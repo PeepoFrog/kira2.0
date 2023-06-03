@@ -118,6 +118,81 @@ jobs:
             echo "::set-output name=publish-step-status::failure"
           fi
         id: check-publish-status
+  create-release:
+    name: Create Release and Upload Artifacts
+    needs: [build-amd64, failure-handling]
+    if: success() && github.event_name == 'push' && contains(github.ref, 'release/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: recursive
+
+      - name: Download linux artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: kira2.0-bin-amd64-linux.tar.gz
+          path: ./
+
+      - name: Download darwin artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: kira2.0-bin-amd64-darwin.tar.gz
+          path: ./
+
+      - name: Download windows artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: kira2.0-bin-amd64-windows.tar.gz
+          path: ./
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Linux Release Asset
+        id: upload-linux-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./kira2.0-bin-amd64-linux.tar.gz
+          asset_name: kira2.0-bin-amd64-linux.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload Darwin Release Asset
+        id: upload-darwin-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./kira2.0-bin-amd64-darwin.tar.gz
+          asset_name: kira2.0-bin-amd64-darwin.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload Windows Release Asset
+        id: upload-windows-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./kira2.0-bin-amd64-windows.tar.gz
+          asset_name: kira2.0-bin-amd64-windows.tar.gz
+          asset_content_type: application/gzip
+
+
 
   failure-handling:
     name: Handle Failures
