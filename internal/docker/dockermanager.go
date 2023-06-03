@@ -17,6 +17,18 @@ import (
 	"github.com/docker/docker/pkg/stdcopy"
 )
 
+type DockerConfig struct {
+	Host       string `json:"Host"`
+	APIVersion string `json:"APIVersion,omitempty"`
+	CertPath   string `json:"CertPath"`
+	CacertPath string `json:"CacertPath"`
+	KeyPath    string `json:"KeyPath"`
+}
+
+func (dc *DockerConfig) SetVersion(version string) {
+	dc.APIVersion = version
+}
+
 type DockerManager struct {
 	Cli *client.Client
 }
@@ -36,7 +48,12 @@ func NewDockerManager(r io.Reader) (*DockerManager, error) {
 		return nil, fmt.Errorf("Failed to decode config: %w", err)
 	}
 
-	cli, err := client.NewClientWithOpts(client.WithHost(config.Host), client.WithVersion(config.APIVersion), client.WithTLSClientConfig(config.CacertPath, config.CertPath, config.KeyPath))
+	cli, err := client.NewClientWithOpts(client.WithHost(config.Host), client.WithAPIVersionNegotiation(), client.WithTLSClientConfig(config.CacertPath, config.CertPath, config.KeyPath))
+
+	// Add API version to config. For future use in debug log etc.
+	config.SetVersion(cli.ClientVersion())
+	log.Printf("Docker API versio set to: %v\n", config.APIVersion)
+
 	if err != nil {
 		log.Printf("Failed to create Docker client: %s", err)
 		return nil, fmt.Errorf("Failed to create Docker client: %w", err)
