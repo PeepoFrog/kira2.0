@@ -35,10 +35,11 @@ jobs:
           cd ./kira2.0
           chmod -Rv 555 ./scripts
           echo "RELEASE_VER: $(./scripts/version.sh)"
-          go version
+          GO_VER="$(go version)"
           echo "ENVS: $(env)"
           echo "HOME: $HOME"
           echo " PWD: $PWD"
+          echo "  GO: $GO_VER"
       - name: Extract branch name on push
         if: github.event_name == 'push'
         shell: bash
@@ -55,7 +56,6 @@ jobs:
           echo "SOURCE_BRANCH=$(echo ${{ env.REF_BRANCH }})" >> $GITHUB_ENV
           echo "DESTINATION_BRANCH=$(echo ${{ env.BASE_REF_BRANCH }})" >> $GITHUB_ENV        
       - name: Inspecting & organizing artifacts
-      # When the repo will be moved to kiracore -> TODO: change mrlutik -> kiracore
         run: |
           echo "(current dir): $PWD" && ls -l ./
           chmod -Rv 555 ./scripts
