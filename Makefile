@@ -1,15 +1,15 @@
-.PHONY all install test build
+.PHONY: all install test build
 
-all: install
+all: install build test publish
 
 install:
-	./scripts/install.sh
+	@./scripts/install.sh
 
 test:
-	./scripts/test.sh
+	@./scripts/test.sh
 
 build:
-	./scripts/build.sh
+	@./scripts/build.sh
 
 publish:
-	./scripts/publish.sh
+	@./scripts/publish.sh
