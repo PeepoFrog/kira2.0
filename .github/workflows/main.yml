@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ release/v*.*.*, bugfix/*,  dev, latest ]
 
+env:
+  VERSION_REGEX: "^v[0-9]+\\.[0-9]+\\.[0-9]+$" # example, change this to your version regex
+
 jobs:
   build-amd64:
     name: AMD64 - Building & Testing repository
@@ -63,12 +66,14 @@ jobs:
           RELEASE_BRANCH="release/$RELEASE_VER" && echo "RELEASE_BRANCH=$RELEASE_BRANCH" >> $GITHUB_ENV
           REPOSITORY_NAME="${{ github.repository }}" && echo "REPOSITORY_NAME=$REPOSITORY_NAME" >> $GITHUB_ENV
           git ls-remote https://github.com/$REPOSITORY_NAME | egrep -q "refs/tags/${RELEASE_VER}$" && echo "RELEASE_EXISTS=true" >> $GITHUB_ENV || echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
-          if [[ "$RELEASE_VER" =~ $VERSION_REGEX ]] && [[ "$SOURCE_BRANCH" =~ $VERSION_REGEX ]] && [ "$SOURCE_BRANCH" != "$RELEASE_VER" ] ; then 
+          if [[ "$RELEASE_VER" =~ ${{ env.VERSION_REGEX }} ]] && [[ "$SOURCE_BRANCH" =~ ${{ env.VERSION_REGEX }} ]] && [ "$SOURCE_BRANCH" != "$RELEASE_VER" ] ; then 
             echo "ERROR: Version branch name MUST be the same as the app version, run scripts/version.sh to check app version!" 
             exit 1
           else
             echo "INFO: Variables setup succeeded"
           fi 
+    
+    
       - name: Print debug data before testing
         run: |
           echo "     Source branch: ${{ env.SOURCE_BRANCH }}"
@@ -117,18 +122,24 @@ jobs:
           then
             echo "::set-output name=publish-step-status::failure"
           fi
-        id: check-publish-status
   create-release:
     name: Create Release and Upload Artifacts
     needs: [build-amd64, failure-handling]
-    if: success() && github.event_name == 'push' && contains(github.ref, 'release/v')
+    if: success() && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release/v')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # your steps are unchanged until "Create Release" step
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          submodules: recursive
+          tag_name: ${{ env.RELEASE_VER }}
+          release_name: Release ${{ env.RELEASE_VER }}
+          draft: false
+          prerelease: false     
+
 
       - name: Download linux artifact for kira2
         uses: actions/download-artifact@v2
@@ -209,9 +220,6 @@ jobs:
           asset_path: ./kira2.0-bin-amd64-windows.tar.gz
           asset_name: kira2.0-bin-amd64-windows.tar.gz
           asset_content_type: application/gzip
-
-
-
   failure-handling:
     name: Handle Failures
     runs-on: ubuntu-latest
@@ -225,3 +233,6 @@ jobs:
             echo "Build Step Status: ${{ needs.build-amd64.outputs.build-step-status }}"
             echo "Publish Step Status: ${{ needs.build-amd64.outputs.publish-step-status }}"
           fi
+
+
+  
