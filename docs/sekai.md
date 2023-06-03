@@ -3,9 +3,49 @@ ver.: v0.3.16
                
 - [Sekai](#sekai)
     - [Context](#context)
+      - [3. config](#3-config)
       - [18. status](#18-status)
       - [25. version](#25-version)
 ### Context
+#### 3. config
+Create or query an application CLI configuration file
+
+#if send ```sekaid config``` printing current config state of the node 
+
+Usage:
+```
+sekaid config <key> [value] [flags]
+```
+| Flags              | Description                                                                        | Work |
+|--------------------|------------------------------------------------------------------------------------|------|
+| --help             | help for version                                                                   | yes  |
+| Global Flags       |                                                                                    |      |
+| --home string      | directory for config and data (default "/root/.sekaid")                            | no   |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | no   |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ?    |
+| --trace            | print out full stack trace on errors                                               | ?    |
+```
+#sekaid config --help
+Create or query an application CLI configuration file
+
+Usage:
+  sekaid config <key> [value] [flags]
+
+Flags:
+  -h, --help   help for config
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+#if keyring-backend value will be wrong it will break entire sekaid installation
+```
+sekaid config keyring-backend test
+```
+
+
 
 #### 18. status
 Query remote node for status
