@@ -123,11 +123,11 @@ jobs:
             echo "::set-output name=publish-step-status::failure"
           fi
   create-release:
-    name: Create Release and Upload Artifacts
-    needs: [build-amd64, failure-handling]
-    if: success() && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release/v')
-    runs-on: ubuntu-latest
-    steps:
+      name: Create Release and Upload Artifacts
+      needs: [build-amd64, failure-handling]
+      if: success() && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release/v')
+      runs-on: ubuntu-latest
+      steps:
       # your steps are unchanged until "Create Release" step
       - name: Create Release
         id: create_release
@@ -220,6 +220,7 @@ jobs:
           asset_path: ./kira2.0-bin-amd64-windows.tar.gz
           asset_name: kira2.0-bin-amd64-windows.tar.gz
           asset_content_type: application/gzip
+  
   failure-handling:
     name: Handle Failures
     runs-on: ubuntu-latest
