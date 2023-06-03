@@ -62,7 +62,7 @@ jobs:
           RELEASE_VER="$(./scripts/version.sh)" && echo "RELEASE_VER=$RELEASE_VER" >> $GITHUB_ENV
           RELEASE_BRANCH="release/$RELEASE_VER" && echo "RELEASE_BRANCH=$RELEASE_BRANCH" >> $GITHUB_ENV
           REPOSITORY_NAME="${{ github.repository }}" && echo "REPOSITORY_NAME=$REPOSITORY_NAME" >> $GITHUB_ENV
-          git ls-remote https://github.com/${{ github.repository_owner }}/$REPOSITORY_NAME | egrep -q "refs/tags/${RELEASE_VER}$" && echo "RELEASE_EXISTS=true" >> $GITHUB_ENV || echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
+          git ls-remote https://github.com/$REPOSITORY_NAME | egrep -q "refs/tags/${RELEASE_VER}$" && echo "RELEASE_EXISTS=true" >> $GITHUB_ENV || echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
           if [[ "$RELEASE_VER" =~ $VERSION_REGEX ]] && [[ "$SOURCE_BRANCH" =~ $VERSION_REGEX ]] && [ "$SOURCE_BRANCH" != "$RELEASE_VER" ] ; then 
             echo "ERROR: Version branch name MUST be the same as the app version, run scripts/version.sh to check app version!" 
             exit 1
