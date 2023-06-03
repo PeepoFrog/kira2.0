@@ -130,23 +130,41 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: recursive
 
-      - name: Download linux artifact
+      - name: Download linux artifact for kira2
         uses: actions/download-artifact@v2
         with:
-          name: kira2.0-bin-amd64-linux.tar.gz
-          path: ./
+          name: kira2-linux-amd64.deb
+          path: /bin
 
-      - name: Download darwin artifact
+      - name: Download linux artifact for kira2_launcher
         uses: actions/download-artifact@v2
         with:
-          name: kira2.0-bin-amd64-darwin.tar.gz
-          path: ./
+          name: kira2_launcher-linux-amd64.deb
+          path: /bin    
 
-      - name: Download windows artifact
+      - name: Download darwin artifact kira2
         uses: actions/download-artifact@v2
         with:
-          name: kira2.0-bin-amd64-windows.tar.gz
-          path: ./
+          name: kira2-darwin-amd64.deb
+          path: /bin
+
+      - name: Download darwin artifact kira2_launcher
+        uses: actions/download-artifact@v2
+        with:
+          name: kira2_laucher-darwin-amd64.deb
+          path: /bin
+
+      - name: Download windows artifact kira2
+        uses: actions/download-artifact@v2
+        with:
+          name: kira2-windows-amd64.exe
+          path: /bin
+
+      - name: Download windows artifact kira2_launcher
+        uses: actions/download-artifact@v2
+        with:
+          name: kira2_launcher-windows-amd64.exe
+          path: /bin
 
       - name: Create Release
         id: create_release

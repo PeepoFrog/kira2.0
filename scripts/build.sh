@@ -36,5 +36,5 @@ rm -fv "$OUTPUT" || echo "ERROR: Failed to wipe old kira2 binary"
 
 go mod tidy
 GO111MODULE=on go mod verify
-env GOOS="$PLATFORM" GOARCH="$ARCH" go build -o "$OUTPUT" ./cmd/kira2_launcher/.
+env GOOS="$PLATFORM" GOARCH="$ARCH" go build -o "${OUTPUT}_launcher" ./cmd/kira2_launcher/.
 env GOOS="$PLATFORM" GOARCH="$ARCH" go build -o "$OUTPUT" ./cmd/kira2/.
