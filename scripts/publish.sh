@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 set -e
-set +x
-. /etc/profile
 set -x
 
-. ../bash-utils/bash-utils.sh
 
 LOCAL_ARCH=$([[ "$(uname -m)" == *"arm"* || "$(uname -m)" == *"aarch"* ]] && echo "arm64" || echo "amd64")
 
@@ -31,7 +28,11 @@ BRANCH=$(git rev-parse --symbolic-full-name --abbrev-ref HEAD || echo "")
 
 CONSTANTS_FILE="./internal/types/constants.go"
 VERSION=$(awk -F'Version = ' '/Version/{print $2}' "$CONSTANTS_FILE" | tr -d '[:space:]\"')
-$(isNullOrEmpty "$VERSION") && ( echoErr "ERROR: Kira2 version was NOT found in '$CONSTANTS_FILE' !" && sleep 5 && exit 1 )
+if [[ -z "$VERSION" ]]; then 
+    echoErr "ERROR: Kira2 version was NOT found in '$CONSTANTS_FILE' !" 
+    sleep 5
+    exit 1
+fi
 
 function pcgRelease() {
     local ARCH="$1" && ARCH=$(echo "$ARCH" |  tr '[:upper:]' '[:lower:]' )
@@ -43,7 +44,7 @@ function pcgRelease() {
 
     mkdir -p "$BIN_PATH" "$RELEASE_DIR"
 
-    echoInfo "INFO: Building $ARCH package for $PLATFORM..."
+    echo "INFO: Building $ARCH package for $PLATFORM..."
     
     TMP_PKG_CONFIG_FILE="./nfpm_${ARCH}_${PLATFORM}.yaml"
     rm -rf "$TMP_PKG_CONFIG_FILE" && cp -v "$PKG_CONFIG_FILE" "$TMP_PKG_CONFIG_FILE"
@@ -69,4 +70,4 @@ pcgRelease "$LOCAL_ARCH" "$VERSION" "darwin"
 pcgRelease "$LOCAL_ARCH" "$VERSION" "windows"
 
 rm -rf "./bin/amd64" "./bin/arm64" "./bin/deb"
-echoInfo "INFO: Sucessfully published kira2 deb packages into ./bin"
+echo "INFO: Sucessfully published kira2 deb packages into ./bin"
