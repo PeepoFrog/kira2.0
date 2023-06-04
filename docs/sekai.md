@@ -4,6 +4,7 @@ ver.: v0.3.16
 - [Sekai](#sekai)
     - [Context](#context)
       - [3. config](#3-config)
+      - [11. init](#11-init)
       - [18. status](#18-status)
       - [25. version](#25-version)
 ### Context
@@ -44,9 +45,48 @@ Global Flags:
 ```
 sekaid config keyring-backend test
 ```
+#### 11. init
+Initialize validators's and node's configuration files.
 
+Usage:
+```
+sekaid init [moniker] [flags]
+```
+| Flags              | Description                                                                        | Work |
+|--------------------|------------------------------------------------------------------------------------|------|
+| --chain-id string  | genesis file chain-id, if left blank will be randomly created                      | yes  |
+| --help             | help for init                                                                      | yes  |
+| --overwrite        | overwrite the genesis.json file                                                    | yes  |
+| --recover          | provide seed phrase to recover existing key instead of creating                    | ?    |
+|                    |                                                                                    |      |
+| Global Flags       |                                                                                    |      |
+| --home string      | directory for config and data (default "/root/.sekaid")                            | yes  |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | no   |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ?    |
+| --trace            | print out full stack trace on errors                                               | ?    |
 
+```
+# sekaid init --help
+Initialize validators's and node's configuration files.
 
+Usage:
+  sekaid init [moniker] [flags]
+
+Flags:
+      --chain-id string   genesis file chain-id, if left blank will be randomly created
+  -h, --help              help for init
+  -o, --overwrite         overwrite the genesis.json file
+      --recover           provide seed phrase to recover existing key instead of creating
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errorsdoc 
+```
+```
+sekaid init "MONIKER" --overwrite --chain-id=$NETWORK_NAME  --home=$SEKAID_HOME
+```
 #### 18. status
 Query remote node for status
 
