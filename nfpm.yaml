@@ -1,0 +1,17 @@
+name: "kira2"
+arch: "${ARCH}"
+platform: "${PLATFORM}"
+version: "${VERSION}"
+section: "default"
+priority: "extra"
+replaces:
+- kira2
+provides:
+- kira2
+maintainer: "KIRA <partners@kira.global>"
+description: "kira2 is a tool to deployt and provision blockchain."
+homepage: "https://github.com/mrlutik/kira2.0"
+license: "AGPL-3.0 license"
+contents:
+- src: ${SOURCE}
+  dst: ./bin/
