@@ -96,17 +96,18 @@ Usage:
 ```
 sekaid status [flags]
 ```
-+-----------------------+-------------------------------------------------------------------------------+-----------+
-|   Flags               |                                   Description                                 |   Work    |
-+-----------------------+--------------+----------------------------------------------------------------+-----------+
-|   --help              |help for status                                                                |   yes     |
-|   --node              |Node to connect to (default "tcp://localhost:26657")                           |   yes     |
-+-----------------------+-------------------------------------------------------------------------------+-----------+
-|   --home              |directory for config and data (default "/root/.sekaid")                        |   yes     |
-|   --log_format        |The logging format (json|plain) (default "plain")                              |   ?no     |
-|   --log_level string  |The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")   |   ?no     |
-|   --trace             |print out full stack trace on errors                                           |   ?no     |
-+-----------------------+-------------------------------------------------------------------------------+-----------|
+
+|   Flags               |                                   Description                                    | Work|
+|-----------------------|----------------------------------------------------------------------------------|-----|
+|   --help              |help for status                                                                   | yes |
+|   --node              |Node to connect to (default "tcp://localhost:26657")                              | yes |
+|                       |                                                                                  |     |
+|   Global Flags        |                                                                                  |     |
+|   --home              |directory for config and data (default "/root/.sekaid")                           | yes |
+|   --log_format        |The logging format (json\|plain) (default "plain")                                | ?no |
+|   --log_level string  |The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info")| ?no |
+|   --trace             |print out full stack trace on errors                                              | ?no |
+
 
 ```
 /# sekaid status --help
