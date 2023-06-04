@@ -266,7 +266,7 @@ jobs:
           ( github.event_name == 'pull_request' ) &&
           ( env.SOURCE_BRANCH == env.RELEASE_BRANCH || env.DESTINATION_BRANCH == env.RELEASE_BRANCH )
         with:
-          github-token: "${{ secrets.BOT_ACCESS_TOKEN }}"
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
       # Work around https://github.com/actions/checkout/issues/760
 
       - name: Add safe.directory
