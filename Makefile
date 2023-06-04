@@ -3,7 +3,7 @@
 all: install build test publish
 
 install:
-	@./scripts/install.sh
+	@./scripts/build.sh
 
 test:
 	@./scripts/test.sh
