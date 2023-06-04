@@ -116,7 +116,11 @@ jobs:
           echo "                                source-code.tar.gz: sha256:$(sha256sum ./bin/source-code.tar.gz | awk '{ print $1 }')" >> ./bin/RELEASE.md
           echo -e "\`\`\`"   >> ./bin/RELEASE.md
           tar -czvf deb.tar.gz -C ./bin .
-
+      - name: Uploading artifacts
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: kira2-bin-deb
+          path: ./deb.tar.gz
       - name: Print job results
         run: |
           echo "Add safe.directory...                               ${{ steps.add-safe-dir.outcome }}"
