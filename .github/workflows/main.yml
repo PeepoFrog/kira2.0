@@ -46,9 +46,30 @@ jobs:
         run: |
           echo "SOURCE_BRANCH=$(echo ${{ env.REF_BRANCH }})" >> $GITHUB_ENV
           echo "DESTINATION_BRANCH=$(echo ${{ env.BASE_REF_BRANCH }})" >> $GITHUB_ENV
+
+      - name: Organizing environment & archiving source code
+        id: org-env-src-code
+        run: |
+          WORK_DIR=$PWD
+          BASE_DIR=$(basename "$WORK_DIR")
+          cd ../ && tar -czvf src.tar.gz -C ./$BASE_DIR . && cp ./src.tar.gz ./$BASE_DIR/src.tar.gz && cd ./$BASE_DIR
+          echo "(current dir): $PWD" && ls -l ./
+          chmod -Rv 555 ./scripts
+          RELEASE_VER="$(./scripts/version.sh)" && echo "RELEASE_VER=$RELEASE_VER" >> $GITHUB_ENV
+          RELEASE_BRANCH="release/$RELEASE_VER" && echo "RELEASE_BRANCH=$RELEASE_BRANCH" >> $GITHUB_ENV
+          REPOSITORY_NAME="${{ github.event.repository.name }}" && echo "REPOSITORY_NAME=$REPOSITORY_NAME" >> $GITHUB_ENV
+          git ls-remote https://github.com/${{ github.repository }} | egrep -q "refs/tags/${RELEASE_VER}$" && echo "RELEASE_EXISTS=true" >> $GITHUB_ENV || echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
+          if [[ "$RELEASE_VER" =~ $VERSION_REGEX ]] && [[ "$SOURCE_BRANCH" =~ $VERSION_REGEX ]] && [ "$SOURCE_BRANCH" != "$RELEASE_VER" ] ; then 
+            echo "ERROR: Version branch name MUST be the same as the app version, run scripts/version.sh to check app version!" 
+            exit 1
+          else
+            echo "INFO: Variables setup succeeded"
+          fi
+      
       - name: Print job results
         run: |
-          echo "Add safe.directory...             ${{ steps.add-safe-dir.outcome }}"
-          echo "Checkout repository...            ${{ steps.checkout-repo.outcome }}"
-          echo "Extract branch name on push...    ${{ steps.extract-branch-name-push.outcome }}"
-          echo "Extract branch name on pull...    ${{ steps.extract-branch-name-pull.outcome }}"
+          echo "Add safe.directory...                               ${{ steps.add-safe-dir.outcome }}"
+          echo "Checkout repository...                              ${{ steps.checkout-repo.outcome }}"
+          echo "Extract branch name on push...                      ${{ steps.extract-branch-name-push.outcome }}"
+          echo "Extract branch name on pull...                      ${{ steps.extract-branch-name-pull.outcome }}"
+          echo "Organizing environment & archiving source code..    ${{ steps.org-env-src-code.outcome }}"
