@@ -49,6 +49,6 @@ jobs:
       - name: Print job results
         run: |
           echo "Add safe.directory...             ${{ steps.add-safe-dir.outcome }}"
-          echo "Checkout repository...            ${{ steps.world.outcome }}"
-          echo "Extract branch name on push...    ${{ steps.extract-branch-push.outcome }}"
-          echo "Extract branch name on pull...    ${{ steps.extract-branch-pull.outcome }}"
+          echo "Checkout repository...            ${{ steps.checkout-repo.outcome }}"
+          echo "Extract branch name on push...    ${{ steps.extract-branch-name-push.outcome }}"
+          echo "Extract branch name on pull...    ${{ steps.extract-branch-name-pull.outcome }}"
