@@ -267,6 +267,7 @@ jobs:
           ( env.SOURCE_BRANCH == env.RELEASE_BRANCH || env.DESTINATION_BRANCH == env.RELEASE_BRANCH )
         with:
           github-token: "${{ secrets.REPO_ACCESS }}"
+          review-message: "Auto approved automated PR"
       # Work around https://github.com/actions/checkout/issues/760
 
       - name: Add safe.directory
