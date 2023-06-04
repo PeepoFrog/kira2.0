@@ -68,9 +68,7 @@ jobs:
       - name: Print debug data
         id: prt-dbg-data
         run: |
-          . /etc/profile
           go version
-          echo "Bash Utils Version: $(bashUtilsVersion)"
           echo "     Source branch: ${{ env.SOURCE_BRANCH }}"
           echo "Destination branch: ${{ env.DESTINATION_BRANCH }}"
           echo "    Release branch: ${{ env.RELEASE_BRANCH }}"
@@ -78,7 +76,6 @@ jobs:
           echo "   Repository name: ${{ env.REPOSITORY_NAME }}"
           echo "   Release version: ${{ env.RELEASE_VER }}"
           echo "    Release exists: ${{ env.RELEASE_EXISTS }}"
-        continue-on-error: false
       
       - name: Installing KIRA2.0
         id: install-kira2
@@ -89,6 +86,38 @@ jobs:
           kira2 version
           kira2_launcher version
 
+      - name: Launching tests...
+        id: run-test
+        run: |
+          echo "(current dir): $PWD" && ls -l ./
+          chmod -Rv 555 ./scripts
+          make test
+
+      - name: Publishing KIRA2.0 binaries
+        id: pub-bin
+        shell: bash
+        run: |
+          echo "(current dir): $PWD" && ls -l ./
+          chmod -Rv 555 ./scripts
+          make publish
+          touch ./RELEASE.md
+          cp -fv ./RELEASE.md ./bin/RELEASE.md
+          cp -fv ./src.tar.gz ./bin/source-code.tar.gz
+          chmod -Rv 777 ./bin
+          echo -e "\n\r\n\r\`\`\`" >> ./bin/RELEASE.md
+          echo -e "        Release Versions: $RELEASE_VER" >> ./bin/RELEASE.md
+          echo -e "       Release Date Time: $(date --rfc-2822)" >> ./bin/RELEASE.md
+          echo "                       kira2-darwin-amd64.deb: sha256:$(sha256sum ./bin/kira2-darwin-amd64.deb  | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "     kira2_launcher-darwin-amd64.deb: sha256:$(sha256sum ./bin/kira2_launcher-darwin-amd64.deb  | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "                        kira2-linux-amd64.deb: sha256:$(sha256sum ./bin/kira2-linux-amd64.deb   | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "       kira2_laucher-linux-amd64.deb: sha256:$(sha256sum ./bin/kira2_launcher-linux-amd64.deb   | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "                    kira2-windows-amd64.exe: sha256:$(sha256sum ./bin/kira2-windows-amd64.exe   | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "   kira2_laucher-windows-amd64.exe: sha256:$(sha256sum ./bin/kira2_launcher-windows-amd64.exe   | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "                                source-code.tar.gz: sha256:$(sha256sum ./bin/source-code.tar.gz | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo -e "\`\`\`"   >> ./bin/RELEASE.md
+          tar -czvf deb.tar.gz -C ./bin .
+      
+      
       - name: Print job results
         run: |
           echo "Add safe.directory...                               ${{ steps.add-safe-dir.outcome }}"
@@ -98,3 +127,5 @@ jobs:
           echo "Organizing environment & archiving source code..    ${{ steps.org-env-src-code.outcome }}"
           echo "Printing debug data...                              ${{ steps.prt-dbg-data.outcome }}"
           echo "Installing KIRA2.0...                               ${{ steps.install-kira2.outcome }}"
+          echo "Launching test...                                   ${{ steps.run-test.outcome }}"
+          echo "Publishing KIRA2.0 binaries...                      ${{ steps.pub-bin.outcome }}"
