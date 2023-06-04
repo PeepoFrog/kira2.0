@@ -37,7 +37,7 @@ jobs:
           echo "DESTINATION_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
       
       - name: Extract branch name on pull request
-        id: extract-branch-name-pull-request
+        id: extract-branch-name-pull
         if: github.event_name == 'pull_request'
         env:
           REF_BRANCH: ${{ github.event.pull_request.head.ref }}
@@ -46,21 +46,9 @@ jobs:
         run: |
           echo "SOURCE_BRANCH=$(echo ${{ env.REF_BRANCH }})" >> $GITHUB_ENV
           echo "DESTINATION_BRANCH=$(echo ${{ env.BASE_REF_BRANCH }})" >> $GITHUB_ENV
-  handle-failures:
-    needs: build
-    runs-on: ubuntu-20.04
-    name: Handle failures
-    steps:
-      - name: Check status of build job
-        if: always()
+      - name: Print job results
         run: |
-          for job in ${{ toJson(needs.build) }}; do
-            job_id=$(echo $job | jq -r '.id')
-            job_name=$(echo $job | jq -r '.name')
-            job_status=$(echo $job | jq -r '.conclusion')
-
-            echo "Job ID: $job_id"
-            echo "Job Name: $job_name"
-            echo "Job Status: $job_status"
-            echo "----"
-          done
+          echo "Add safe.directory...             ${{ steps.add-safe-dir.outcome }}"
+          echo "Checkout repository...            ${{ steps.world.outcome }}"
+          echo "Extract branch name on push...    ${{ steps.extract-branch-push.outcome }}"
+          echo "Extract branch name on pull...    ${{ steps.extract-branch-pull.outcome }}"
