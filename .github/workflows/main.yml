@@ -2,50 +2,32 @@ name: Build, Test & Publish
 
 on:
   push:
-    branches: [ release/v*.*.*, features/*, feature/*, master, dev, latest ]
+    branches: [release/v*.*.*, bugfix/*, feature/*, features/*, master, dev]
   pull_request:
-    branches: [ release/v*.*.*, bugfix/*,  dev, latest ]
-
-env:
-  VERSION_REGEX: "^v[0-9]+\\.[0-9]+\\.[0-9]+$" 
-
+    branches: [release/v*.*.*, bugfix/*, feature/*, features/*, master, dev]
+  
 jobs:
-  build-amd64:
-    name: AMD64 - Building & Testing repository
-    runs-on: ubuntu-latest
+  build:
+    name: Building repo
+    runs-on: ubuntu-20.04
     permissions:
       contents: read
       packages: write
       id-token: write
       pull-requests: write
-    container: 
-      image: ghcr.io/kiracore/docker/base-image:v0.13.11
+    container: ghcr.io/kiracore/docker/base-image:v0.13.11
     steps:
-      # Work around https://github.com/actions/checkout/issues/760
+      
       - name: Add safe.directory
         id: add-safe-dir
         run: |
           git config --global --add safe.directory /github/workspace
           git config --global --add safe.directory $PWD
+
       - name: Checkout repository
-        id: check-repo
+        id: checkout-repo
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          submodules: recursive
-      - name: Checking dependency versions & packaging source files
-        id: check-dep-ver-pack-src-files
-        run: |
-          echo "(current dir): $PWD" && ls -l ./
-          cd ../ && tar -czvf src.tar.gz -C ./kira2.0 . && cp ./src.tar.gz ./kira2.0/src.tar.gz
-          cd ./kira2.0
-          chmod -Rv 555 ./scripts
-          echo "RELEASE_VER: $(./scripts/version.sh)"
-          GO_VER="$(go version)"
-          echo "ENVS: $(env)"
-          echo "HOME: $HOME"
-          echo " PWD: $PWD"
-          echo "  GO: $GO_VER"
+
       - name: Extract branch name on push
         id: extract-branch-name-push
         if: github.event_name == 'push'
@@ -53,8 +35,9 @@ jobs:
         run: |
           echo "SOURCE_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
           echo "DESTINATION_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+      
       - name: Extract branch name on pull request
-        id: extract-branch-name-pull
+        id: extract-branch-name-pull-request
         if: github.event_name == 'pull_request'
         env:
           REF_BRANCH: ${{ github.event.pull_request.head.ref }}
@@ -62,165 +45,22 @@ jobs:
         shell: bash
         run: |
           echo "SOURCE_BRANCH=$(echo ${{ env.REF_BRANCH }})" >> $GITHUB_ENV
-          echo "DESTINATION_BRANCH=$(echo ${{ env.BASE_REF_BRANCH }})" >> $GITHUB_ENV        
-      - name: Inspecting & organizing artifacts
-        id: isnpect-organize-artifacts
-        run: |
-          echo "(current dir): $PWD" && ls -l ./
-          chmod -Rv 555 ./scripts
-          RELEASE_VER="$(./scripts/version.sh)" && echo "RELEASE_VER=$RELEASE_VER" >> $GITHUB_ENV
-          RELEASE_BRANCH="release/$RELEASE_VER" && echo "RELEASE_BRANCH=$RELEASE_BRANCH" >> $GITHUB_ENV
-          REPOSITORY_NAME="${{ github.repository }}" && echo "REPOSITORY_NAME=$REPOSITORY_NAME" >> $GITHUB_ENV
-          git ls-remote https://github.com/$REPOSITORY_NAME | egrep -q "refs/tags/${RELEASE_VER}$" && echo "RELEASE_EXISTS=true" >> $GITHUB_ENV || echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
-      - name: Check version branch name with regex
-        id: check-branch-ver-against-regex
-        run: |
-          if [[ "$RELEASE_VER" =~ ${{ env.VERSION_REGEX }} ]] && [[ "$SOURCE_BRANCH" =~ ${{ env.VERSION_REGEX }} ]] && [[ "$SOURCE_BRANCH" != "$RELEASE_VER" ]] ; then 
-            echo "ERROR: Version branch name MUST be the same as the app version, run scripts/version.sh to check app version!" 
-            exit 1
-          else
-            echo "INFO: Variables setup succeeded"
-          fi 
-    
-      - name: Print debug data before testing
-        id: print-debug-data
-        run: |
-          echo "     Source branch: ${{ env.SOURCE_BRANCH }}"
-          echo "Destination branch: ${{ env.DESTINATION_BRANCH }}"
-          echo "    Release branch: ${{ env.RELEASE_BRANCH }}"
-          echo "        Event name: ${{ github.event_name }}"
-          echo "   Repository name: ${{ env.REPOSITORY_NAME }}"
-          echo "   Release version: ${{ env.RELEASE_VER }}"
-          echo "    Release exists: ${{ env.RELEASE_EXISTS }}"
-      - name: Testing & Building KIRA2.0
-        id: test-and-build
-        run: |
-          set -x
-          echo "(current dir): $PWD" && ls -l ./
-          tar xvf ./src.tar.gz
-          chmod -Rv 555 ./scripts 
-          chmod -Rv 666 ./RELEASE.md 
-          export SOURCE_BRANCH=${{ env.SOURCE_BRANCH }}
-          make test
-          make build 
-        env:
-          BUILD_STEP_STATUS: "success"
-        continue-on-error: true 
-      - name: Set Build Step Status
-        id: set-build-status
-        run: |
-          if [ ${{ job.status }} != 'success' ]
-          then
-            echo "::set-output name=build-step-status::failure"
-          fi
-      - name: Publishing KIRA2.0 binaries
-        id: publish-binaries
-        run: |
-          set -x
-          make publish
-          touch ./RELEASE.md
-          cp -fv ./RELEASE.md ./bin/RELEASE.md
-          cp -fv ./src.tar.gz ./bin/source-code.tar.gz
-          tar -czvf kira2.0-bin-amd64.tar.gz -C ./bin .
-        env:
-          PUBLISH_STEP_STATUS: "success"
-        continue-on-error: true 
-      - name: Set Publish Step Status
-        id: set-publish-status
-        run: |
-          if [ ${{ job.status }} != 'success' ]
-          then
-            echo "::set-output name=publish-step-status::failure"
-          fi
-  create-release:
-      name: Create Release and Upload Artifacts
-      needs: [build-amd64, failure-handling]
-      if: success() && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release/v')
-      runs-on: ubuntu-latest
-      steps:
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        with:
-          tag_name: ${{ env.RELEASE_VER }}
-          release_name: Release ${{ env.RELEASE_VER }}
-          draft: false
-          prerelease: false     
-
-      - name: Download artifact
-        id: download-artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: build-artifacts
-          path: ./bin
-
-      - name: Upload Linux Release Asset KIRA2.0
-        id: upload-linux-release-asset-kira2 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bin/kira2-linux-amd64.deb
-          asset_name: kira2-linux-amd64.deb
-          asset_content_type: application/vnd.debian.binary-package
-      
-      - name: Upload Linux Release Asset KIRA2.0_LAUNCHER
-        id: upload-linux-release-asset-kira2-launcher 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bin/kira2_launcher-linux-amd64.deb
-          asset_name: kira2_launcher-linux-amd64.deb
-          asset_content_type: application/vnd.debian.binary-package
-
-      - name: Upload Darwin Release Asset KIRA2.0_LAUNCHER
-        id: upload-darwin-release-asset-kira2-launcher 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bin/kira2_launcher-darwin-amd64.deb
-          asset_name: kira2_launcher-darwin-amd64.deb
-          asset_content_type: application/vnd.apple.installer+xml
-
-      - name: Upload Windows Release Asset KIRA2.0_LAUNCHER
-        id: upload-windows-release-asset-kira2-launcher 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bin/kira2-windows-amd64.exe
-          asset_name: kira2-windows-amd64.exe
-          asset_content_type: application/gzip
-  
-  failure-handling:
-    name: Handle Failures
-    runs-on: ubuntu-latest
-    needs: [build-amd64]
-    if: always()
+          echo "DESTINATION_BRANCH=$(echo ${{ env.BASE_REF_BRANCH }})" >> $GITHUB_ENV
+  handle-failures:
+    needs: build
+    runs-on: ubuntu-20.04
+    name: Handle failures
     steps:
-      - name: Get Steps
-        id: get-steps
-        run: echo "::set-output name=steps::${{ toJson(steps) }}"
-      
-      - name: Process Steps
-        id: process-steps
+      - name: Check status of build job
+        if: always()
         run: |
-          STEPS=$(echo ${{ steps.get-steps.outputs.steps }})
-          for step in $STEPS; do
-            step_name=$(echo $step | jq -r '.name')
-            step_status=$(echo $step | jq -r '.conclusion')
-            echo "Job Name: job-name | Step Name: $step_name | Step Status: $step_status"
+          for job in ${{ toJson(needs.build) }}; do
+            job_id=$(echo $job | jq -r '.id')
+            job_name=$(echo $job | jq -r '.name')
+            job_status=$(echo $job | jq -r '.conclusion')
+
+            echo "Job ID: $job_id"
+            echo "Job Name: $job_name"
+            echo "Job Status: $job_status"
+            echo "----"
           done
-          exit 1
-
-
-
-  
