@@ -204,7 +204,7 @@ jobs:
     name: Handle Failures
     runs-on: ubuntu-latest
     needs: [build-amd64]
-    if: failure()
+    if: always()
     steps:
       - name: Get Steps
         id: get-steps
