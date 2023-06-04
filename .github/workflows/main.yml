@@ -78,6 +78,17 @@ jobs:
           echo "   Repository name: ${{ env.REPOSITORY_NAME }}"
           echo "   Release version: ${{ env.RELEASE_VER }}"
           echo "    Release exists: ${{ env.RELEASE_EXISTS }}"
+        continue-on-error: false
+      
+      - name: Installing KIRA2.0
+        id: install-kira2
+        run: |
+          echo "(current dir): $PWD" && ls -l ./
+          chmod -Rv 555 ./scripts
+          make install
+          kira2 version
+          kira2_launcher version
+
       - name: Print job results
         run: |
           echo "Add safe.directory...                               ${{ steps.add-safe-dir.outcome }}"
@@ -86,4 +97,4 @@ jobs:
           echo "Extract branch name on pull...                      ${{ steps.extract-branch-name-pull.outcome }}"
           echo "Organizing environment & archiving source code..    ${{ steps.org-env-src-code.outcome }}"
           echo "Printing debug data...                              ${{ steps.prt-dbg-data.outcome }}"
-          
+          echo "Installing KIRA2.0...                               ${{ steps.install-kira2.outcome }}"
