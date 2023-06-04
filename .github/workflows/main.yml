@@ -206,16 +206,18 @@ jobs:
     needs: [build-amd64]
     if: failure()
     steps:
-      - name: Check for failures
+      - name: Get Steps
+        id: get-steps
+        run: echo "::set-output name=steps::${{ toJson(steps) }}"
+      
+      - name: Process Steps
+        id: process-steps
         run: |
-          echo "Error: Build or tests failed in the following steps:"
-          echo ""
-
-          # Iterate over the IDs of the failed steps
-          for step_id in build-and-test upload-artifact-1 upload-artifact-2; do
-          step_name=$(echo "${{ steps[step_id].name }}")
-          step_status=$(echo "${{ job.status }}")
-          echo "Step Name: $step_name | Step Status: $step_status"
+          STEPS=$(echo ${{ steps.get-steps.outputs.steps }})
+          for step in $STEPS; do
+            step_name=$(echo $step | jq -r '.name')
+            step_status=$(echo $step | jq -r '.conclusion')
+            echo "Job Name: job-name | Step Name: $step_name | Step Status: $step_status"
           done
           exit 1
 
