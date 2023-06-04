@@ -7,7 +7,7 @@ on:
     branches: [ release/v*.*.*, bugfix/*,  dev, latest ]
 
 env:
-  VERSION_REGEX: "^v[0-9]+\\.[0-9]+\\.[0-9]+$" # example, change this to your version regex
+  VERSION_REGEX: "^v[0-9]+\\.[0-9]+\\.[0-9]+$" 
 
 jobs:
   build-amd64:
@@ -23,15 +23,18 @@ jobs:
     steps:
       # Work around https://github.com/actions/checkout/issues/760
       - name: Add safe.directory
+        id: add-safe-dir
         run: |
           git config --global --add safe.directory /github/workspace
           git config --global --add safe.directory $PWD
       - name: Checkout repository
+        id: check-repo
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           submodules: recursive
       - name: Checking dependency versions & packaging source files
+        id: check-dep-ver-pack-src-files
         run: |
           echo "(current dir): $PWD" && ls -l ./
           cd ../ && tar -czvf src.tar.gz -C ./kira2.0 . && cp ./src.tar.gz ./kira2.0/src.tar.gz
@@ -44,12 +47,14 @@ jobs:
           echo " PWD: $PWD"
           echo "  GO: $GO_VER"
       - name: Extract branch name on push
+        id: extract-branch-name-push
         if: github.event_name == 'push'
         shell: bash
         run: |
           echo "SOURCE_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
           echo "DESTINATION_BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
       - name: Extract branch name on pull request
+        id: extract-branch-name-pull
         if: github.event_name == 'pull_request'
         env:
           REF_BRANCH: ${{ github.event.pull_request.head.ref }}
@@ -59,6 +64,7 @@ jobs:
           echo "SOURCE_BRANCH=$(echo ${{ env.REF_BRANCH }})" >> $GITHUB_ENV
           echo "DESTINATION_BRANCH=$(echo ${{ env.BASE_REF_BRANCH }})" >> $GITHUB_ENV        
       - name: Inspecting & organizing artifacts
+        id: isnpect-organize-artifacts
         run: |
           echo "(current dir): $PWD" && ls -l ./
           chmod -Rv 555 ./scripts
@@ -66,15 +72,18 @@ jobs:
           RELEASE_BRANCH="release/$RELEASE_VER" && echo "RELEASE_BRANCH=$RELEASE_BRANCH" >> $GITHUB_ENV
           REPOSITORY_NAME="${{ github.repository }}" && echo "REPOSITORY_NAME=$REPOSITORY_NAME" >> $GITHUB_ENV
           git ls-remote https://github.com/$REPOSITORY_NAME | egrep -q "refs/tags/${RELEASE_VER}$" && echo "RELEASE_EXISTS=true" >> $GITHUB_ENV || echo "RELEASE_EXISTS=false" >> $GITHUB_ENV
-          if [[ "$RELEASE_VER" =~ ${{ env.VERSION_REGEX }} ]] && [[ "$SOURCE_BRANCH" =~ ${{ env.VERSION_REGEX }} ]] && [ "$SOURCE_BRANCH" != "$RELEASE_VER" ] ; then 
+      - name: Check version branch name with regex
+        id: check-branch-ver-against-regex
+        run: |
+          if [[ "$RELEASE_VER" =~ ${{ env.VERSION_REGEX }} ]] && [[ "$SOURCE_BRANCH" =~ ${{ env.VERSION_REGEX }} ]] && [[ "$SOURCE_BRANCH" != "$RELEASE_VER" ]] ; then 
             echo "ERROR: Version branch name MUST be the same as the app version, run scripts/version.sh to check app version!" 
             exit 1
           else
             echo "INFO: Variables setup succeeded"
           fi 
     
-    
       - name: Print debug data before testing
+        id: print-debug-data
         run: |
           echo "     Source branch: ${{ env.SOURCE_BRANCH }}"
           echo "Destination branch: ${{ env.DESTINATION_BRANCH }}"
@@ -84,6 +93,7 @@ jobs:
           echo "   Release version: ${{ env.RELEASE_VER }}"
           echo "    Release exists: ${{ env.RELEASE_EXISTS }}"
       - name: Testing & Building KIRA2.0
+        id: test-and-build
         run: |
           set -x
           echo "(current dir): $PWD" && ls -l ./
@@ -92,19 +102,19 @@ jobs:
           chmod -Rv 666 ./RELEASE.md 
           export SOURCE_BRANCH=${{ env.SOURCE_BRANCH }}
           make test
-          make build
-        id: build-step # Add an id to reference this step's output
+          make build 
         env:
           BUILD_STEP_STATUS: "success"
-        continue-on-error: true # Ensure this step does not stop the job
+        continue-on-error: true 
       - name: Set Build Step Status
+        id: set-build-status
         run: |
           if [ ${{ job.status }} != 'success' ]
           then
             echo "::set-output name=build-step-status::failure"
           fi
-        id: check-build-status
       - name: Publishing KIRA2.0 binaries
+        id: publish-binaries
         run: |
           set -x
           make publish
@@ -112,11 +122,11 @@ jobs:
           cp -fv ./RELEASE.md ./bin/RELEASE.md
           cp -fv ./src.tar.gz ./bin/source-code.tar.gz
           tar -czvf kira2.0-bin-amd64.tar.gz -C ./bin .
-        id: publish-step # Add an id to reference this step's output
         env:
           PUBLISH_STEP_STATUS: "success"
-        continue-on-error: true # Ensure this step does not stop the job
+        continue-on-error: true 
       - name: Set Publish Step Status
+        id: set-publish-status
         run: |
           if [ ${{ job.status }} != 'success' ]
           then
@@ -132,96 +142,83 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         with:
           tag_name: ${{ env.RELEASE_VER }}
           release_name: Release ${{ env.RELEASE_VER }}
           draft: false
           prerelease: false     
 
-
-      - name: Download linux artifact for kira2
+      - name: Download artifact
+        id: download-artifacts
         uses: actions/download-artifact@v2
         with:
-          name: kira2-linux-amd64.deb
-          path: /bin
+          name: build-artifacts
+          path: ./bin
 
-      - name: Download linux artifact for kira2_launcher
-        uses: actions/download-artifact@v2
-        with:
-          name: kira2_launcher-linux-amd64.deb
-          path: /bin    
-
-      - name: Download darwin artifact kira2
-        uses: actions/download-artifact@v2
-        with:
-          name: kira2-darwin-amd64.deb
-          path: /bin
-
-      - name: Download darwin artifact kira2_launcher
-        uses: actions/download-artifact@v2
-        with:
-          name: kira2_laucher-darwin-amd64.deb
-          path: /bin
-
-      - name: Download windows artifact kira2
-        uses: actions/download-artifact@v2
-        with:
-          name: kira2-windows-amd64.exe
-          path: /bin
-
-      - name: Download windows artifact kira2_launcher
-        uses: actions/download-artifact@v2
-        with:
-          name: kira2_launcher-windows-amd64.exe
-          path: /bin
-
-      - name: Upload Linux Release Asset
-        id: upload-linux-release-asset 
+      - name: Upload Linux Release Asset KIRA2.0
+        id: upload-linux-release-asset-kira2 
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./kira2.0-bin-amd64-linux.tar.gz
-          asset_name: kira2.0-bin-amd64-linux.tar.gz
-          asset_content_type: application/gzip
-
-      - name: Upload Darwin Release Asset
-        id: upload-darwin-release-asset 
+          asset_path: ./bin/kira2-linux-amd64.deb
+          asset_name: kira2-linux-amd64.deb
+          asset_content_type: application/vnd.debian.binary-package
+      
+      - name: Upload Linux Release Asset KIRA2.0_LAUNCHER
+        id: upload-linux-release-asset-kira2-launcher 
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./kira2.0-bin-amd64-darwin.tar.gz
-          asset_name: kira2.0-bin-amd64-darwin.tar.gz
-          asset_content_type: application/gzip
+          asset_path: ./bin/kira2_launcher-linux-amd64.deb
+          asset_name: kira2_launcher-linux-amd64.deb
+          asset_content_type: application/vnd.debian.binary-package
 
-      - name: Upload Windows Release Asset
-        id: upload-windows-release-asset 
+      - name: Upload Darwin Release Asset KIRA2.0_LAUNCHER
+        id: upload-darwin-release-asset-kira2-launcher 
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./kira2.0-bin-amd64-windows.tar.gz
-          asset_name: kira2.0-bin-amd64-windows.tar.gz
+          asset_path: ./bin/kira2_launcher-darwin-amd64.deb
+          asset_name: kira2_launcher-darwin-amd64.deb
+          asset_content_type: application/vnd.apple.installer+xml
+
+      - name: Upload Windows Release Asset KIRA2.0_LAUNCHER
+        id: upload-windows-release-asset-kira2-launcher 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./bin/kira2-windows-amd64.exe
+          asset_name: kira2-windows-amd64.exe
           asset_content_type: application/gzip
   
   failure-handling:
     name: Handle Failures
     runs-on: ubuntu-latest
     needs: [build-amd64]
-    if: always()
+    if: failure()
     steps:
       - name: Check for failures
         run: |
-          if [ "${{ needs.build-amd64.outputs.build-step-status }}" == "failure" ] || [ "${{ needs.build-amd64.outputs.publish-step-status }}" == "failure" ]; then
-            echo "A failure occurred during the workflow execution."
-            echo "Build Step Status: ${{ needs.build-amd64.outputs.build-step-status }}"
-            echo "Publish Step Status: ${{ needs.build-amd64.outputs.publish-step-status }}"
-          fi
+          echo "Error: Build or tests failed in the following steps:"
+          echo ""
+
+          # Iterate over the IDs of the failed steps
+          for step_id in build-and-test upload-artifact-1 upload-artifact-2; do
+          step_name=$(echo "${{ steps[step_id].name }}")
+          step_status=$(echo "${{ job.status }}")
+          echo "Step Name: $step_name | Step Status: $step_status"
+          done
+          exit 1
+
 
 
   
