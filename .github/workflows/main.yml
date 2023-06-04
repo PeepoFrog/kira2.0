@@ -65,7 +65,19 @@ jobs:
           else
             echo "INFO: Variables setup succeeded"
           fi
-      
+      - name: Print debug data
+        id: prt-dbg-data
+        run: |
+          . /etc/profile
+          go version
+          echo "Bash Utils Version: $(bashUtilsVersion)"
+          echo "     Source branch: ${{ env.SOURCE_BRANCH }}"
+          echo "Destination branch: ${{ env.DESTINATION_BRANCH }}"
+          echo "    Release branch: ${{ env.RELEASE_BRANCH }}"
+          echo "        Event name: ${{ github.event_name }}"
+          echo "   Repository name: ${{ env.REPOSITORY_NAME }}"
+          echo "   Release version: ${{ env.RELEASE_VER }}"
+          echo "    Release exists: ${{ env.RELEASE_EXISTS }}"
       - name: Print job results
         run: |
           echo "Add safe.directory...                               ${{ steps.add-safe-dir.outcome }}"
@@ -73,3 +85,5 @@ jobs:
           echo "Extract branch name on push...                      ${{ steps.extract-branch-name-push.outcome }}"
           echo "Extract branch name on pull...                      ${{ steps.extract-branch-name-pull.outcome }}"
           echo "Organizing environment & archiving source code..    ${{ steps.org-env-src-code.outcome }}"
+          echo "Printing debug data...                              ${{ steps.prt-dbg-data.outcome }}"
+          
