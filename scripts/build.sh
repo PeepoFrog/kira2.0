@@ -20,7 +20,7 @@ OUTPUT="$3"
 [ -z "$OUTPUT" ] && OUTPUT="$LOCAL_OUT"
 
 CONSTANTS_FILE=./internal/types/constants.go
-VERSION=$(awk -F'Version = ' '/Version/{print $2}' $CONSTANTS_FILE | tr -d '[:space:]\"')
+VERSION=$(awk -F'KiraVersion = ' '/KiraVersion/{print $2}' $CONSTANTS_FILE | tr -d '[:space:]\"')
 
 if [[ -z "$VERSION" ]]; then
     echo "ERROR: Version was NOT found in constants '$CONSTANTS_FILE' !" >&2
