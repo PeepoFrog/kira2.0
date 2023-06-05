@@ -169,3 +169,43 @@ Global Flags:
 ### 24. validate-genesis
 
 ### 25. version
+Print the application binary version information
+Usage:
+```
+sekaid version [flags]
+```
+| Flags              | Description                                                                        | Work |
+|--------------------|------------------------------------------------------------------------------------|------|
+| --help             | help for version                                                                   | yes  |
+| --long             | Print long version information                                                     | yes  |
+| --output string    | Output format (text\|json) (default "text")                                        | ?no  |
+
+| Global flags         | Description                                                                            | Work |
+| -------------------- | -------------------------------------------------------------------------------------- | ---- |
+| --home string      | directory for config and data (default "/root/.sekaid")                                  | yes  |
+| --log_format       | The logging format (json\|plain) (default "plain")                                       | no   |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info")       | ?    |
+| --trace            | print out full stack trace on errors                                                     | ?    |
+```
+#sekaid version  --help
+Print the application binary version information
+
+Usage:
+  sekaid version [flags]
+
+Flags:
+  -h, --help            help for version
+      --long            Print long version information
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+#sekaid version
+v0.3.15.1
+```
