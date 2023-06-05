@@ -107,13 +107,13 @@ jobs:
           echo -e "\n\r\n\r\`\`\`" >> ./bin/RELEASE.md
           echo -e "        Release Versions: $RELEASE_VER" >> ./bin/RELEASE.md
           echo -e "       Release Date Time: $(date --rfc-2822)" >> ./bin/RELEASE.md
-          echo "                       kira2-darwin-amd64.deb: sha256:$(sha256sum ./bin/kira2-darwin-amd64.deb  | awk '{ print $1 }')" >> ./bin/RELEASE.md
-          echo "     kira2_launcher-darwin-amd64.deb: sha256:$(sha256sum ./bin/kira2_launcher-darwin-amd64.deb  | awk '{ print $1 }')" >> ./bin/RELEASE.md
-          echo "                        kira2-linux-amd64.deb: sha256:$(sha256sum ./bin/kira2-linux-amd64.deb   | awk '{ print $1 }')" >> ./bin/RELEASE.md
-          echo "       kira2_laucher-linux-amd64.deb: sha256:$(sha256sum ./bin/kira2_launcher-linux-amd64.deb   | awk '{ print $1 }')" >> ./bin/RELEASE.md
-          echo "                    kira2-windows-amd64.exe: sha256:$(sha256sum ./bin/kira2-windows-amd64.exe   | awk '{ print $1 }')" >> ./bin/RELEASE.md
-          echo "   kira2_laucher-windows-amd64.exe: sha256:$(sha256sum ./bin/kira2_launcher-windows-amd64.exe   | awk '{ print $1 }')" >> ./bin/RELEASE.md
-          echo "                                source-code.tar.gz: sha256:$(sha256sum ./bin/source-code.tar.gz | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "                kira2-linux-amd64.deb: sha256:$(sha256sum ./bin/kira2-linux-amd64.deb   | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "               kira2-darwin-amd64.deb: sha256:$(sha256sum ./bin/kira2-darwin-amd64.deb  | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "              kira2-windows-amd64.exe: sha256:$(sha256sum ./bin/kira2-windows-amd64.exe   | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "        kira2_laucher-linux-amd64.deb: sha256:$(sha256sum ./bin/kira2_launcher-linux-amd64.deb   | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "      kira2_launcher-darwin-amd64.deb: sha256:$(sha256sum ./bin/kira2_launcher-darwin-amd64.deb  | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "      kira2_laucher-windows-amd64.exe: sha256:$(sha256sum ./bin/kira2_launcher-windows-amd64.exe   | awk '{ print $1 }')" >> ./bin/RELEASE.md
+          echo "                   source-code.tar.gz: sha256:$(sha256sum ./bin/source-code.tar.gz | awk '{ print $1 }')" >> ./bin/RELEASE.md
           echo -e "\`\`\`"   >> ./bin/RELEASE.md
           tar -czvf deb.tar.gz -C ./bin .
       - name: Uploading artifacts
