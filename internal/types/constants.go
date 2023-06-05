@@ -1,5 +1,3 @@
 package types
 
-
-const KiraVersion = "v0.0.12"
-
+const KiraVersion = "v0.0.13"
