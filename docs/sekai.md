@@ -32,6 +32,9 @@
       * [14.1 account](#141-account)
       * [14.2 auth](#142-auth)
       * [14.3 bank](#143-bank)
+        * [14.3.1 balances](#1431-balances)
+        * [14.3.2 denom-metadata](#1432-denom-metadata)
+        * [14.3.3 total](#1433-total)
       * [14.4 basket](#144-basket)
       * [14.5 block](#145-block)
       * [14.6 collectives](#146-collectives)
@@ -1068,6 +1071,305 @@ Use "sekaid query [command] --help" for more information about a command.
 [Return to top](#sekai)
 
 #### 14.3 bank
+
+Querying commands for the bank module.
+
+Usage:
+```
+Usage:
+  sekaid query bank [flags]
+  sekaid query bank [command]
+```
+
+Available Commands:
+
+| Subcommand                               | Description                                      |
+| ---------------------------------------- | ------------------------------------------------ |
+| [`balances`](#1431-balances)             | Query for account balances by address            |
+| [`denom-metadata`](#1432-denom-metadata) | Query the client metadata for coin denominations |
+| [`total`](#1433-total)                   | Query the total supply of coins of the chain     |
+
+```
+/# sekaid query bank --help
+Querying commands for the bank module
+
+Usage:
+  sekaid query bank [flags]
+  sekaid query bank [command]
+
+Available Commands:
+  balances       Query for account balances by address
+  denom-metadata Query the client metadata for coin denominations
+  total          Query the total supply of coins of the chain
+
+Flags:
+  -h, --help   help for bank
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid query bank [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+##### 14.3.1 balances
+
+Query the total balance of an account or of a specific denomination.
+
+Usage:
+```
+sekaid query bank balances [address] [flags]
+```
+
+| Flags                 | Description                                                                                         | Work  |
+| --------------------- | --------------------------------------------------------------------------------------------------- | ----- |
+| `--count-total`       | count total number of records in all balances to query for                                          | ❌ ?   |
+| `--denom string`      | The specific balance denomination to query for                                                      | ❌ ?   |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)               | ❌ ?   |
+| `-h, --help`          | help for balances                                                                                   | ✅ yes |
+| `--limit uint`        | pagination limit of all balances to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`)    | ✅ yes |
+| `--offset uint`       | pagination offset of all balances to query for                                                      | ❌ ?   |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                     | ✅ yes |
+| `--page uint`         | pagination page of all balances to query for. This sets offset to a multiple of limit (default `1`) | ❌ ?   |
+| `--page-key string`   | pagination page-key of all balances to query for                                                    | ❌ ?   |
+| `--reverse`           | results are sorted in descending order                                                              | ❌ ?   |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ yes |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid query bank balances --help
+Query the total balance of an account or of a specific denomination.
+
+Example:
+  $ sekaid query bank balances [address]
+  $ sekaid query bank balances [address] --denom=[denom]
+
+Usage:
+  sekaid query bank balances [address] [flags]
+
+Flags:
+      --count-total       count total number of records in all balances to query for
+      --denom string      The specific balance denomination to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for balances
+      --limit uint        pagination limit of all balances to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of all balances to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of all balances to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of all balances to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query bank balances kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --output=json | jq
+{
+  "balances": [
+    {
+      "denom": "lol",
+      "amount": "899900"
+    },
+    {
+      "denom": "samolean",
+      "amount": "1999999999999999999999900100"
+    },
+    {
+      "denom": "test",
+      "amount": "29999779999900000"
+    },
+    {
+      "denom": "ukex",
+      "amount": "299998797027396"
+    }
+  ],
+  "pagination": {
+    "next_key": null,
+    "total": "0"
+  }
+}
+```
+
+[Return to top](#sekai)
+
+##### 14.3.2 denom-metadata
+
+Query the client metadata for all the registered coin denominations
+
+Usage:
+```
+sekaid query bank denom-metadata [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--denom string`      | The specific denomination to query client metadata for                                           | ❌ ?   |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ❌ ?   |
+| `-h, --help`          | help for denom-metadata                                                                          | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ yes |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid query bank denom-metadata --help
+Query the client metadata for all the registered coin denominations
+
+Example:
+  To query for the client metadata of all coin denominations use:
+  $ sekaid query bank denom-metadata
+
+To query for the client metadata of a specific coin denomination use:
+  $ sekaid query bank denom-metadata --denom=[denom]
+
+Usage:
+  sekaid query bank denom-metadata [flags]
+
+Flags:
+      --denom string    The specific denomination to query client metadata for
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for denom-metadata
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+#TODO show real usage \[currently there is no metadata\]
+
+🟨  
+🟨  
+🟨  
+
+[Return to top](#sekai)
+
+##### 14.3.3 total
+
+Query total supply of coins that are held by accounts in the chain.
+
+Usage:
+```
+sekaid query bank total [flags]
+```
+
+| Flags                 | Description                                                                                         | Work  |
+| --------------------- | --------------------------------------------------------------------------------------------------- | ----- |
+| `--count-total`       | count total number of records in all balances to query for                                          | ❌ ?   |
+| `--denom string`      | The specific balance denomination to query for                                                      | ❌ ?   |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)               | ❌ ?   |
+| `-h, --help`          | help for balances                                                                                   | ✅ yes |
+| `--limit uint`        | pagination limit of all balances to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`)    | ✅ yes |
+| `--offset uint`       | pagination offset of all balances to query for                                                      | ❌ ?   |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                     | ✅ yes |
+| `--page uint`         | pagination page of all balances to query for. This sets offset to a multiple of limit (default `1`) | ❌ ?   |
+| `--page-key string`   | pagination page-key of all balances to query for                                                    | ❌ ?   |
+| `--reverse`           | results are sorted in descending order                                                              | ❌ ?   |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ yes |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid query bank total --help
+Query total supply of coins that are held by accounts in the chain.
+
+Example:
+  $ sekaid query bank total
+
+To query for the total supply of a specific coin denomination use:
+  $ sekaid query bank total --denom=[denom]
+
+Usage:
+  sekaid query bank total [flags]
+
+Flags:
+      --count-total       count total number of records in all supply totals to query for
+      --denom string      The specific balance denomination to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for total
+      --limit uint        pagination limit of all supply totals to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of all supply totals to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of all supply totals to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of all supply totals to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query bank total --node tcp://10.1.0.2:26657 -o json | jq
+{
+  "supply": [
+    {
+      "denom": "lol",
+      "amount": "2000000"
+    },
+    {
+      "denom": "samolean",
+      "amount": "5000000000000000000000000000"
+    },
+    {
+      "denom": "test",
+      "amount": "29999990000000000"
+    },
+    {
+      "denom": "ukex",
+      "amount": "300790043210638"
+    }
+  ],
+  "pagination": {
+    "next_key": null,
+    "total": "0"
+  }
+}
+```
 
 [Return to top](#sekai)
 
