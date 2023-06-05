@@ -29,6 +29,29 @@
       * [12.9 show](#129-show)
     * [13. new-genesis-from-exported](#13-new-genesis-from-exported)
     * [14. query](#14-query)
+      * [14.1 account](#141-account)
+      * [14.2 auth](#142-auth)
+      * [14.3 bank](#143-bank)
+      * [14.4 basket](#144-basket)
+      * [14.5 block](#145-block)
+      * [14.6 collectives](#146-collectives)
+      * [14.7 custody](#147-custody)
+      * [14.8 customevidence](#148-customevidence)
+      * [14.9 customgov](#149-customgov)
+      * [14.10 customslashing](#1410-customslashing)
+      * [14.11 customstaking](#1411-customstaking)
+      * [14.12 distributor](#1412-distributor)
+      * [14.13 layer2](#1413-layer2)
+      * [14.14 multistaking](#1414-multistaking)
+      * [14.15 params](#1415-params)
+      * [14.16 recovery](#1416-recovery)
+      * [14.17 spending](#1417-spending)
+      * [14.18 tendermint-validator-set](#1418-tendermint-validator-set)
+      * [14.19 tokens](#1419-tokens)
+      * [14.20 tx](#1420-tx)
+      * [14.21 txs](#1421-txs)
+      * [14.22 ubi](#1422-ubi)
+      * [14.23 upgrade](#1423-upgrade)
     * [15. rollback](#15-rollback)
     * [16. rosetta](#16-rosetta)
     * [17. start](#17-start)
@@ -36,6 +59,30 @@
     * [19. tendermint](#19-tendermint)
     * [20. testnet](#20-testnet)
     * [21. tx](#21-tx)
+      * [21.1 bank](#211-bank)
+        * [21.1.1 send](#2111-send)
+      * [21.2 basket](#212-basket)
+      * [21.3 broadcast](#213-broadcast)
+      * [21.4 collectives](#214-collectives)
+      * [21.5 custody](#215-custody)
+      * [21.6 customevidence](#216-customevidence)
+      * [21.7 customgov](#217-customgov)
+      * [21.8 customslashing](#218-customslashing)
+      * [21.9 customstaking](#219-customstaking)
+      * [21.10 decode](#2110-decode)
+      * [21.11 distributor](#2111-distributor)
+      * [21.12 encode](#2112-encode)
+      * [21.13 layer2](#2113-layer2)
+      * [21.14 multisign](#2114-multisign)
+      * [21.15 multistaking](#2115-multistaking)
+      * [21.16 recovery](#2116-recovery)
+      * [21.17 sign](#2117-sign)
+      * [21.18 sign-batch](#2118-sign-batch)
+      * [21.19 spending](#2119-spending)
+      * [21.20 tokens](#2120-tokens)
+      * [21.21 ubi](#2121-ubi)
+      * [21.22 upgrade](#2122-upgrade)
+      * [21.23 validate-signatures](#2123-validate-signatures)
     * [22. val-address](#22-val-address)
     * [23. valcons-address](#23-valcons-address)
     * [24. validate-genesis](#24-validate-genesis)
@@ -925,11 +972,196 @@ kiravalcons1vmwdgw426aj9fx33fqusmtg6r65yyucmp0vjlc
 
 ### 14. query
 
+Querying subcommands
+
+Usage:
+```
+sekaid query [flags]
+sekaid query [command]
+```
+
+Available Commands:
+
+| Subcommand                                                   | Description                                                                                                      |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| [`account`](#151-account)                                    | Query for account by address                                                                                     |
+| [`auth`](#152-auth)                                          | Querying commands for the auth module                                                                            |
+| [`bank`](#153-bank)                                          | Querying commands for the bank module                                                                            |
+| [`basket`](#154-basket)                                      | query commands for the basket module                                                                             |
+| [`block`](#155-block)                                        | Get verified data for a the block at given height                                                                |
+| [`collectives`](#156-collectives)                            | query commands for the collectives module                                                                        |
+| [`custody`](#157-custody)                                    | query commands for the custody module                                                                            |
+| [`customevidence`](#158-customevidence)                      | Query for evidence by hash or for all (paginated) submitted evidence                                             |
+| [`customgov`](#159-customgov)                                | query commands for the customgov module                                                                          |
+| [`customslashing`](#1510-customslashing)                     | Querying commands for the slashing module                                                                        |
+| [`customstaking`](#1511-customstaking)                       | Querying commands for the staking module                                                                         |
+| [`distributor`](#1512-distributor)                           | query commands for the distributor module                                                                        |
+| [`layer2`](#1513-layer2)                                     | query commands for the layer2 module                                                                             |
+| [`multistaking`](#1514-multistaking)                         | Querying commands for the multistaking module                                                                    |
+| [`params`](#1515-params)                                     | Querying commands for the params module                                                                          |
+| [`recovery`](#1516-recovery)                                 | Querying commands for the recovery module                                                                        |
+| [`spending`](#1517-spending)                                 | query commands for the tokens module                                                                             |
+| [`tendermint-validator-set`](#1518-tendermint-validator-set) | Get the full tendermint validator set at given height                                                            |
+| [`tokens`](#1519-tokens)                                     | query commands for the tokens module                                                                             |
+| [`tx`](#1520-tx)                                             | Query for a transaction by hash, `"<addr>/<seq>"` combination or comma-separated signatures in a committed block |
+| [`txs`](#1521-txs)                                           | Query for paginated transactions that match a set of events                                                      |
+| [`ubi`](#1522-ubi)                                           | query commands for the ubi module                                                                                |
+| [`upgrade`](#1523-upgrade)                                   | Querying commands for the upgrade module                                                                         |
+
+```
+/# sekaid q --help
+Querying subcommands
+
+Usage:
+  sekaid query [flags]
+  sekaid query [command]
+
+Aliases:
+  query, q
+
+Available Commands:
+  account                  Query for account by address
+  auth                     Querying commands for the auth module
+  bank                     Querying commands for the bank module
+  basket                   query commands for the basket module
+  block                    Get verified data for a the block at given height
+  collectives              query commands for the collectives module
+  custody                  query commands for the custody module
+  customevidence           Query for evidence by hash or for all (paginated) submitted evidence
+  customgov                query commands for the customgov module
+  customslashing           Querying commands for the slashing module
+  customstaking            Querying commands for the staking module
+  distributor              query commands for the distributor module
+  layer2                   query commands for the layer2 module
+  multistaking             Querying commands for the multistaking module
+  params                   Querying commands for the params module
+  recovery                 Querying commands for the recovery module
+  spending                 query commands for the tokens module
+  tendermint-validator-set Get the full tendermint validator set at given height
+  tokens                   query commands for the tokens module
+  tx                       Query for a transaction by hash, "<addr>/<seq>" combination or comma-separated signatures in a committed block
+  txs                      Query for paginated transactions that match a set of events
+  ubi                      query commands for the ubi module
+  upgrade                  Querying commands for the upgrade module
+
+Flags:
+      --chain-id string   The network chain ID
+  -h, --help              help for query
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid query [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+#### 14.1 account
+
+[Return to top](#sekai)
+
+#### 14.2 auth
+
+[Return to top](#sekai)
+
+#### 14.3 bank
+
+[Return to top](#sekai)
+
+#### 14.4 basket
+
+[Return to top](#sekai)
+
+#### 14.5 block
+
+[Return to top](#sekai)
+
+#### 14.6 collectives
+
+[Return to top](#sekai)
+
+#### 14.7 custody
+
+[Return to top](#sekai)
+
+#### 14.8 customevidence
+
+[Return to top](#sekai)
+
+#### 14.9 customgov
+
+[Return to top](#sekai)
+
+#### 14.10 customslashing
+
+[Return to top](#sekai)
+
+#### 14.11 customstaking
+
+[Return to top](#sekai)
+
+#### 14.12 distributor
+
+[Return to top](#sekai)
+
+#### 14.13 layer2
+
+[Return to top](#sekai)
+
+#### 14.14 multistaking
+
+[Return to top](#sekai)
+
+#### 14.15 params
+
+[Return to top](#sekai)
+
+#### 14.16 recovery
+
+[Return to top](#sekai)
+
+#### 14.17 spending
+
+[Return to top](#sekai)
+
+#### 14.18 tendermint-validator-set
+
+[Return to top](#sekai)
+
+#### 14.19 tokens
+
+[Return to top](#sekai)
+
+#### 14.20 tx
+
+[Return to top](#sekai)
+
+#### 14.21 txs
+
+[Return to top](#sekai)
+
+#### 14.22 ubi
+
+[Return to top](#sekai)
+
+#### 14.23 upgrade
+
+[Return to top](#sekai)
+
 ### 15. rollback
+
+[Return to top](#sekai)
 
 ### 16. rosetta
 
+[Return to top](#sekai)
+
 ### 17. start
+
+[Return to top](#sekai)
 
 ### 18. status
 Query remote node for status
@@ -1019,6 +1251,8 @@ Global Flags:
 }
 ```
 
+[Return to top](#sekai)
+
 ### 19. tendermint
 
 [Return to top](#sekai)
@@ -1028,6 +1262,785 @@ Global Flags:
 [Return to top](#sekai)
 
 ### 21. tx
+
+Transactions subcommands
+
+Usage:
+```
+sekaid tx [flags]
+sekaid tx [command]
+```
+
+Available Commands:
+
+| Subcommand                                         | Description                                                     |
+| -------------------------------------------------- | --------------------------------------------------------------- |
+| [`bank`](#211-bank)                                | Bank transaction subcommands                                    |
+| [`basket`](#212-basket)                            | Tokens sub commands                                             |
+| [`broadcast`](#213-broadcast)                      | Broadcast transactions generated offline                        |
+| [`collectives`](#214-collectives)                  | Collectives sub commands                                        |
+| [`custody`](#215-custody)                          | Custody sub commands                                            |
+| [`customevidence`](#216-customevidence)            | Evidence transaction subcommands                                |
+| [`customgov`](#217-customgov)                      | Custom gov sub commands                                         |
+| [`customslashing`](#218-customslashing)            | Slashing transaction subcommands                                |
+| [`customstaking`](#219-customstaking)              | Staking module subcommands                                      |
+| [`decode`](#2110-decode)                           | Decode a binary encoded transaction string                      |
+| [`distributor`](#2111-distributor)                 | Distributor sub commands                                        |
+| [`encode`](#2112-encode)                           | Encode transactions generated offline                           |
+| [`layer2`](#2113-layer2)                           | Tokens sub commands                                             |
+| [`multisign`](#2114-multisign)                     | Generate multisig signatures for transactions generated offline |
+| [`multistaking`](#2115-multistaking)               | Multistaking sub commands                                       |
+| [`recovery`](#2116-recovery)                       | Recovery transaction subcommands                                |
+| [`sign`](#2117-sign)                               | Sign a transaction generated offline                            |
+| [`sign-batch`](#2118-sign-batch)                   | Sign transaction batch files                                    |
+| [`spending`](#2119-spending)                       | Tokens sub commands                                             |
+| [`tokens`](#2120-tokens)                           | Tokens sub commands                                             |
+| [`ubi`](#2121-ubi)                                 | UBI sub commands                                                |
+| [`upgrade`](#2122-upgrade)                         | Upgrade transaction subcommands                                 |
+| [`validate-signatures`](#2123-validate-signatures) | Validate transactions signatures                                |
+
+
+
+| Flags               | Description          | Work  |
+| ------------------- | -------------------- | ----- |
+| `--chain-id string` | The network chain ID | ✅ yes |
+| `-h, --help`        | Help for tx          | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work |
+| --------------------- | -------------------------------------------------------------------------------------- | ---- |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ❌ ?  |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?  |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?  |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?  |
+
+```
+/# sekaid tx --help
+Transactions subcommands
+
+Usage:
+  sekaid tx [flags]
+  sekaid tx [command]
+
+Available Commands:
+
+
+  bank                Bank transaction subcommands
+  basket              Tokens sub commands
+  broadcast           Broadcast transactions generated offline
+  collectives         Collectives sub commands
+  custody             custody sub commands
+  customevidence      Evidence transaction subcommands
+  customgov           Custom gov sub commands
+  customslashing      Slashing transaction subcommands
+  customstaking       staking module subcommands
+  decode              Decode a binary encoded transaction string
+  distributor         distributor sub commands
+  encode              Encode transactions generated offline
+  layer2              Tokens sub commands
+  multisign           Generate multisig signatures for transactions generated offline
+  multistaking        multistaking sub commands
+  recovery            Recovery transaction subcommands
+  sign                Sign a transaction generated offline
+  sign-batch          Sign transaction batch files
+  spending            Tokens sub commands
+  tokens              Tokens sub commands
+  ubi                 UBI sub commands
+  upgrade             Upgrade transaction subcommands
+  validate-signatures validate transactions signatures
+
+Flags:
+      --chain-id string   The network chain ID
+  -h, --help              help for tx
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid tx [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+#### 21.1 bank
+
+Bank transaction subcommands
+
+Usage:
+```
+sekaid tx bank [flags]
+sekaid tx bank [command]
+```
+
+Available Commands:
+| Subcommand           | Description                            |
+| -------------------- | -------------------------------------- |
+| [`send`](#2111-send) | Send funds from one account to another |
+
+
+
+| Flags        | Description   | Work  |
+| ------------ | ------------- | ----- |
+| `-h, --help` | Help for bank | ✅ yes |
+
+```
+/# sekaid tx bank --help
+Bank transaction subcommands
+
+Usage:
+  sekaid tx bank [flags]
+  sekaid tx bank [command]
+
+Available Commands:
+  send        Send funds from one account to another. Note, the'--from' flag is
+ignored as it is implied from [from_key_or_address].
+
+Flags:
+  -h, --help   help for bank
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid tx bank [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+##### 21.1.1 send
+
+Send funds from one account to another
+
+Usage:
+```
+sekaid tx bank send [from_key_or_address] [to_address] [amount] [flags]
+```
+
+| Flags                         | Description                                                                                                    | Work      |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------- | --------- |
+| `-a, --account-number uint`   | The account number of the signing account (**offline mode only**)                                              | ❌ ?       |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                        | ✅ yes     |
+| `--dry-run`                   | Ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                      | ❌ ?       |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                 | ❌ ?       |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                              | ✅ yes     |
+| `--from string`               | Name or address of private key with which to sign                                                              | ✅ ignored |
+| `--gas string`                | Gas limit to set per-transaction; set to `"auto"` to calculate sufficient gas automatically (default `200000`) | ❌ ?       |
+| `--gas-adjustment float`      | Adjustment factor to be multiplied against the estimate returned by the tx simulation ... (default `1`)        | ❌ ?       |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                | ❌ ?       |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)       | ✅ yes     |
+| `-h, --help`                  | Help for send                                                                                                  | ✅ yes     |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                            | ✅ yes     |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                          | ✅ yes     |
+| `--ledger`                    | Use a connected Ledger device                                                                                  | ❌ ?       |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)               | ✅ yes     |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                             | ❌ ?       |
+| `--offline`                   | Offline mode (does not allow any online functionality)                                                         | ❌ ?       |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                | ✅ yes     |
+| `-s, --sequence uint`         | The sequence number of the signing account (`offline` mode only)                                               | ❌ ?       |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                           | ✅ yes     |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                        | ❌ ?       |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                       | ✅ yes     |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx bank send --help
+Send funds from one account to another. Note, the'--from' flag is
+ignored as it is implied from [from_key_or_address].
+
+Usage:
+  sekaid tx bank send [from_key_or_address] [to_address] [amount] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for send
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+
+<details>
+  <summary>Check before</summary>
+  
+  validator1:
+  ```bash
+  sekaid keys show validator -a --home=/root/.sekai --keyring-backend=test
+  ```
+  `kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4`
+
+  ```bash
+  sekaid query bank balances kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --output=json | jq
+  ```
+  ```json
+  {
+    "balances": [
+      {
+        "denom": "lol",
+        "amount": "900000"
+      },
+      {
+        "denom": "samolean",
+        "amount": "1999999999999999999999900100"
+      },
+      {
+        "denom": "test",
+        "amount": "29999779999900000"
+      },
+      {
+        "denom": "ukex",
+        "amount": "299998797027495"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+
+  validator2:
+  ```bash
+  sekaid keys show validator -a --home=/root/.sekai --keyring-backend=test
+  ```
+  `kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt`
+
+  ```bash
+  sekaid query bank balances kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --output=json | jq
+  ```
+  ```json
+  {
+    "balances": [
+      {
+        "denom": "ukex",
+        "amount": "953621"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+</details>
+
+```
+/# sekaid tx bank send kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt 100lol --keyring-backend=test --home=/root/.sekai --chain-id=localnet-4 --fees 99ukex --output=json --yes | jq
+{
+  "height": "0",
+  "txhash": "CCD7FE3C3E1FB517BB0E0BB81BAE550032BF4A52416F82ABCE66DF470D316C6A",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check tx execution</summary>
+
+  ```bash
+  sekaid query tx CCD7FE3C3E1FB517BB0E0BB81BAE550032BF4A52416F82ABCE66DF470D316C6A --output=json | jq
+  ```
+
+  ```json
+  {
+    "height": "83663",
+    "txhash": "CCD7FE3C3E1FB517BB0E0BB81BAE550032BF4A52416F82ABCE66DF470D316C6A",
+    "codespace": "",
+    "code": 0,
+    "data": "0A1E0A1C2F636F736D6F732E62616E6B2E763162657461312E4D736753656E64",
+    "raw_log": "[{\"events\":[{\"type\":\"coin_received\",\"attributes\":[{\"key\":\"receiver\",\"value\":\"kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt\"},{\"key\":\"amount\",\"value\":\"100lol\"}]},{\"type\":\"coin_spent\",\"attributes\":[{\"key\":\"spender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"100lol\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/cosmos.bank.v1beta1.MsgSend\"},{\"key\":\"sender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"module\",\"value\":\"bank\"}]},{\"type\":\"transfer\",\"attributes\":[{\"key\":\"recipient\",\"value\":\"kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt\"},{\"key\":\"sender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"100lol\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "coin_received",
+            "attributes": [
+              {
+                "key": "receiver",
+                "value": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt"
+              },
+              {
+                "key": "amount",
+                "value": "100lol"
+              }
+            ]
+          },
+          {
+            "type": "coin_spent",
+            "attributes": [
+              {
+                "key": "spender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "100lol"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/cosmos.bank.v1beta1.MsgSend"
+              },
+              {
+                "key": "sender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "module",
+                "value": "bank"
+              }
+            ]
+          },
+          {
+            "type": "transfer",
+            "attributes": [
+              {
+                "key": "recipient",
+                "value": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt"
+              },
+              {
+                "key": "sender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "100lol"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/cosmos.bank.v1beta1.MsgSend",
+            "from_address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "to_address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+            "amount": [
+              {
+                "denom": "lol",
+                "amount": "100"
+              }
+            ]
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "83"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "99"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "WK8mHiZNoCwBE0joGrAq/nksi2/xOFTo7Hube03HqapBlm1fbItmR5kE0uzBjSGbm3GLFNJt1zS0O3QyJx1zpQ=="
+      ]
+    },
+    "timestamp": "2023-06-05T12:07:57Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC84Mw==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "V0s4bUhpWk5vQ3dCRTBqb0dyQXEvbmtzaTIveE9GVG83SHViZTAzSHFhcEJsbTFmYkl0bVI1a0UwdXpCalNHYm0zR0xGTkp0MXpTME8zUXlKeDF6cFE9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "OTl1a2V4",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2Nvc21vcy5iYW5rLnYxYmV0YTEuTXNnU2VuZA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwbG9s",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwbG9s",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwbG9s",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "bW9kdWxl",
+            "value": "YmFuaw==",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
+
+<details>
+  <summary>Check balances</summary>
+
+  ```bash
+  sekaid query bank balances kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --output=json | jq
+  ```
+
+  ```json
+  {
+    "balances": [
+      {
+        "denom": "lol",
+        "amount": "899900"
+      },
+      {
+        "denom": "samolean",
+        "amount": "1999999999999999999999900100"
+      },
+      {
+        "denom": "test",
+        "amount": "29999779999900000"
+      },
+      {
+        "denom": "ukex",
+        "amount": "299998797027396"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+
+  /# sekaid query bank balances kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --output=json | jq
+  {
+    "balances": [
+      {
+        "denom": "lol",
+        "amount": "100"
+      },
+      {
+        "denom": "ukex",
+        "amount": "953621"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+</details>
+
+[Return to top](#sekai)
+
+#### 21.2 basket
+
+[Return to top](#sekai)
+
+#### 21.3 broadcast
+
+[Return to top](#sekai)
+
+#### 21.4 collectives
+
+[Return to top](#sekai)
+
+#### 21.5 custody
+
+[Return to top](#sekai)
+
+#### 21.6 customevidence
+
+[Return to top](#sekai)
+
+#### 21.7 customgov
+
+[Return to top](#sekai)
+
+#### 21.8 customslashing
+
+[Return to top](#sekai)
+
+#### 21.9 customstaking
+
+[Return to top](#sekai)
+
+#### 21.10 decode
+
+[Return to top](#sekai)
+
+#### 21.11 distributor
+
+[Return to top](#sekai)
+
+#### 21.12 encode
+
+[Return to top](#sekai)
+
+#### 21.13 layer2
+
+[Return to top](#sekai)
+
+#### 21.14 multisign
+
+[Return to top](#sekai)
+
+#### 21.15 multistaking
+
+[Return to top](#sekai)
+
+#### 21.16 recovery
+
+[Return to top](#sekai)
+
+#### 21.17 sign
+
+[Return to top](#sekai)
+
+#### 21.18 sign-batch
+
+[Return to top](#sekai)
+
+#### 21.19 spending
+
+[Return to top](#sekai)
+
+#### 21.20 tokens
+
+[Return to top](#sekai)
+
+#### 21.21 ubi
+
+[Return to top](#sekai)
+
+#### 21.22 upgrade
+
+[Return to top](#sekai)
+
+#### 21.23 validate-signatures
 
 [Return to top](#sekai)
 
