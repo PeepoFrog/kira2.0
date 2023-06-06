@@ -155,23 +155,23 @@ Usage:
 ```
 sekaid add-genesis-account [address_or_key_name] [coin][,[coin]] [flags]
 ```
-| Flags                                    | Description                                                                                                                                    | Work |
-|------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| `--height int`                            | Use a specific height to query state at (this can error if the node is pruning state)                                                         |❌ ?no  |
-| `-h, --help`                          | help for add-genesis-account                                                                                                                      |✅ yes  |
-|` --keyring-backend string`              | Select keyring's backend (`os\|file\|kwallet\|pass\|test`) (default `"os"`)                                                                     |✅ yes  |
-| `--node string`                          | \<host>:\<port> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`)                                                 |❌?no   |
-|` -o, --output string`                  | Output format (`text\|json`) (default `"text`")                                                                                                  |❌ no   |
-| `--vesting-amount string`               | amount of coins for vesting accounts                                                                                                            |❌ ?    |
-| `--vesting-end-time int`                | schedule end time (unix epoch) for vesting accounts                                                                                             |❌ ?    |
-| `--vesting-start-time int`                | schedule start time (unix epoch) for vesting accounts                                                                                         |❌ ?    |
+| Flags                       | Description                                                                                    | Work  |
+| --------------------------- | ---------------------------------------------------------------------------------------------- | ----- |
+| `--height int`              | Use a specific height to query state at (this can error if the node is pruning state)          | ❌ ?no |
+| `-h, --help`                | help for add-genesis-account                                                                   | ✅ yes |
+| ` --keyring-backend string` | Select keyring's backend (`os\|file\|kwallet\|pass\|test`) (default `"os"`)                    | ✅ yes |
+| `--node string`             | \<host>:\<port> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ❌?no  |
+| ` -o, --output string`      | Output format (`text\|json`) (default `"text`")                                                | ❌ no  |
+| `--vesting-amount string`   | amount of coins for vesting accounts                                                           | ❌ ?   |
+| `--vesting-end-time int`    | schedule end time (unix epoch) for vesting accounts                                            | ❌ ?   |
+| `--vesting-start-time int`  | schedule start time (unix epoch) for vesting accounts                                          | ❌ ?   |
 
-| Global flags         | Description                                                                            | Work |
-| -------------------- | -------------------------------------------------------------------------------------- | ---- |
-| `--home string`           | directory for config and data (default `"/root/.sekaid"`)                         |✅ yes  |
-| `--log_format string`       | The logging format (`json\|plain`) (default `"plain"`)                          |❌?no   |
-| `--log_level string` | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) |❌?no   |
-| `--trace`            | Print out full stack trace on errors                                                   |❌?no   |
+| Global flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌?no  |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌?no  |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌?no  |
 ```
 
 # sekaid add-genesis-account --help
@@ -1133,6 +1133,8 @@ kiravalcons1vmwdgw426aj9fx33fqusmtg6r65yyucmp0vjlc
 [Return to top](#sekai)
 
 ### 13. new-genesis-from-exported
+
+[Return to top](#sekai)
 
 ### 14. query
 
