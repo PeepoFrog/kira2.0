@@ -2142,6 +2142,78 @@ Use "sekaid query customgov [command] --help" for more information about a comma
 
 ##### 14.9.8 data-registry
 
+Query data registry by key.
+
+Usage:
+```
+sekaid query customgov data-registry [flags] ❌ mistake! here we need the one positional argument
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--count-total`       | count total number of records in customgov to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for data-registry                                                                           | ✅ yes |
+| `--limit uint`        | pagination limit of customgov to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `--offset uint`       | pagination offset of customgov to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+| `--page uint`         | pagination page of customgov to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of customgov to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                           | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov data-registry --help
+Query data registry by key.
+
+Example:
+$ sekaid query gov data-registry [key]
+
+Usage:
+  sekaid query customgov data-registry [flags]
+
+Flags:
+      --count-total       count total number of records in customgov to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for data-registry
+      --limit uint        pagination limit of customgov to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of customgov to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of customgov to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of customgov to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query customgov data-registry icon -o json | jq
+{
+  "data": {
+    "hash": "891bd9d3b2ee0c6eed43a8129b096bebc7e5ae517d0b855b2116a3205211fe21",
+    "reference": "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+    "encoding": "picture",
+    "size": "1597"
+  }
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
