@@ -81,6 +81,18 @@
       * [21.5 custody](#215-custody)
       * [21.6 customevidence](#216-customevidence)
       * [21.7 customgov](#217-customgov)
+        * [21.7.1 cancel-identity-records-verify-request](#2171-cancel-identity-records-verify-request)
+        * [21.7.2 councilor](#2172-councilor)
+        * [21.7.3 delete-identity-records](#2173-delete-identity-records)
+        * [21.7.4 handle-identity-records-verify-request](#2174-handle-identity-records-verify-request)
+        * [21.7.5 permission](#2175-permission)
+        * [21.7.6 poll](#2176-poll)
+        * [21.7.7 proposal](#2177-proposal)
+        * [21.7.8 register-identity-records](#2178-register-identity-records)
+        * [21.7.9 request-identity-record-verify](#2179-request-identity-record-verify)
+        * [21.7.10 role](#21710-role)
+        * [21.7.11 set-execution-fee](#21711-set-execution-fee)
+        * [21.7.12 set-network-properties](#21712-set-network-properties)
       * [21.8 customslashing](#218-customslashing)
       * [21.9 customstaking](#219-customstaking)
       * [21.10 decode](#2110-decode)
@@ -3926,7 +3938,56 @@ tx_signed.json
 
 #### 21.7 customgov
 
+Custom gov sub commands.
+
+Usage:
+```
+sekaid tx customgov [flags]
+sekaid tx customgov [command]
+```
+
+Available Commands:
+
+| Subcommands                                                                              | Description                                                                |
+| ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [`cancel-identity-records-verify-request`](#2171-cancel-identity-records-verify-request) | Submit a transaction to cancel identity records verification request.      |
+| [`councilor`](#2172-councilor)                                                           | Councilor subcommands                                                      |
+| [`delete-identity-records`](#2173-delete-identity-records)                               | Submit a transaction to delete an identity records.                        |
+| [`handle-identity-records-verify-request`](#2174-handle-identity-records-verify-request) | Submit a transaction to approve or reject identity records verify request. |
+| [`permission`](#2175-permission)                                                         | Permission management subcommands                                          |
+| [`poll`](#2176-poll)                                                                     | Governance poll management subcommands                                     |
+| [`proposal`](#2177-proposal)                                                             | Governance proposals management subcommands                                |
+| [`register-identity-records`](#2178-register-identity-records)                           | Submit a transaction to create an identity record.                         |
+| [`request-identity-record-verify`](#2179-request-identity-record-verify)                 | Submit a transaction to request an identity verify record.                 |
+| [`role`](#21710-role)                                                                    | Role management subcommands                                                |
+| [`set-execution-fee`](#21711-set-execution-fee)                                          | Submit a transaction to set execution fee                                  |
+| [`set-network-properties`](#21712-set-network-properties)                                | Submit a transaction to set network properties                             |
+
 [Return to top](#sekai)
+
+##### 21.7.1 cancel-identity-records-verify-request
+
+##### 21.7.2 councilor
+
+##### 21.7.3 delete-identity-records
+
+##### 21.7.4 handle-identity-records-verify-request
+
+##### 21.7.5 permission
+
+##### 21.7.6 poll
+
+##### 21.7.7 proposal
+
+##### 21.7.8 register-identity-records
+
+##### 21.7.9 request-identity-record-verify
+
+##### 21.7.10 role
+
+##### 21.7.11 set-execution-fee
+
+##### 21.7.12 set-network-properties
 
 #### 21.8 customslashing
 
