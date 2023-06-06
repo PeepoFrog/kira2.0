@@ -4283,27 +4283,157 @@ Available Commands:
 
 ##### 21.7.1 cancel-identity-records-verify-request
 
+[Return to top](#sekai)
+
 ##### 21.7.2 councilor
+
+[Return to top](#sekai)
 
 ##### 21.7.3 delete-identity-records
 
+[Return to top](#sekai)
+
 ##### 21.7.4 handle-identity-records-verify-request
+
+[Return to top](#sekai)
 
 ##### 21.7.5 permission
 
+[Return to top](#sekai)
+
 ##### 21.7.6 poll
+
+[Return to top](#sekai)
 
 ##### 21.7.7 proposal
 
+Governance proposals management subcommands.
+
+Usage:
+```
+sekaid tx customgov proposal [flags]
+sekaid tx customgov proposal [command]
+```
+
+Available Commands:
+
+| Subcommands                               | Description                                             |
+| ----------------------------------------- | ------------------------------------------------------- |
+| [`account`]()                             | Account proposals management subcommands                |
+| [`proposal-jail-councilor`]()             | Create a proposal to jail councilors                    |
+| [`proposal-reset-whole-councilor-rank`]() | Create a proposal to reset whole councilor rank         |
+| [`role`]()                                | Role proposals management subcommands                   |
+| [`set-network-property`]()                | Create a proposal to set a value on a network property. |
+| [`set-poor-network-msgs`]()               | Create a proposal to set a value on a network property. |
+| [`set-proposal-durations-proposal`]()     | Create a proposal to set batch proposal durations.      |
+| [`upsert-data-registry`]()                | Create a proposal to upsert a key in the data registry  |
+| [`vote`]()                                | Vote a proposal.                                        |
+
+
+
+| Flags        | Description       | Work  |
+| ------------ | ----------------- | ----- |
+| `-h, --help` | help for proposal | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work |
+| --------------------- | -------------------------------------------------------------------------------------- | ---- |
+| `--chain-id string`   | The network chain ID                                                                   | ❌ ?  |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ❌ ?  |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?  |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?  |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?  |
+
+```
+sekaid tx customgov proposal --help
+Governance proposals management subcommands
+
+Usage:
+  sekaid tx customgov proposal [flags]
+  sekaid tx customgov proposal [command]
+
+Available Commands:
+  account                             Account proposals management subcommands
+  proposal-jail-councilor             Create a proposal to jail councilors
+  proposal-reset-whole-councilor-rank Create a proposal to reset whole councilor rank
+  role                                Role proposals management subcommands
+  set-network-property                Create a proposal to set a value on a network property.
+  set-poor-network-msgs               Create a proposal to set a value on a network property.
+  set-proposal-durations-proposal     Create a proposal to set batch proposal durations.
+  upsert-data-registry                Create a proposal to upsert a key in the data registry
+  vote                                Vote a proposal.
+
+Flags:
+  -h, --help   help for proposal
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid tx customgov proposal [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+###### 21.7.7.1 account
+
+[Return to top](#sekai)
+
+###### 21.7.7.2 proposal-jail-councilor
+
+[Return to top](#sekai)
+
+###### 21.7.7.3 proposal-reset-whole-councilor-rank
+
+[Return to top](#sekai)
+
+###### 21.7.7.4 role
+
+[Return to top](#sekai)
+
+###### 21.7.7.5 set-network-property
+
+[Return to top](#sekai)
+
+###### 21.7.7.6 set-poor-network-msgs
+
+[Return to top](#sekai)
+
+###### 21.7.7.7 set-proposal-durations-proposal
+
+[Return to top](#sekai)
+
+###### 21.7.7.8 upsert-data-registry
+
+[Return to top](#sekai)
+
+###### 21.7.7.9 vote
+
+[Return to top](#sekai)
+
 ##### 21.7.8 register-identity-records
+
+[Return to top](#sekai)
 
 ##### 21.7.9 request-identity-record-verify
 
+[Return to top](#sekai)
+
 ##### 21.7.10 role
+
+[Return to top](#sekai)
 
 ##### 21.7.11 set-execution-fee
 
+[Return to top](#sekai)
+
 ##### 21.7.12 set-network-properties
+
+[Return to top](#sekai)
 
 #### 21.8 customslashing
 
