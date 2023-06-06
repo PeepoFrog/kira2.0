@@ -2215,6 +2215,95 @@ sekaid q tokens all-aliases --output=json | jq
 
 ##### 14.19.4 all-rates
 
+Get all token rates.
+
+Usage:
+```
+sekaid query tokens all-rates [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for alias                                                                                   | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q tokens all-rates --help
+Get all token rates
+
+Usage:
+  sekaid query tokens all-rates [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for all-rates
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid q tokens all-rates --output=json | jq
+{
+  "data": [
+    {
+      "denom": "frozen",
+      "fee_rate": "0.100000000000000000",
+      "fee_payments": true,
+      "stake_cap": "0.000000000000000000",
+      "stake_min": "1",
+      "stake_token": false,
+      "invalidated": false
+    },
+    {
+      "denom": "ubtc",
+      "fee_rate": "10.000000000000000000",
+      "fee_payments": true,
+      "stake_cap": "0.250000000000000000",
+      "stake_min": "1",
+      "stake_token": true,
+      "invalidated": false
+    },
+    {
+      "denom": "ukex",
+      "fee_rate": "1.000000000000000000",
+      "fee_payments": true,
+      "stake_cap": "0.500000000000000000",
+      "stake_min": "1",
+      "stake_token": true,
+      "invalidated": false
+    },
+    {
+      "denom": "xeth",
+      "fee_rate": "0.100000000000000000",
+      "fee_payments": true,
+      "stake_cap": "0.100000000000000000",
+      "stake_min": "1",
+      "stake_token": false,
+      "invalidated": false
+    }
+  ]
+}
+```
+
 [Return to top](#sekai)
 
 ##### 14.19.5 rate
