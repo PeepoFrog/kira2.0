@@ -2353,6 +2353,451 @@ Global Flags:
 
 #### 21.3 broadcast
 
+Broadcast transactions created with the --generate-only flag and signed with the sign command.
+
+Usage:
+```
+sekaid tx broadcast [file_path] [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `--amino`                     | Generate Amino encoded JSON suitable for submiting to the txs REST endpoint                                                                                 | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ❌ ?   |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for broadcast                                                                                                                                          | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--multisig string`           | Address or key name of the multisig account on behalf of which the transaction shall be signed                                                              | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ❌ ?   |
+| `--output-document string`    | The document will be written to the given file instead of STDOUT                                                                                            | ❌ ?   |
+| `--overwrite`                 | Overwrite existing signatures with a new one. If disabled, new signature will be appended                                                                   | ❌ ?   |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--signature-only`            | Print only the signatures                                                                                                                                   | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ❌ ?   |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx broadcast --help
+Broadcast transactions created with the --generate-only
+flag and signed with the sign command. Read a transaction from [file_path] and
+broadcast it to a node. If you supply a dash (-) argument in place of an input
+filename, the command reads from standard input.
+
+$ <appd> tx broadcast ./mytxn.json
+
+Usage:
+  sekaid tx broadcast [file_path] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for broadcast
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+<details>
+  <summary>Pregenerate tx</summary>
+
+  Generate tx (Example of sending tokens via `bank` module):
+  ```
+  /# sekaid tx bank send kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt 100samolean --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --fees=99ukex --generate-only --output=json | jq > tx.json
+  ```
+
+  Sign tx:
+  ```
+  /# sekaid tx sign tx.json --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --output=json | jq >
+tx_signed.json
+  ```
+</details>
+
+```
+/# sekaid tx broadcast tx_signed.json  --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --output=json | jq
+{
+  "height": "0",
+  "txhash": "9AE59A7878EE853F6175B77BC83F6A132B243810308A1A17DF35641E703B29A9",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check tx execution</summary>
+
+  ```
+  /# sekaid q tx 9AE59A7878EE853F6175B77BC83F6A132B243810308A1A17DF35641E703B29A9 -o json | jq
+  ```
+
+  ```json
+  {
+    "height": "91894",
+    "txhash": "9AE59A7878EE853F6175B77BC83F6A132B243810308A1A17DF35641E703B29A9",
+    "codespace": "",
+    "code": 0,
+    "data": "0A1E0A1C2F636F736D6F732E62616E6B2E763162657461312E4D736753656E64",
+    "raw_log": "[{\"events\":[{\"type\":\"coin_received\",\"attributes\":[{\"key\":\"receiver\",\"value\":\"kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt\"},{\"key\":\"amount\",\"value\":\"100samolean\"}]},{\"type\":\"coin_spent\",\"attributes\":[{\"key\":\"spender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"100samolean\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/cosmos.bank.v1beta1.MsgSend\"},{\"key\":\"sender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"module\",\"value\":\"bank\"}]},{\"type\":\"transfer\",\"attributes\":[{\"key\":\"recipient\",\"value\":\"kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt\"},{\"key\":\"sender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"100samolean\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "coin_received",
+            "attributes": [
+              {
+                "key": "receiver",
+                "value": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt"
+              },
+              {
+                "key": "amount",
+                "value": "100samolean"
+              }
+            ]
+          },
+          {
+            "type": "coin_spent",
+            "attributes": [
+              {
+                "key": "spender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "100samolean"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/cosmos.bank.v1beta1.MsgSend"
+              },
+              {
+                "key": "sender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "module",
+                "value": "bank"
+              }
+            ]
+          },
+          {
+            "type": "transfer",
+            "attributes": [
+              {
+                "key": "recipient",
+                "value": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt"
+              },
+              {
+                "key": "sender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "100samolean"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/cosmos.bank.v1beta1.MsgSend",
+            "from_address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "to_address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+            "amount": [
+              {
+                "denom": "samolean",
+                "amount": "100"
+              }
+            ]
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "84"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "99"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "OukW9MMdqzxI2LUymHKu9DXz1A6B6+RxEZBSn55vw5QSnC7DHi+ryIm2tDcwMPRm84t2uDh55DGyniNyyHoSrg=="
+      ]
+    },
+    "timestamp": "2023-06-06T11:42:47Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC84NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "T3VrVzlNTWRxenhJMkxVeW1IS3U5RFh6MUE2QjYrUnhFWkJTbjU1dnc1UVNuQzdESGkrcnlJbTJ0RGN3TVBSbTg0dDJ1RGg1NURHeW5pTnl5SG9Tcmc9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "OTl1a2V4",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2Nvc21vcy5iYW5rLnYxYmV0YTEuTXNnU2VuZA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwc2Ftb2xlYW4=",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwc2Ftb2xlYW4=",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwc2Ftb2xlYW4=",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "bW9kdWxl",
+            "value": "YmFuaw==",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
+
 [Return to top](#sekai)
 
 #### 21.4 collectives
@@ -2623,42 +3068,47 @@ Global Flags:
   <summary>Pregenerate tx</summary>
 
   ```
-  /# sekaid tx bank send kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt 100ukex --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --generate-only --output=json | jq > tx.json
+  /# sekaid tx bank send kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt 100samolean --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --fees=99ukex --generate-only --output=json | jq > tx.json
   ```
 
   tx.json:
   ```json
   {
-  "body": {
-    "messages": [
-      {
-        "@type": "/cosmos.bank.v1beta1.MsgSend",
-        "from_address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
-        "to_address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+    "body": {
+      "messages": [
+        {
+          "@type": "/cosmos.bank.v1beta1.MsgSend",
+          "from_address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+          "to_address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+          "amount": [
+            {
+              "denom": "samolean",
+              "amount": "100"
+            }
+          ]
+        }
+      ],
+      "memo": "",
+      "timeout_height": "0",
+      "extension_options": [],
+      "non_critical_extension_options": []
+    },
+    "auth_info": {
+      "signer_infos": [],
+      "fee": {
         "amount": [
           {
-            "denom": "samolean",
-            "amount": "100"
+            "denom": "ukex",
+            "amount": "99"
           }
-        ]
+        ],
+        "gas_limit": "200000",
+        "payer": "",
+        "granter": ""
       }
-    ],
-    "memo": "",
-    "timeout_height": "0",
-    "extension_options": [],
-    "non_critical_extension_options": []
-  },
-  "auth_info": {
-    "signer_infos": [],
-    "fee": {
-      "amount": [],
-      "gas_limit": "200000",
-      "payer": "",
-      "granter": ""
-    }
-  },
-  "signatures": []
-}
+    },
+    "signatures": []
+  }
   ```
 
   __Important to use the `--generate-only` flag__
@@ -2702,14 +3152,19 @@ Global Flags:
       }
     ],
     "fee": {
-      "amount": [],
+      "amount": [
+        {
+          "denom": "ukex",
+          "amount": "99"
+        }
+      ],
       "gas_limit": "200000",
       "payer": "",
       "granter": ""
     }
   },
   "signatures": [
-    "yqZAxLBrN+vsF3oWozOCItihdziTv1iZkt5aOhS2krZpE2Wk8SaXRMpPaoeBRDiSYd7Nd26u0Zc9uQMYvk1e3g=="
+    "OukW9MMdqzxI2LUymHKu9DXz1A6B6+RxEZBSn55vw5QSnC7DHi+ryIm2tDcwMPRm84t2uDh55DGyniNyyHoSrg=="
   ]
 }
 ```
