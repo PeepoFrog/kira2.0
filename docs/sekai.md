@@ -2409,6 +2409,200 @@ Global Flags:
 
 #### 21.17 sign
 
+Sign a transaction created with the '--generate-only' flag.
+
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `--amino`                     | Generate Amino encoded JSON suitable for submiting to the txs REST endpoint                                                                                 | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ❌ ?   |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for sign-batch                                                                                                                                         | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--multisig string`           | Address or key name of the multisig account on behalf of which the transaction shall be signed                                                              | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ❌ ?   |
+| `--output-document string`    | The document will be written to the given file instead of STDOUT                                                                                            | ❌ ?   |
+| `--overwrite`                 | Overwrite existing signatures with a new one. If disabled, new signature will be appended                                                                   | ❌ ?   |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--signature-only`            | Print only the signatures                                                                                                                                   | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ❌ ?   |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx sign tx --help
+Sign a transaction created with the --generate-only flag.
+It will read a transaction from [file], sign it, and print its JSON encoding.
+
+If the --signature-only flag is set, it will output the signature parts only.
+
+The --offline flag makes sure that the client will not reach out to full node.
+As a result, the account and sequence number queries will not be performed and
+it is required to set such parameters manually. Note, invalid values will cause
+the transaction to fail.
+
+The --multisig=<multisig_key> flag generates a signature on behalf of a multisig account
+key. It implies --signature-only. Full multisig signed transactions may eventually
+be generated via the 'multisign' command.
+
+Usage:
+  sekaid tx sign [file] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+      --amino                    Generate Amino encoded JSON suitable for submiting to the txs REST endpoint
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for sign
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --multisig string          Address or key name of the multisig account on behalf of which the transaction shall be signed
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+      --output-document string   The document will be written to the given file instead of STDOUT
+      --overwrite                Overwrite existing signatures with a new one. If disabled, new signature will be appended
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --signature-only           Print only the signatures
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+<details>
+  <summary>Pregenerate tx</summary>
+
+  ```
+  /# sekaid tx bank send kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt 100ukex --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --generate-only --output=json | jq > tx.json
+  ```
+
+  tx.json:
+  ```json
+  {
+  "body": {
+    "messages": [
+      {
+        "@type": "/cosmos.bank.v1beta1.MsgSend",
+        "from_address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "to_address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+        "amount": [
+          {
+            "denom": "samolean",
+            "amount": "100"
+          }
+        ]
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": []
+}
+  ```
+
+  __Important to use the `--generate-only` flag__
+</details>
+
+```
+/# sekaid tx sign tx.json --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --output=json | jq
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/cosmos.bank.v1beta1.MsgSend",
+        "from_address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "to_address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+        "amount": [
+          {
+            "denom": "samolean",
+            "amount": "100"
+          }
+        ]
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [
+      {
+        "public_key": {
+          "@type": "/cosmos.crypto.secp256k1.PubKey",
+          "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+        },
+        "mode_info": {
+          "single": {
+            "mode": "SIGN_MODE_DIRECT"
+          }
+        },
+        "sequence": "84"
+      }
+    ],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": [
+    "yqZAxLBrN+vsF3oWozOCItihdziTv1iZkt5aOhS2krZpE2Wk8SaXRMpPaoeBRDiSYd7Nd26u0Zc9uQMYvk1e3g=="
+  ]
+}
+```
+
 [Return to top](#sekai)
 
 #### 21.18 sign-batch
