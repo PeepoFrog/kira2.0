@@ -31,6 +31,10 @@
     * [14. query](#14-query)
       * [14.1 account](#141-account)
       * [14.2 auth](#142-auth)
+        * [14.2.1 account](#1421-account)
+        * [14.2.2 accounts](#1422-accounts)
+        * [14.2.3 module-account](#1423-module-account)
+        * [14.2.4 params](#1424-params)
       * [14.3 bank](#143-bank)
         * [14.3.1 balances](#1431-balances)
         * [14.3.2 denom-metadata](#1432-denom-metadata)
@@ -1067,6 +1071,150 @@ Use "sekaid query [command] --help" for more information about a command.
 [Return to top](#sekai)
 
 #### 14.2 auth
+
+Querying commands for the auth module
+
+Usage:
+```
+  sekaid query auth [flags]
+  sekaid query auth [command]
+```
+
+Available Commands:
+
+| Subcommand                               | Description                              |
+| ---------------------------------------- | ---------------------------------------- |
+| [`account`](#1421-account)               | Query for account by address             |
+| [`accounts`](#1422-accounts)             | Query all the accounts                   |
+| [`module-account`](#1423-module-account) | Query module account info by module name |
+| [`params`](#1424-params)                 | Query the current auth parameters        |
+
+
+
+| Flags        | Description   | Work |
+| ------------ | ------------- | ---- |
+| `-h, --help` | help for auth |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid query auth account --help
+Query for account by address
+
+Usage:
+  sekaid query auth account [address] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for account
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+[Return to top](#sekai)
+
+##### 14.2.1 account
+
+Query for account by address.
+
+Usage:
+```
+sekaid query auth account [address] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for account                                                                                 | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query auth account --help
+Query for account by address
+
+Usage:
+  sekaid query auth account [address] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for account
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query auth account kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --output=json | jq
+{
+  "@type": "/cosmos.auth.v1beta1.BaseAccount",
+  "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+  "pub_key": {
+    "@type": "/cosmos.crypto.secp256k1.PubKey",
+    "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+  },
+  "account_number": "0",
+  "sequence": "85"
+}
+```
+
+On specific `--height` condition:
+```
+/# sekaid query auth account kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --height 40980 --output=json | jq
+{
+  "@type": "/cosmos.auth.v1beta1.BaseAccount",
+  "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+  "pub_key": {
+    "@type": "/cosmos.crypto.secp256k1.PubKey",
+    "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+  },
+  "account_number": "0",
+  "sequence": "70"
+}
+```
+
+[Return to top](#sekai)
+
+##### 14.2.2 accounts
+
+[Return to top](#sekai)
+
+##### 14.2.3 module-account
+
+[Return to top](#sekai)
+
+##### 14.2.4 params
 
 [Return to top](#sekai)
 
