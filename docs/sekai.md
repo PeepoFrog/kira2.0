@@ -1,6 +1,6 @@
 # Sekai
 `ver.: v0.3.16`
-               
+
 * [Sekai](#sekai)
   * [Context](#context)
     * [1. add-genesis-account](#1-add-genesis-account)
@@ -228,18 +228,18 @@ Usage:
 ```
 sekaid config <key> [value] [flags]
 ```
-| Flags              | Description                                                                        | Work |
-|--------------------|------------------------------------------------------------------------------------|------|
-| --help             | help for version                                                                   | ✅yes  |
+| Flags  | Description      | Work |
+| ------ | ---------------- | ---- |
+| --help | help for version | ✅yes |
 
 
 
-| Global Flags       |                                                                                    |      |
-|--------------------|------------------------------------------------------------------------------------|------|
-| --home string      | directory for config and data (default "/root/.sekaid")                            | ❌no   |
-| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌no   |
-| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌?    |
-| --trace            | print out full stack trace on errors                                               | ❌?    |
+| Global Flags       |                                                                                    |     |
+| ------------------ | ---------------------------------------------------------------------------------- | --- |
+| --home string      | directory for config and data (default "/root/.sekaid")                            | ❌no |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌no |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌?  |
+| --trace            | print out full stack trace on errors                                               | ❌?  |
 ```
 #sekaid config --help
 Create or query an application CLI configuration file
@@ -2546,7 +2546,7 @@ sekaid query tokens alias <symbol> [flags]
 | `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
 
 ```
-# sekaid q tokens alias --help
+sekaid q tokens alias --help
 Get the token alias by symbol
 
 Usage:
