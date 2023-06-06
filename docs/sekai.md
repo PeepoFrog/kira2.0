@@ -1,6 +1,6 @@
 # Sekai
 `ver.: v0.3.16`
-               
+
 * [Sekai](#sekai)
   * [Context](#context)
     * [1. add-genesis-account](#1-add-genesis-account)
@@ -45,6 +45,39 @@
       * [14.7 custody](#147-custody)
       * [14.8 customevidence](#148-customevidence)
       * [14.9 customgov](#149-customgov)
+        * [14.9.1 all-execution-fees](#1491-all-execution-fees)
+        * [14.9.2 all-identity-record-verify-requests](#1492-all-identity-record-verify-requests)
+        * [14.9.3 all-proposal-durations](#1493-all-proposal-durations)
+        * [14.9.4 all-roles](#1494-all-roles)
+        * [14.9.5 blacklisted-permission-addresses](#1495-blacklisted-permission-addresses)
+        * [14.9.6 council-registry](#1496-council-registry)
+        * [14.9.7 councilors](#1497-councilors)
+        * [14.9.8 data-registry](#1498-data-registry)
+        * [14.9.9 data-registry-keys](#1499-data-registry-keys)
+        * [14.9.10 execution-fee](#14910-execution-fee)
+        * [14.9.11 identity-record](#14911-identity-record)
+        * [14.9.12 identity-record-verify-request](#14912-identity-record-verify-request)
+        * [14.9.13 identity-record-verify-requests-by-approver](#14913-identity-record-verify-requests-by-approver)
+        * [14.9.14 identity-record-verify-requests-by-requester](#14914-identity-record-verify-requests-by-requester)
+        * [14.9.15 identity-records](#14915-identity-records)
+        * [14.9.16 identity-records-by-addr](#14916-identity-records-by-addr)
+        * [14.9.17 network-properties](#14917-network-properties)
+        * [14.9.18 non-councilors](#14918-non-councilors)
+        * [14.9.19 permissions](#14919-permissions)
+        * [14.9.20 poll-votes](#14920-poll-votes)
+        * [14.9.21 polls](#14921-polls)
+        * [14.9.22 poor-network-messages](#14922-poor-network-messages)
+        * [14.9.23 proposal](#14923-proposal)
+        * [14.9.24 proposal-duration](#14924-proposal-duration)
+        * [14.9.25 proposals](#14925-proposals)
+        * [14.9.26 proposer\_voters\_count](#14926-proposer_voters_count)
+        * [14.9.27 role](#14927-role)
+        * [14.9.28 roles](#14928-roles)
+        * [14.9.29 vote](#14929-vote)
+        * [14.9.30 voters](#14930-voters)
+        * [14.9.31 votes](#14931-votes)
+        * [14.9.32 whitelisted-permission-addresses](#14932-whitelisted-permission-addresses)
+        * [14.9.33 whitelisted-role-addresses](#14933-whitelisted-role-addresses)
       * [14.10 customslashing](#1410-customslashing)
       * [14.11 customstaking](#1411-customstaking)
       * [14.12 distributor](#1412-distributor)
@@ -81,6 +114,27 @@
       * [21.5 custody](#215-custody)
       * [21.6 customevidence](#216-customevidence)
       * [21.7 customgov](#217-customgov)
+        * [21.7.1 cancel-identity-records-verify-request](#2171-cancel-identity-records-verify-request)
+        * [21.7.2 councilor](#2172-councilor)
+        * [21.7.3 delete-identity-records](#2173-delete-identity-records)
+        * [21.7.4 handle-identity-records-verify-request](#2174-handle-identity-records-verify-request)
+        * [21.7.5 permission](#2175-permission)
+        * [21.7.6 poll](#2176-poll)
+        * [21.7.7 proposal](#2177-proposal)
+          * [21.7.7.1 account](#21771-account)
+          * [21.7.7.2 proposal-jail-councilor](#21772-proposal-jail-councilor)
+          * [21.7.7.3 proposal-reset-whole-councilor-rank](#21773-proposal-reset-whole-councilor-rank)
+          * [21.7.7.4 role](#21774-role)
+          * [21.7.7.5 set-network-property](#21775-set-network-property)
+          * [21.7.7.6 set-poor-network-msgs](#21776-set-poor-network-msgs)
+          * [21.7.7.7 set-proposal-durations-proposal](#21777-set-proposal-durations-proposal)
+          * [21.7.7.8 upsert-data-registry](#21778-upsert-data-registry)
+          * [21.7.7.9 vote](#21779-vote)
+        * [21.7.8 register-identity-records](#2178-register-identity-records)
+        * [21.7.9 request-identity-record-verify](#2179-request-identity-record-verify)
+        * [21.7.10 role](#21710-role)
+        * [21.7.11 set-execution-fee](#21711-set-execution-fee)
+        * [21.7.12 set-network-properties](#21712-set-network-properties)
       * [21.8 customslashing](#218-customslashing)
       * [21.9 customstaking](#219-customstaking)
       * [21.10 decode](#2110-decode)
@@ -110,23 +164,23 @@ Usage:
 ```
 sekaid add-genesis-account [address_or_key_name] [coin][,[coin]] [flags]
 ```
-| Flags                                    | Description                                                                                                                                    | Work |
-|------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| `--height int`                            | Use a specific height to query state at (this can error if the node is pruning state)                                                         |❌ ?no  |
-| `-h, --help`                          | help for add-genesis-account                                                                                                                      |✅ yes  |
-|` --keyring-backend string`              | Select keyring's backend (`os\|file\|kwallet\|pass\|test`) (default `"os"`)                                                                     |✅ yes  |
-| `--node string`                          | \<host>:\<port> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`)                                                 |❌?no   |
-|` -o, --output string`                  | Output format (`text\|json`) (default `"text`")                                                                                                  |❌ no   |
-| `--vesting-amount string`               | amount of coins for vesting accounts                                                                                                            |❌ ?    |
-| `--vesting-end-time int`                | schedule end time (unix epoch) for vesting accounts                                                                                             |❌ ?    |
-| `--vesting-start-time int`                | schedule start time (unix epoch) for vesting accounts                                                                                         |❌ ?    |
+| Flags                       | Description                                                                                    | Work  |
+| --------------------------- | ---------------------------------------------------------------------------------------------- | ----- |
+| `--height int`              | Use a specific height to query state at (this can error if the node is pruning state)          | ❌ ?no |
+| `-h, --help`                | help for add-genesis-account                                                                   | ✅ yes |
+| ` --keyring-backend string` | Select keyring's backend (`os\|file\|kwallet\|pass\|test`) (default `"os"`)                    | ✅ yes |
+| `--node string`             | \<host>:\<port> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ❌?no  |
+| ` -o, --output string`      | Output format (`text\|json`) (default `"text`")                                                | ❌ no  |
+| `--vesting-amount string`   | amount of coins for vesting accounts                                                           | ❌ ?   |
+| `--vesting-end-time int`    | schedule end time (unix epoch) for vesting accounts                                            | ❌ ?   |
+| `--vesting-start-time int`  | schedule start time (unix epoch) for vesting accounts                                          | ❌ ?   |
 
-| Global flags         | Description                                                                            | Work |
-| -------------------- | -------------------------------------------------------------------------------------- | ---- |
-| `--home string`           | directory for config and data (default `"/root/.sekaid"`)                         |✅ yes  |
-| `--log_format string`       | The logging format (`json\|plain`) (default `"plain"`)                          |❌?no   |
-| `--log_level string` | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) |❌?no   |
-| `--trace`            | Print out full stack trace on errors                                                   |❌?no   |
+| Global flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌?no  |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌?no  |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌?no  |
 ```
 
 # sekaid add-genesis-account --help
@@ -174,18 +228,18 @@ Usage:
 ```
 sekaid config <key> [value] [flags]
 ```
-| Flags              | Description                                                                        | Work |
-|--------------------|------------------------------------------------------------------------------------|------|
-| --help             | help for version                                                                   | ✅yes  |
+| Flags  | Description      | Work |
+| ------ | ---------------- | ---- |
+| --help | help for version | ✅yes |
 
 
 
-| Global Flags       |                                                                                    |      |
-|--------------------|------------------------------------------------------------------------------------|------|
-| --home string      | directory for config and data (default "/root/.sekaid")                            | ❌no   |
-| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌no   |
-| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌?    |
-| --trace            | print out full stack trace on errors                                               | ❌?    |
+| Global Flags       |                                                                                    |     |
+| ------------------ | ---------------------------------------------------------------------------------- | --- |
+| --home string      | directory for config and data (default "/root/.sekaid")                            | ❌no |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌no |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌?  |
+| --trace            | print out full stack trace on errors                                               | ❌?  |
 ```
 #sekaid config --help
 Create or query an application CLI configuration file
@@ -1089,6 +1143,8 @@ kiravalcons1vmwdgw426aj9fx33fqusmtg6r65yyucmp0vjlc
 
 ### 13. new-genesis-from-exported
 
+[Return to top](#sekai)
+
 ### 14. query
 
 Querying subcommands
@@ -1103,29 +1159,29 @@ Available Commands:
 
 | Subcommand                                                   | Description                                                                                                      |
 | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| [`account`](#151-account)                                    | Query for account by address                                                                                     |
-| [`auth`](#152-auth)                                          | Querying commands for the auth module                                                                            |
-| [`bank`](#153-bank)                                          | Querying commands for the bank module                                                                            |
-| [`basket`](#154-basket)                                      | query commands for the basket module                                                                             |
-| [`block`](#155-block)                                        | Get verified data for a the block at given height                                                                |
-| [`collectives`](#156-collectives)                            | query commands for the collectives module                                                                        |
-| [`custody`](#157-custody)                                    | query commands for the custody module                                                                            |
-| [`customevidence`](#158-customevidence)                      | Query for evidence by hash or for all (paginated) submitted evidence                                             |
-| [`customgov`](#159-customgov)                                | query commands for the customgov module                                                                          |
-| [`customslashing`](#1510-customslashing)                     | Querying commands for the slashing module                                                                        |
-| [`customstaking`](#1511-customstaking)                       | Querying commands for the staking module                                                                         |
-| [`distributor`](#1512-distributor)                           | query commands for the distributor module                                                                        |
-| [`layer2`](#1513-layer2)                                     | query commands for the layer2 module                                                                             |
-| [`multistaking`](#1514-multistaking)                         | Querying commands for the multistaking module                                                                    |
-| [`params`](#1515-params)                                     | Querying commands for the params module                                                                          |
-| [`recovery`](#1516-recovery)                                 | Querying commands for the recovery module                                                                        |
-| [`spending`](#1517-spending)                                 | query commands for the tokens module                                                                             |
-| [`tendermint-validator-set`](#1518-tendermint-validator-set) | Get the full tendermint validator set at given height                                                            |
-| [`tokens`](#1519-tokens)                                     | query commands for the tokens module                                                                             |
-| [`tx`](#1520-tx)                                             | Query for a transaction by hash, `"<addr>/<seq>"` combination or comma-separated signatures in a committed block |
-| [`txs`](#1521-txs)                                           | Query for paginated transactions that match a set of events                                                      |
-| [`ubi`](#1522-ubi)                                           | query commands for the ubi module                                                                                |
-| [`upgrade`](#1523-upgrade)                                   | Querying commands for the upgrade module                                                                         |
+| [`account`](#141-account)                                    | Query for account by address                                                                                     |
+| [`auth`](#142-auth)                                          | Querying commands for the auth module                                                                            |
+| [`bank`](#143-bank)                                          | Querying commands for the bank module                                                                            |
+| [`basket`](#144-basket)                                      | query commands for the basket module                                                                             |
+| [`block`](#145-block)                                        | Get verified data for a the block at given height                                                                |
+| [`collectives`](#146-collectives)                            | query commands for the collectives module                                                                        |
+| [`custody`](#147-custody)                                    | query commands for the custody module                                                                            |
+| [`customevidence`](#148-customevidence)                      | Query for evidence by hash or for all (paginated) submitted evidence                                             |
+| [`customgov`](#149-customgov)                                | query commands for the customgov module                                                                          |
+| [`customslashing`](#1410-customslashing)                     | Querying commands for the slashing module                                                                        |
+| [`customstaking`](#1411-customstaking)                       | Querying commands for the staking module                                                                         |
+| [`distributor`](#1412-distributor)                           | query commands for the distributor module                                                                        |
+| [`layer2`](#1413-layer2)                                     | query commands for the layer2 module                                                                             |
+| [`multistaking`](#1414-multistaking)                         | Querying commands for the multistaking module                                                                    |
+| [`params`](#1415-params)                                     | Querying commands for the params module                                                                          |
+| [`recovery`](#1416-recovery)                                 | Querying commands for the recovery module                                                                        |
+| [`spending`](#1417-spending)                                 | query commands for the tokens module                                                                             |
+| [`tendermint-validator-set`](#1418-tendermint-validator-set) | Get the full tendermint validator set at given height                                                            |
+| [`tokens`](#1419-tokens)                                     | query commands for the tokens module                                                                             |
+| [`tx`](#1420-tx)                                             | Query for a transaction by hash, `"<addr>/<seq>"` combination or comma-separated signatures in a committed block |
+| [`txs`](#1421-txs)                                           | Query for paginated transactions that match a set of events                                                      |
+| [`ubi`](#1422-ubi)                                           | query commands for the ubi module                                                                                |
+| [`upgrade`](#1423-upgrade)                                   | Querying commands for the upgrade module                                                                         |
 
 ```
 /# sekaid q --help
@@ -1931,6 +1987,432 @@ Global Flags:
 
 #### 14.9 customgov
 
+query commands for the customgov module.
+
+Usage:
+```
+sekaid query customgov [command]
+```
+
+Available Commands:
+
+| Subcommand                                                                                            | Description                                                                                       |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [`all-execution-fees`](#1491-all-execution-fees)                                                      | Query all execution fees                                                                          |
+| [`all-identity-record-verify-requests`](#1492-all-identity-record-verify-requests)                    | Query all identity records verify requests                                                        |
+| [`all-proposal-durations`](#1493-all-proposal-durations)                                              | Query all proposal durations                                                                      |
+| [`all-roles`](#1494-all-roles)                                                                        | Query all registered roles                                                                        |
+| [`blacklisted-permission-addresses`](#1495-blacklisted-permission-addresses)                          | Query all KIRA addresses by a specific blacklisted permission                                     |
+| [`council-registry`](#1496-council-registry)                                                          | Query governance registry.                                                                        |
+| [`councilors`](#1497-councilors)                                                                      | Query councilors                                                                                  |
+| [`data-registry`](#1498-data-registry)                                                                | Query data registry by specific key                                                               |
+| [`data-registry-keys`](#1499-data-registry-keys)                                                      | Query all data registry keys                                                                      |
+| [`execution-fee`](#14910-execution-fee)                                                               | Query execution fee by the type of transaction                                                    |
+| [`identity-record`](#14911-identity-record)                                                           | Query identity record by id                                                                       |
+| [`identity-record-verify-request`](#14912-identity-record-verify-request)                             | Query identity record verify request by id                                                        |
+| [`identity-record-verify-requests-by-approver`](#14913-identity-record-verify-requests-by-approver)   | Query identity record verify request by approver                                                  |
+| [`identity-record-verify-requests-by-requester`](#14914-identity-record-verify-requests-by-requester) | Query identity records verify requests by requester                                               |
+| [`identity-records`](#14915-identity-records)                                                         | Query all identity records                                                                        |
+| [`identity-records-by-addr`](#14916-identity-records-by-addr)                                         | Query identity records by address                                                                 |
+| [`network-properties`](#14917-network-properties)                                                     | Query network properties                                                                          |
+| [`non-councilors`](#14918-non-councilors)                                                             | Query all governance members that are NOT Councilors                                              |
+| [`permissions`](#14919-permissions)                                                                   | Query permissions of an address                                                                   |
+| [`poll-votes`](#14920-poll-votes)                                                                     | Get poll votes by id                                                                              |
+| [`polls`](#14921-polls)                                                                               | Get polls by address                                                                              |
+| [`poor-network-messages`](#14922-poor-network-messages)                                               | Query poor network messages                                                                       |
+| [`proposal`](#14923-proposal)                                                                         | Query proposal details                                                                            |
+| [`proposal-duration`](#14924-proposal-duration)                                                       | Query a proposal duration                                                                         |
+| [`proposals`](#14925-proposals)                                                                       | Query proposals with optional filters                                                             |
+| [`proposer_voters_count`](#14926-proposer_voters_count)                                               | Query proposer and voters count that can create at least a type of proposal                       |
+| [`role`](#14927-role)                                                                                 | Query role by sid or id                                                                           |
+| [`roles`](#14928-roles)                                                                               | Query roles assigned to an address                                                                |
+| [`vote`](#14929-vote)                                                                                 | Query details of a single vote                                                                    |
+| [`voters`](#14930-voters)                                                                             | Query voters of a proposal                                                                        |
+| [`votes`](#14931-votes)                                                                               | Query votes on a proposal                                                                         |
+| [`whitelisted-permission-addresses](#14932-whitelisted-permission-addresses)                          | Query all KIRA addresses by a specific whitelisted permission                                     |
+| [`whitelisted-role-addresses`](#14933-whitelisted-role-addresses)                                     | Query all kira addresses by a specific whitelisted role (address does NOT have to be a Councilor) |
+
+
+
+| Flags        | Description        | Work  |
+| ------------ | ------------------ | ----- |
+| `-h, --help` | help for customgov | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work |
+| --------------------- | -------------------------------------------------------------------------------------- | ---- |
+| `--chain-id string`   | The network chain ID                                                                   | ❌ ?  |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ❌ ?  |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?  |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?  |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?  |
+
+```
+sekaid q customgov --help
+query commands for the customgov module
+
+Usage:
+  sekaid query customgov [command]
+
+Available Commands:
+  all-execution-fees                           Query all execution fees
+  all-identity-record-verify-requests          Query all identity records verify requests
+  all-proposal-durations                       Query all proposal durations
+  all-roles                                    Query all registered roles
+  blacklisted-permission-addresses             Query all KIRA addresses by a specific blacklisted permission
+  council-registry                             Query governance registry.
+  councilors                                   Query councilors
+  data-registry                                Query data registry by specific key
+  data-registry-keys                           Query all data registry keys
+  execution-fee                                Query execution fee by the type of transaction
+  identity-record                              Query identity record by id
+  identity-record-verify-request               Query identity record verify request by id
+  identity-record-verify-requests-by-approver  Query identity record verify request by approver
+  identity-record-verify-requests-by-requester Query identity records verify requests by requester
+  identity-records                             Query all identity records
+  identity-records-by-addr                     Query identity records by address
+  network-properties                           Query network properties
+  non-councilors                               Query all governance members that are NOT Councilors
+  permissions                                  Query permissions of an address
+  poll-votes                                   Get poll votes by id
+  polls                                        Get polls by address
+  poor-network-messages                        Query poor network messages
+  proposal                                     Query proposal details
+  proposal-duration                            Query a proposal duration
+  proposals                                    Query proposals with optional filters
+  proposer_voters_count                        Query proposer and voters count that can create at least a type of proposal
+  role                                         Query role by sid or id
+  roles                                        Query roles assigned to an address
+  vote                                         Query details of a single vote
+  voters                                       Query voters of a proposal
+  votes                                        Query votes on a proposal
+  whitelisted-permission-addresses             Query all KIRA addresses by a specific whitelisted permission
+  whitelisted-role-addresses                   Query all kira addresses by a specific whitelisted role (address does NOT have to be a Councilor)
+
+Flags:
+  -h, --help   help for customgov
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid query customgov [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+##### 14.9.1 all-execution-fees
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.2 all-identity-record-verify-requests
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.3 all-proposal-durations
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.4 all-roles
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.5 blacklisted-permission-addresses
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.6 council-registry
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.7 councilors
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.8 data-registry
+
+Query data registry by key.
+
+Usage:
+```
+sekaid query customgov data-registry [flags] ❌ mistake! here we need the one positional argument
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--count-total`       | count total number of records in customgov to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for data-registry                                                                           | ✅ yes |
+| `--limit uint`        | pagination limit of customgov to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `--offset uint`       | pagination offset of customgov to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+| `--page uint`         | pagination page of customgov to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of customgov to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                           | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov data-registry --help
+Query data registry by key.
+
+Example:
+$ sekaid query gov data-registry [key]
+
+Usage:
+  sekaid query customgov data-registry [flags]
+
+Flags:
+      --count-total       count total number of records in customgov to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for data-registry
+      --limit uint        pagination limit of customgov to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of customgov to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of customgov to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of customgov to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query customgov data-registry icon -o json | jq
+{
+  "data": {
+    "hash": "891bd9d3b2ee0c6eed43a8129b096bebc7e5ae517d0b855b2116a3205211fe21",
+    "reference": "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+    "encoding": "picture",
+    "size": "1597"
+  }
+}
+```
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.9 data-registry-keys
+
+Query all data registry keys.
+
+Usage:
+```
+sekaid query customgov data-registry-keys [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--count-total`       | count total number of records in customgov to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for data-registry-keys                                                                      | ✅ yes |
+| `--limit uint`        | pagination limit of customgov to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `--offset uint`       | pagination offset of customgov to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+| `--page uint`         | pagination page of customgov to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of customgov to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                           | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov data-registry-keys --help
+Query all data registry keys.
+
+Example:
+$ sekaid query gov data-registry-keys
+
+Usage:
+  sekaid query customgov data-registry-keys [flags]
+
+Flags:
+      --count-total       count total number of records in customgov to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for data-registry-keys
+      --limit uint        pagination limit of customgov to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of customgov to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of customgov to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of customgov to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid query customgov data-registry-keys --output=json | jq
+{
+  "keys": [
+    "icon"
+  ],
+  "pagination": {
+    "next_key": null,
+    "total": "0"
+  }
+}
+```
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.10 execution-fee
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.11 identity-record
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.12 identity-record-verify-request
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.13 identity-record-verify-requests-by-approver
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.14 identity-record-verify-requests-by-requester
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.15 identity-records
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.16 identity-records-by-addr
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.17 network-properties
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.18 non-councilors
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.19 permissions
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.20 poll-votes
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.21 polls
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.22 poor-network-messages
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.23 proposal
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.24 proposal-duration
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.25 proposals
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.26 proposer_voters_count
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.27 role
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.28 roles
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.29 vote
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.30 voters
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.31 votes
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.32 whitelisted-permission-addresses
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.33 whitelisted-role-addresses
+
+[Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
 #### 14.10 customslashing
@@ -2064,7 +2546,7 @@ sekaid query tokens alias <symbol> [flags]
 | `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
 
 ```
-# sekaid q tokens alias --help
+sekaid q tokens alias --help
 Get the token alias by symbol
 
 Usage:
@@ -3925,6 +4407,618 @@ tx_signed.json
 [Return to top](#sekai)
 
 #### 21.7 customgov
+
+Custom gov sub commands.
+
+Usage:
+```
+sekaid tx customgov [flags]
+sekaid tx customgov [command]
+```
+
+Available Commands:
+
+| Subcommands                                                                              | Description                                                                |
+| ---------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [`cancel-identity-records-verify-request`](#2171-cancel-identity-records-verify-request) | Submit a transaction to cancel identity records verification request.      |
+| [`councilor`](#2172-councilor)                                                           | Councilor subcommands                                                      |
+| [`delete-identity-records`](#2173-delete-identity-records)                               | Submit a transaction to delete an identity records.                        |
+| [`handle-identity-records-verify-request`](#2174-handle-identity-records-verify-request) | Submit a transaction to approve or reject identity records verify request. |
+| [`permission`](#2175-permission)                                                         | Permission management subcommands                                          |
+| [`poll`](#2176-poll)                                                                     | Governance poll management subcommands                                     |
+| [`proposal`](#2177-proposal)                                                             | Governance proposals management subcommands                                |
+| [`register-identity-records`](#2178-register-identity-records)                           | Submit a transaction to create an identity record.                         |
+| [`request-identity-record-verify`](#2179-request-identity-record-verify)                 | Submit a transaction to request an identity verify record.                 |
+| [`role`](#21710-role)                                                                    | Role management subcommands                                                |
+| [`set-execution-fee`](#21711-set-execution-fee)                                          | Submit a transaction to set execution fee                                  |
+| [`set-network-properties`](#21712-set-network-properties)                                | Submit a transaction to set network properties                             |
+
+[Return to top](#sekai)
+
+##### 21.7.1 cancel-identity-records-verify-request
+
+[Return to top](#sekai)
+
+##### 21.7.2 councilor
+
+[Return to top](#sekai)
+
+##### 21.7.3 delete-identity-records
+
+[Return to top](#sekai)
+
+##### 21.7.4 handle-identity-records-verify-request
+
+[Return to top](#sekai)
+
+##### 21.7.5 permission
+
+[Return to top](#sekai)
+
+##### 21.7.6 poll
+
+[Return to top](#sekai)
+
+##### 21.7.7 proposal
+
+Governance proposals management subcommands.
+
+Usage:
+```
+sekaid tx customgov proposal [flags]
+sekaid tx customgov proposal [command]
+```
+
+Available Commands:
+
+| Subcommands                                                                         | Description                                             |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [`account`](#21771-account)                                                         | Account proposals management subcommands                |
+| [`proposal-jail-councilor`](#21772-proposal-jail-councilor)                         | Create a proposal to jail councilors                    |
+| [`proposal-reset-whole-councilor-rank`](#21773-proposal-reset-whole-councilor-rank) | Create a proposal to reset whole councilor rank         |
+| [`role`](#21774-role)                                                               | Role proposals management subcommands                   |
+| [`set-network-property`](#21775-set-network-property)                               | Create a proposal to set a value on a network property. |
+| [`set-poor-network-msgs`](#21776-set-poor-network-msgs)                             | Create a proposal to set a value on a network property. |
+| [`set-proposal-durations-proposal`](#21777-set-proposal-durations-proposal)         | Create a proposal to set batch proposal durations.      |
+| [`upsert-data-registry`](#21778-upsert-data-registry)                               | Create a proposal to upsert a key in the data registry  |
+| [`vote`](#21779-vote)                                                               | Vote a proposal.                                        |
+
+
+
+| Flags        | Description       | Work  |
+| ------------ | ----------------- | ----- |
+| `-h, --help` | help for proposal | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work |
+| --------------------- | -------------------------------------------------------------------------------------- | ---- |
+| `--chain-id string`   | The network chain ID                                                                   | ❌ ?  |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ❌ ?  |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?  |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?  |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?  |
+
+```
+sekaid tx customgov proposal --help
+Governance proposals management subcommands
+
+Usage:
+  sekaid tx customgov proposal [flags]
+  sekaid tx customgov proposal [command]
+
+Available Commands:
+  account                             Account proposals management subcommands
+  proposal-jail-councilor             Create a proposal to jail councilors
+  proposal-reset-whole-councilor-rank Create a proposal to reset whole councilor rank
+  role                                Role proposals management subcommands
+  set-network-property                Create a proposal to set a value on a network property.
+  set-poor-network-msgs               Create a proposal to set a value on a network property.
+  set-proposal-durations-proposal     Create a proposal to set batch proposal durations.
+  upsert-data-registry                Create a proposal to upsert a key in the data registry
+  vote                                Vote a proposal.
+
+Flags:
+  -h, --help   help for proposal
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid tx customgov proposal [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+###### 21.7.7.1 account
+
+[Return to top](#sekai)
+
+###### 21.7.7.2 proposal-jail-councilor
+
+[Return to top](#sekai)
+
+###### 21.7.7.3 proposal-reset-whole-councilor-rank
+
+[Return to top](#sekai)
+
+###### 21.7.7.4 role
+
+[Return to top](#sekai)
+
+###### 21.7.7.5 set-network-property
+
+[Return to top](#sekai)
+
+###### 21.7.7.6 set-poor-network-msgs
+
+[Return to top](#sekai)
+
+###### 21.7.7.7 set-proposal-durations-proposal
+
+[Return to top](#sekai)
+
+###### 21.7.7.8 upsert-data-registry
+
+Create a proposal to upsert a key in the data registry.
+
+Usage:
+```
+sekaid tx customgov proposal upsert-data-registry [key] [hash] [reference] [encoding] [size] [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--description string`        | The description of the proposal, it can be a url, some text, etc.                                                                                           | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ❌ ?   |
+| `-h, --help`                  | help for upsert-data-registry                                                                                                                               | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `--title string`              | The title of the proposal.                                                                                                                                  | ✅ yes |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov proposal upsert-data-registry --help
+Create a proposal to upsert a key in the data registry
+
+Usage:
+  sekaid tx customgov proposal upsert-data-registry [key] [hash] [reference] [encoding] [size] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --description string       The description of the proposal, it can be a url, some text, etc.
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for upsert-data-registry
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+      --title string             The title of the proposal.
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid tx customgov proposal upsert-data-registry icon2 891bd9d3b2ee0c6eed43a8129b096bebc7e5ae517d0b855b2116a3205211fe21 https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg picture 1597 --title="Upserting date registry key 'icon'" --description="Assign value '<url>' to key 'icon'" --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --chain-id=localnet-4 --keyring-backend=test --fees=100ukex --yes --log_format=json --broadcast-mode=async --home=/root/.sekai --output=json | jq
+{
+  "height": "0",
+  "txhash": "6B7BCD4B3B2B93D83F477E522EAA5FEA998C6BD68970CCAD746A07E153E43AC4",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check the transaction</summary>
+
+  ```
+  /# sekaid query tx 6B7BCD4B3B2B93D83F477E522EAA5FEA998C6BD68970CCAD746A07E153E43AC4 -o json | jq
+  ```
+
+  ```json 
+  {
+    "height": "93606",
+    "txhash": "6B7BCD4B3B2B93D83F477E522EAA5FEA998C6BD68970CCAD746A07E153E43AC4",
+    "codespace": "",
+    "code": 0,
+    "data": "0A210A1B2F6B6972612E676F762E4D73675375626D697450726F706F73616C1202080B",
+    "raw_log": "[{\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgSubmitProposal\"}]},{\"type\":\"submit_proposal\",\"attributes\":[{\"key\":\"proposal_id\",\"value\":\"11\"},{\"key\":\"proposal_type\",\"value\":\"UpsertDataRegistry\"},{\"key\":\"proposal_content\",\"value\":\"proposer: kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\\ntitle: Upserting date registry key 'icon'\\ndescription: Assign value '\\u003curl\\u003e' to key 'icon'\\ncontent:\\n  typeurl: /kira.gov.UpsertDataRegistryProposal\\n  value:\\n  - 10\\n  - 5\\n  - 105\\n  - 99\\n  - 111\\n  - 110\\n  - 50\\n  - 18\\n  - 64\\n  - 56\\n  - 57\\n  - 49\\n  - 98\\n  - 100\\n  - 57\\n  - 100\\n  - 51\\n  - 98\\n  - 50\\n  - 101\\n  - 101\\n  - 48\\n  - 99\\n  - 54\\n  - 101\\n  - 101\\n  - 100\\n  - 52\\n  - 51\\n  - 97\\n  - 56\\n  - 49\\n  - 50\\n  - 57\\n  - 98\\n  - 48\\n  - 57\\n  - 54\\n  - 98\\n  - 101\\n  - 98\\n  - 99\\n  - 55\\n  - 101\\n  - 53\\n  - 97\\n  - 101\\n  - 53\\n  - 49\\n  - 55\\n  - 100\\n  - 48\\n  - 98\\n  - 56\\n  - 53\\n  - 53\\n  - 98\\n  - 50\\n  - 49\\n  - 49\\n  - 54\\n  - 97\\n  - 51\\n  - 50\\n  - 48\\n  - 53\\n  - 50\\n  - 49\\n  - 49\\n  - 102\\n  - 101\\n  - 50\\n  - 49\\n  - 26\\n  - 73\\n  - 104\\n  - 116\\n  - 116\\n  - 112\\n  - 115\\n  - 58\\n  - 47\\n  - 47\\n  - 107\\n  - 105\\n  - 114\\n  - 97\\n  - 45\\n  - 110\\n  - 101\\n  - 116\\n  - 119\\n  - 111\\n  - 114\\n  - 107\\n  - 46\\n  - 115\\n  - 51\\n  - 45\\n  - 101\\n  - 117\\n  - 45\\n  - 119\\n  - 101\\n  - 115\\n  - 116\\n  - 45\\n  - 49\\n  - 46\\n  - 97\\n  - 109\\n  - 97\\n  - 122\\n  - 111\\n  - 110\\n  - 97\\n  - 119\\n  - 115\\n  - 46\\n  - 99\\n  - 111\\n  - 109\\n  - 47\\n  - 97\\n  - 115\\n  - 115\\n  - 101\\n  - 116\\n  - 115\\n  - 47\\n  - 105\\n  - 109\\n  - 103\\n  - 47\\n  - 116\\n  - 111\\n  - 107\\n  - 101\\n  - 110\\n  - 115\\n  - 47\\n  - 107\\n  - 101\\n  - 120\\n  - 46\\n  - 115\\n  - 118\\n  - 103\\n  - 34\\n  - 7\\n  - 112\\n  - 105\\n  - 99\\n  - 116\\n  - 117\\n  - 114\\n  - 101\\n  - 40\\n  - 189\\n  - 12\\n  xxx_nounkeyedliteral: {}\\n  xxx_unrecognized: []\\n  xxx_sizecache: 0\\n\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/kira.gov.MsgSubmitProposal"
+              }
+            ]
+          },
+          {
+            "type": "submit_proposal",
+            "attributes": [
+              {
+                "key": "proposal_id",
+                "value": "11"
+              },
+              {
+                "key": "proposal_type",
+                "value": "UpsertDataRegistry"
+              },
+              {
+                "key": "proposal_content",
+                "value": "proposer: kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\ntitle: Upserting date registry key 'icon'\ndescription: Assign value '<url>' to key 'icon'\ncontent:\n  typeurl: /kira.gov.UpsertDataRegistryProposal\n  value:\n  - 10\n  - 5\n  - 105\n  - 99\n  - 111\n  - 110\n  - 50\n  - 18\n  - 64\n  - 56\n  - 57\n  - 49\n  - 98\n  - 100\n  - 57\n  - 100\n  - 51\n  - 98\n  - 50\n  - 101\n  - 101\n  - 48\n  - 99\n  - 54\n  - 101\n  - 101\n  - 100\n  - 52\n  - 51\n  - 97\n  - 56\n  - 49\n  - 50\n  - 57\n  - 98\n  - 48\n  - 57\n  - 54\n  - 98\n  - 101\n  - 98\n  - 99\n  - 55\n  - 101\n  - 53\n  - 97\n  - 101\n  - 53\n  - 49\n  - 55\n  - 100\n  - 48\n  - 98\n  - 56\n  - 53\n  - 53\n  - 98\n  - 50\n  - 49\n  - 49\n  - 54\n  - 97\n  - 51\n  - 50\n  - 48\n  - 53\n  - 50\n  - 49\n  - 49\n  - 102\n  - 101\n  - 50\n  - 49\n  - 26\n  - 73\n  - 104\n  - 116\n  - 116\n  - 112\n  - 115\n  - 58\n  - 47\n  - 47\n  - 107\n  - 105\n  - 114\n  - 97\n  - 45\n  - 110\n  - 101\n  - 116\n  - 119\n  - 111\n  - 114\n  - 107\n  - 46\n  - 115\n  - 51\n  - 45\n  - 101\n  - 117\n  - 45\n  - 119\n  - 101\n  - 115\n  - 116\n  - 45\n  - 49\n  - 46\n  - 97\n  - 109\n  - 97\n  - 122\n  - 111\n  - 110\n  - 97\n  - 119\n  - 115\n  - 46\n  - 99\n  - 111\n  - 109\n  - 47\n  - 97\n  - 115\n  - 115\n  - 101\n  - 116\n  - 115\n  - 47\n  - 105\n  - 109\n  - 103\n  - 47\n  - 116\n  - 111\n  - 107\n  - 101\n  - 110\n  - 115\n  - 47\n  - 107\n  - 101\n  - 120\n  - 46\n  - 115\n  - 118\n  - 103\n  - 34\n  - 7\n  - 112\n  - 105\n  - 99\n  - 116\n  - 117\n  - 114\n  - 101\n  - 40\n  - 189\n  - 12\n  xxx_nounkeyedliteral: {}\n  xxx_unrecognized: []\n  xxx_sizecache: 0\n"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/kira.gov.MsgSubmitProposal",
+            "proposer": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "title": "Upserting date registry key 'icon'",
+            "description": "Assign value '<url>' to key 'icon'",
+            "content": {
+              "@type": "/kira.gov.UpsertDataRegistryProposal",
+              "key": "icon2",
+              "hash": "891bd9d3b2ee0c6eed43a8129b096bebc7e5ae517d0b855b2116a3205211fe21",
+              "reference": "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+              "encoding": "picture",
+              "size": "1597"
+            }
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "85"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "100"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "nIXu3GR+RioFsgnNfOIlyOxKSNFfqE+EkdCDyF7rzxtXq8X+jcU22Iuh1rrU3IYzzP3fCeIL8kkuuDf2q/0fIg=="
+      ]
+    },
+    "timestamp": "2023-06-06T16:37:02Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC84NQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "bklYdTNHUitSaW9Gc2duTmZPSWx5T3hLU05GZnFFK0VrZENEeUY3cnp4dFhxOFgramNVMjJJdWgxcnJVM0lZenpQM2ZDZUlMOGtrdXVEZjJxLzBmSWc9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "MTAwdWtleA==",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2tpcmEuZ292Lk1zZ1N1Ym1pdFByb3Bvc2Fs",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "submit_proposal",
+        "attributes": [
+          {
+            "key": "cHJvcG9zYWxfaWQ=",
+            "value": "MTE=",
+            "index": true
+          },
+          {
+            "key": "cHJvcG9zYWxfdHlwZQ==",
+            "value": "VXBzZXJ0RGF0YVJlZ2lzdHJ5",
+            "index": true
+          },
+          {
+            "key": "cHJvcG9zYWxfY29udGVudA==",
+            "value": "cHJvcG9zZXI6IGtpcmExdm13ZGd3NDI2YWo5ZngzM2ZxdXNtdGc2cjY1eXl1Y214NnJkdDQKdGl0bGU6IFVwc2VydGluZyBkYXRlIHJlZ2lzdHJ5IGtleSAnaWNvbicKZGVzY3JpcHRpb246IEFzc2lnbiB2YWx1ZSAnPHVybD4nIHRvIGtleSAnaWNvbicKY29udGVudDoKICB0eXBldXJsOiAva2lyYS5nb3YuVXBzZXJ0RGF0YVJlZ2lzdHJ5UHJvcG9zYWwKICB2YWx1ZToKICAtIDEwCiAgLSA1CiAgLSAxMDUKICAtIDk5CiAgLSAxMTEKICAtIDExMAogIC0gNTAKICAtIDE4CiAgLSA2NAogIC0gNTYKICAtIDU3CiAgLSA0OQogIC0gOTgKICAtIDEwMAogIC0gNTcKICAtIDEwMAogIC0gNTEKICAtIDk4CiAgLSA1MAogIC0gMTAxCiAgLSAxMDEKICAtIDQ4CiAgLSA5OQogIC0gNTQKICAtIDEwMQogIC0gMTAxCiAgLSAxMDAKICAtIDUyCiAgLSA1MQogIC0gOTcKICAtIDU2CiAgLSA0OQogIC0gNTAKICAtIDU3CiAgLSA5OAogIC0gNDgKICAtIDU3CiAgLSA1NAogIC0gOTgKICAtIDEwMQogIC0gOTgKICAtIDk5CiAgLSA1NQogIC0gMTAxCiAgLSA1MwogIC0gOTcKICAtIDEwMQogIC0gNTMKICAtIDQ5CiAgLSA1NQogIC0gMTAwCiAgLSA0OAogIC0gOTgKICAtIDU2CiAgLSA1MwogIC0gNTMKICAtIDk4CiAgLSA1MAogIC0gNDkKICAtIDQ5CiAgLSA1NAogIC0gOTcKICAtIDUxCiAgLSA1MAogIC0gNDgKICAtIDUzCiAgLSA1MAogIC0gNDkKICAtIDQ5CiAgLSAxMDIKICAtIDEwMQogIC0gNTAKICAtIDQ5CiAgLSAyNgogIC0gNzMKICAtIDEwNAogIC0gMTE2CiAgLSAxMTYKICAtIDExMgogIC0gMTE1CiAgLSA1OAogIC0gNDcKICAtIDQ3CiAgLSAxMDcKICAtIDEwNQogIC0gMTE0CiAgLSA5NwogIC0gNDUKICAtIDExMAogIC0gMTAxCiAgLSAxMTYKICAtIDExOQogIC0gMTExCiAgLSAxMTQKICAtIDEwNwogIC0gNDYKICAtIDExNQogIC0gNTEKICAtIDQ1CiAgLSAxMDEKICAtIDExNwogIC0gNDUKICAtIDExOQogIC0gMTAxCiAgLSAxMTUKICAtIDExNgogIC0gNDUKICAtIDQ5CiAgLSA0NgogIC0gOTcKICAtIDEwOQogIC0gOTcKICAtIDEyMgogIC0gMTExCiAgLSAxMTAKICAtIDk3CiAgLSAxMTkKICAtIDExNQogIC0gNDYKICAtIDk5CiAgLSAxMTEKICAtIDEwOQogIC0gNDcKICAtIDk3CiAgLSAxMTUKICAtIDExNQogIC0gMTAxCiAgLSAxMTYKICAtIDExNQogIC0gNDcKICAtIDEwNQogIC0gMTA5CiAgLSAxMDMKICAtIDQ3CiAgLSAxMTYKICAtIDExMQogIC0gMTA3CiAgLSAxMDEKICAtIDExMAogIC0gMTE1CiAgLSA0NwogIC0gMTA3CiAgLSAxMDEKICAtIDEyMAogIC0gNDYKICAtIDExNQogIC0gMTE4CiAgLSAxMDMKICAtIDM0CiAgLSA3CiAgLSAxMTIKICAtIDEwNQogIC0gOTkKICAtIDExNgogIC0gMTE3CiAgLSAxMTQKICAtIDEwMQogIC0gNDAKICAtIDE4OQogIC0gMTIKICB4eHhfbm91bmtleWVkbGl0ZXJhbDoge30KICB4eHhfdW5yZWNvZ25pemVkOiBbXQogIHh4eF9zaXplY2FjaGU6IDAK",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+
+  > OR find all transactions for 
+  ```
+  sekaid query txs --events=submit_proposal.proposal_type=UpsertDataRegistry --output=json | jq
+  ```
+
+  __VERY LONG JSON with all txs__
+  ```json
+  {
+    "total_count": "4",
+    "count": "4",
+    "page_number": "1",
+    "page_total": "1",
+    "limit": "30",
+    "txs": [
+      {...}, 
+      {...}, 
+      {...}, 
+      {...}
+    ]
+  }
+  ```
+</details>
+
+<details>
+  <summary>Check the vote</summary>
+
+  ```
+  sekaid query customgov proposal 11 -o json | jq
+  ```
+
+  ```json
+  {
+    "proposal_id": "11",
+    "title": "Upserting date registry key 'icon'",
+    "description": "Assign value '<url>' to key 'icon'",
+    "content": {
+      "@type": "/kira.gov.UpsertDataRegistryProposal",
+      "key": "icon2",
+      "hash": "891bd9d3b2ee0c6eed43a8129b096bebc7e5ae517d0b855b2116a3205211fe21",
+      "reference": "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+      "encoding": "picture",
+      "size": "1597"
+    },
+    "submit_time": "2023-06-06T16:37:02.959659272Z",
+    "voting_end_time": "2023-06-06T16:43:02.959659272Z",
+    "enactment_end_time": "2023-06-06T16:48:02.959659272Z",
+    "min_voting_end_block_height": "93608",
+    "min_enactment_end_block_height": "93609",
+    "result": "VOTE_PENDING",
+    "exec_result": ""
+  }
+  ```
+</details>
+
+<details>
+  <summary>Check data registry (after successful vote)</summary>
+
+  List of all data registries:
+  ```
+  sekaid query customgov data-registry-keys --output=json | jq
+  ```
+
+  ```json
+  {
+    "keys": [
+      "icon" // it's a old passed value!
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+
+  Only specific value (_there is an example of old same registry_):
+  ```
+  /# sekaid query customgov data-registry icon -o json | jq
+  ```
+
+  ```json
+  {
+    "data": {
+      "hash": "891bd9d3b2ee0c6eed43a8129b096bebc7e5ae517d0b855b2116a3205211fe21",
+      "reference": "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+      "encoding": "picture",
+      "size": "1597"
+    }
+  }
+  ```
+</details>
+
+[Return to top](#sekai)
+
+###### 21.7.7.9 vote
+
+[Return to top](#sekai)
+
+##### 21.7.8 register-identity-records
+
+[Return to top](#sekai)
+
+##### 21.7.9 request-identity-record-verify
+
+[Return to top](#sekai)
+
+##### 21.7.10 role
+
+[Return to top](#sekai)
+
+##### 21.7.11 set-execution-fee
+
+[Return to top](#sekai)
+
+##### 21.7.12 set-network-properties
 
 [Return to top](#sekai)
 
