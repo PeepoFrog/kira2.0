@@ -2395,6 +2395,27 @@ sekaid query tokens rates-by-denom [flags] ❌ mistake! here we need the one pos
 | `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
 
 ```
+/# sekaid q tokens rates-by-denom --help
+Get token rates by denom
+
+Usage:
+  sekaid query tokens rates-by-denom [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for rates-by-denom
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
 sekaid q tokens rates-by-denom ukex -o json | jq
 {
   "data": {
@@ -2414,6 +2435,65 @@ sekaid q tokens rates-by-denom ukex -o json | jq
 [Return to top](#sekai)
 
 ##### 14.19.7 token-black-whites
+
+Get token black whites.
+
+Usage:
+```
+sekaid query tokens token-black-whites [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for alias                                                                                   | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q tokens token-black-whites --help
+Get token black whites
+
+Usage:
+  sekaid query tokens token-black-whites [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for token-black-whites
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid q tokens token-black-whites -o json | jq
+{
+  "data": {
+    "whitelisted": [
+      "ukex"
+    ],
+    "blacklisted": [
+      "frozen"
+    ]
+  }
+}
+```
 
 [Return to top](#sekai)
 
