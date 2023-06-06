@@ -1208,6 +1208,111 @@ On specific `--height` condition:
 
 ##### 14.2.2 accounts
 
+Query all the accounts
+
+Usage:
+```
+sekaid query auth accounts [flags]
+```
+
+| Flags                 | Description                                                                                         | Work  |
+| --------------------- | --------------------------------------------------------------------------------------------------- | ----- |
+| `--count-total`       | count total number of records in all-accounts to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)               | ✅ yes |
+| `-h, --help`          | help for accounts                                                                                   | ✅ yes |
+| `--limit uint`        | pagination limit of all-accounts to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`)    | ✅ yes |
+| `--offset uint`       | pagination offset of all-accounts to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                     | ✅ yes |
+| `--page uint`         | pagination page of all-accounts to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of all-accounts to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                              | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query auth accounts --help
+Query all the accounts
+
+Usage:
+  sekaid query auth accounts [flags]
+
+Flags:
+      --count-total       count total number of records in all-accounts to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for accounts
+      --limit uint        pagination limit of all-accounts to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of all-accounts to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of all-accounts to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of all-accounts to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid query auth accounts --limit=2 --reverse --output=json | jq
+{
+  "accounts": [
+    {
+      "@type": "/cosmos.auth.v1beta1.BaseAccount",
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "pub_key": {
+        "@type": "/cosmos.crypto.secp256k1.PubKey",
+        "key": "A5mB81789jXij6eUh5QGrRlhXdLheHFL1ix1LtxfMCvJ"
+      },
+      "account_number": "6",
+      "sequence": "5"
+    },
+    {
+      "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+      "base_account": {
+        "address": "kira17xpfvakm2amg962yls6f84z3kell8c5lqkfw2s",
+        "pub_key": null,
+        "account_number": "3",
+        "sequence": "0"
+      },
+      "name": "fee_collector",
+      "permissions": []
+    }
+  ],
+  "pagination": {
+    "next_key": "70V8dQvo1DIIoWZwiWl6lpuJ2s0=",
+    "total": "0"
+  }
+}
+```
+
+Other usages:
+```
+sekaid query auth accounts --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+
+sekaid query auth accounts --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+
+sekaid query auth accounts --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
+```
+
+**Pay attention**
+Can't use together:
+- `--page` and `--page-key`
+- `--offset` and `--page`
+- `--height` for future blocks
+
 [Return to top](#sekai)
 
 ##### 14.2.3 module-account
