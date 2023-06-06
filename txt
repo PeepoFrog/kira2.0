@@ -1,5 +1,0 @@
-git pull --rebase  upstream master   /latest
-git checkout -b feature/__sekaidv**
-
-git commit -S -m "Change release ver v0.0.6 -> v0.0.7"  
-git push upstream feature/__sekaidv** 
