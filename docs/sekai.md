@@ -121,6 +121,15 @@
         * [21.7.5 permission](#2175-permission)
         * [21.7.6 poll](#2176-poll)
         * [21.7.7 proposal](#2177-proposal)
+          * [21.7.7.1 account](#21771-account)
+          * [21.7.7.2 proposal-jail-councilor](#21772-proposal-jail-councilor)
+          * [21.7.7.3 proposal-reset-whole-councilor-rank](#21773-proposal-reset-whole-councilor-rank)
+          * [21.7.7.4 role](#21774-role)
+          * [21.7.7.5 set-network-property](#21775-set-network-property)
+          * [21.7.7.6 set-poor-network-msgs](#21776-set-poor-network-msgs)
+          * [21.7.7.7 set-proposal-durations-proposal](#21777-set-proposal-durations-proposal)
+          * [21.7.7.8 upsert-data-registry](#21778-upsert-data-registry)
+          * [21.7.7.9 vote](#21779-vote)
         * [21.7.8 register-identity-records](#2178-register-identity-records)
         * [21.7.9 request-identity-record-verify](#2179-request-identity-record-verify)
         * [21.7.10 role](#21710-role)
@@ -4317,17 +4326,17 @@ sekaid tx customgov proposal [command]
 
 Available Commands:
 
-| Subcommands                               | Description                                             |
-| ----------------------------------------- | ------------------------------------------------------- |
-| [`account`]()                             | Account proposals management subcommands                |
-| [`proposal-jail-councilor`]()             | Create a proposal to jail councilors                    |
-| [`proposal-reset-whole-councilor-rank`]() | Create a proposal to reset whole councilor rank         |
-| [`role`]()                                | Role proposals management subcommands                   |
-| [`set-network-property`]()                | Create a proposal to set a value on a network property. |
-| [`set-poor-network-msgs`]()               | Create a proposal to set a value on a network property. |
-| [`set-proposal-durations-proposal`]()     | Create a proposal to set batch proposal durations.      |
-| [`upsert-data-registry`]()                | Create a proposal to upsert a key in the data registry  |
-| [`vote`]()                                | Vote a proposal.                                        |
+| Subcommands                                                                         | Description                                             |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [`account`](#21771-account)                                                         | Account proposals management subcommands                |
+| [`proposal-jail-councilor`](#21772-proposal-jail-councilor)                         | Create a proposal to jail councilors                    |
+| [`proposal-reset-whole-councilor-rank`](#21773-proposal-reset-whole-councilor-rank) | Create a proposal to reset whole councilor rank         |
+| [`role`](#21774-role)                                                               | Role proposals management subcommands                   |
+| [`set-network-property`](#21775-set-network-property)                               | Create a proposal to set a value on a network property. |
+| [`set-poor-network-msgs`](#21776-set-poor-network-msgs)                             | Create a proposal to set a value on a network property. |
+| [`set-proposal-durations-proposal`](#21777-set-proposal-durations-proposal)         | Create a proposal to set batch proposal durations.      |
+| [`upsert-data-registry`](#21778-upsert-data-registry)                               | Create a proposal to upsert a key in the data registry  |
+| [`vote`](#21779-vote)                                                               | Vote a proposal.                                        |
 
 
 
@@ -4408,6 +4417,439 @@ Use "sekaid tx customgov proposal [command] --help" for more information about a
 [Return to top](#sekai)
 
 ###### 21.7.7.8 upsert-data-registry
+
+Create a proposal to upsert a key in the data registry.
+
+Usage:
+```
+sekaid tx customgov proposal upsert-data-registry [key] [hash] [reference] [encoding] [size] [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--description string`        | The description of the proposal, it can be a url, some text, etc.                                                                                           | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ❌ ?   |
+| `-h, --help`                  | help for upsert-data-registry                                                                                                                               | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `--title string`              | The title of the proposal.                                                                                                                                  | ✅ yes |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov proposal upsert-data-registry --help
+Create a proposal to upsert a key in the data registry
+
+Usage:
+  sekaid tx customgov proposal upsert-data-registry [key] [hash] [reference] [encoding] [size] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --description string       The description of the proposal, it can be a url, some text, etc.
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for upsert-data-registry
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+      --title string             The title of the proposal.
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid tx customgov proposal upsert-data-registry icon2 891bd9d3b2ee0c6eed43a8129b096bebc7e5ae517d0b855b2116a3205211fe21 https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg picture 1597 --title="Upserting date registry key 'icon'" --description="Assign value '<url>' to key 'icon'" --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --chain-id=localnet-4 --keyring-backend=test --fees=100ukex --yes --log_format=json --broadcast-mode=async --home=/root/.sekai --output=json | jq
+{
+  "height": "0",
+  "txhash": "6B7BCD4B3B2B93D83F477E522EAA5FEA998C6BD68970CCAD746A07E153E43AC4",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check the transaction</summary>
+
+  ```
+  /# sekaid query tx 6B7BCD4B3B2B93D83F477E522EAA5FEA998C6BD68970CCAD746A07E153E43AC4 -o json | jq
+  ```
+
+  ```json 
+  {
+    "height": "93606",
+    "txhash": "6B7BCD4B3B2B93D83F477E522EAA5FEA998C6BD68970CCAD746A07E153E43AC4",
+    "codespace": "",
+    "code": 0,
+    "data": "0A210A1B2F6B6972612E676F762E4D73675375626D697450726F706F73616C1202080B",
+    "raw_log": "[{\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgSubmitProposal\"}]},{\"type\":\"submit_proposal\",\"attributes\":[{\"key\":\"proposal_id\",\"value\":\"11\"},{\"key\":\"proposal_type\",\"value\":\"UpsertDataRegistry\"},{\"key\":\"proposal_content\",\"value\":\"proposer: kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\\ntitle: Upserting date registry key 'icon'\\ndescription: Assign value '\\u003curl\\u003e' to key 'icon'\\ncontent:\\n  typeurl: /kira.gov.UpsertDataRegistryProposal\\n  value:\\n  - 10\\n  - 5\\n  - 105\\n  - 99\\n  - 111\\n  - 110\\n  - 50\\n  - 18\\n  - 64\\n  - 56\\n  - 57\\n  - 49\\n  - 98\\n  - 100\\n  - 57\\n  - 100\\n  - 51\\n  - 98\\n  - 50\\n  - 101\\n  - 101\\n  - 48\\n  - 99\\n  - 54\\n  - 101\\n  - 101\\n  - 100\\n  - 52\\n  - 51\\n  - 97\\n  - 56\\n  - 49\\n  - 50\\n  - 57\\n  - 98\\n  - 48\\n  - 57\\n  - 54\\n  - 98\\n  - 101\\n  - 98\\n  - 99\\n  - 55\\n  - 101\\n  - 53\\n  - 97\\n  - 101\\n  - 53\\n  - 49\\n  - 55\\n  - 100\\n  - 48\\n  - 98\\n  - 56\\n  - 53\\n  - 53\\n  - 98\\n  - 50\\n  - 49\\n  - 49\\n  - 54\\n  - 97\\n  - 51\\n  - 50\\n  - 48\\n  - 53\\n  - 50\\n  - 49\\n  - 49\\n  - 102\\n  - 101\\n  - 50\\n  - 49\\n  - 26\\n  - 73\\n  - 104\\n  - 116\\n  - 116\\n  - 112\\n  - 115\\n  - 58\\n  - 47\\n  - 47\\n  - 107\\n  - 105\\n  - 114\\n  - 97\\n  - 45\\n  - 110\\n  - 101\\n  - 116\\n  - 119\\n  - 111\\n  - 114\\n  - 107\\n  - 46\\n  - 115\\n  - 51\\n  - 45\\n  - 101\\n  - 117\\n  - 45\\n  - 119\\n  - 101\\n  - 115\\n  - 116\\n  - 45\\n  - 49\\n  - 46\\n  - 97\\n  - 109\\n  - 97\\n  - 122\\n  - 111\\n  - 110\\n  - 97\\n  - 119\\n  - 115\\n  - 46\\n  - 99\\n  - 111\\n  - 109\\n  - 47\\n  - 97\\n  - 115\\n  - 115\\n  - 101\\n  - 116\\n  - 115\\n  - 47\\n  - 105\\n  - 109\\n  - 103\\n  - 47\\n  - 116\\n  - 111\\n  - 107\\n  - 101\\n  - 110\\n  - 115\\n  - 47\\n  - 107\\n  - 101\\n  - 120\\n  - 46\\n  - 115\\n  - 118\\n  - 103\\n  - 34\\n  - 7\\n  - 112\\n  - 105\\n  - 99\\n  - 116\\n  - 117\\n  - 114\\n  - 101\\n  - 40\\n  - 189\\n  - 12\\n  xxx_nounkeyedliteral: {}\\n  xxx_unrecognized: []\\n  xxx_sizecache: 0\\n\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/kira.gov.MsgSubmitProposal"
+              }
+            ]
+          },
+          {
+            "type": "submit_proposal",
+            "attributes": [
+              {
+                "key": "proposal_id",
+                "value": "11"
+              },
+              {
+                "key": "proposal_type",
+                "value": "UpsertDataRegistry"
+              },
+              {
+                "key": "proposal_content",
+                "value": "proposer: kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\ntitle: Upserting date registry key 'icon'\ndescription: Assign value '<url>' to key 'icon'\ncontent:\n  typeurl: /kira.gov.UpsertDataRegistryProposal\n  value:\n  - 10\n  - 5\n  - 105\n  - 99\n  - 111\n  - 110\n  - 50\n  - 18\n  - 64\n  - 56\n  - 57\n  - 49\n  - 98\n  - 100\n  - 57\n  - 100\n  - 51\n  - 98\n  - 50\n  - 101\n  - 101\n  - 48\n  - 99\n  - 54\n  - 101\n  - 101\n  - 100\n  - 52\n  - 51\n  - 97\n  - 56\n  - 49\n  - 50\n  - 57\n  - 98\n  - 48\n  - 57\n  - 54\n  - 98\n  - 101\n  - 98\n  - 99\n  - 55\n  - 101\n  - 53\n  - 97\n  - 101\n  - 53\n  - 49\n  - 55\n  - 100\n  - 48\n  - 98\n  - 56\n  - 53\n  - 53\n  - 98\n  - 50\n  - 49\n  - 49\n  - 54\n  - 97\n  - 51\n  - 50\n  - 48\n  - 53\n  - 50\n  - 49\n  - 49\n  - 102\n  - 101\n  - 50\n  - 49\n  - 26\n  - 73\n  - 104\n  - 116\n  - 116\n  - 112\n  - 115\n  - 58\n  - 47\n  - 47\n  - 107\n  - 105\n  - 114\n  - 97\n  - 45\n  - 110\n  - 101\n  - 116\n  - 119\n  - 111\n  - 114\n  - 107\n  - 46\n  - 115\n  - 51\n  - 45\n  - 101\n  - 117\n  - 45\n  - 119\n  - 101\n  - 115\n  - 116\n  - 45\n  - 49\n  - 46\n  - 97\n  - 109\n  - 97\n  - 122\n  - 111\n  - 110\n  - 97\n  - 119\n  - 115\n  - 46\n  - 99\n  - 111\n  - 109\n  - 47\n  - 97\n  - 115\n  - 115\n  - 101\n  - 116\n  - 115\n  - 47\n  - 105\n  - 109\n  - 103\n  - 47\n  - 116\n  - 111\n  - 107\n  - 101\n  - 110\n  - 115\n  - 47\n  - 107\n  - 101\n  - 120\n  - 46\n  - 115\n  - 118\n  - 103\n  - 34\n  - 7\n  - 112\n  - 105\n  - 99\n  - 116\n  - 117\n  - 114\n  - 101\n  - 40\n  - 189\n  - 12\n  xxx_nounkeyedliteral: {}\n  xxx_unrecognized: []\n  xxx_sizecache: 0\n"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/kira.gov.MsgSubmitProposal",
+            "proposer": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "title": "Upserting date registry key 'icon'",
+            "description": "Assign value '<url>' to key 'icon'",
+            "content": {
+              "@type": "/kira.gov.UpsertDataRegistryProposal",
+              "key": "icon2",
+              "hash": "891bd9d3b2ee0c6eed43a8129b096bebc7e5ae517d0b855b2116a3205211fe21",
+              "reference": "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+              "encoding": "picture",
+              "size": "1597"
+            }
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "85"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "100"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "nIXu3GR+RioFsgnNfOIlyOxKSNFfqE+EkdCDyF7rzxtXq8X+jcU22Iuh1rrU3IYzzP3fCeIL8kkuuDf2q/0fIg=="
+      ]
+    },
+    "timestamp": "2023-06-06T16:37:02Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC84NQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "bklYdTNHUitSaW9Gc2duTmZPSWx5T3hLU05GZnFFK0VrZENEeUY3cnp4dFhxOFgramNVMjJJdWgxcnJVM0lZenpQM2ZDZUlMOGtrdXVEZjJxLzBmSWc9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "MTAwdWtleA==",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2tpcmEuZ292Lk1zZ1N1Ym1pdFByb3Bvc2Fs",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "submit_proposal",
+        "attributes": [
+          {
+            "key": "cHJvcG9zYWxfaWQ=",
+            "value": "MTE=",
+            "index": true
+          },
+          {
+            "key": "cHJvcG9zYWxfdHlwZQ==",
+            "value": "VXBzZXJ0RGF0YVJlZ2lzdHJ5",
+            "index": true
+          },
+          {
+            "key": "cHJvcG9zYWxfY29udGVudA==",
+            "value": "cHJvcG9zZXI6IGtpcmExdm13ZGd3NDI2YWo5ZngzM2ZxdXNtdGc2cjY1eXl1Y214NnJkdDQKdGl0bGU6IFVwc2VydGluZyBkYXRlIHJlZ2lzdHJ5IGtleSAnaWNvbicKZGVzY3JpcHRpb246IEFzc2lnbiB2YWx1ZSAnPHVybD4nIHRvIGtleSAnaWNvbicKY29udGVudDoKICB0eXBldXJsOiAva2lyYS5nb3YuVXBzZXJ0RGF0YVJlZ2lzdHJ5UHJvcG9zYWwKICB2YWx1ZToKICAtIDEwCiAgLSA1CiAgLSAxMDUKICAtIDk5CiAgLSAxMTEKICAtIDExMAogIC0gNTAKICAtIDE4CiAgLSA2NAogIC0gNTYKICAtIDU3CiAgLSA0OQogIC0gOTgKICAtIDEwMAogIC0gNTcKICAtIDEwMAogIC0gNTEKICAtIDk4CiAgLSA1MAogIC0gMTAxCiAgLSAxMDEKICAtIDQ4CiAgLSA5OQogIC0gNTQKICAtIDEwMQogIC0gMTAxCiAgLSAxMDAKICAtIDUyCiAgLSA1MQogIC0gOTcKICAtIDU2CiAgLSA0OQogIC0gNTAKICAtIDU3CiAgLSA5OAogIC0gNDgKICAtIDU3CiAgLSA1NAogIC0gOTgKICAtIDEwMQogIC0gOTgKICAtIDk5CiAgLSA1NQogIC0gMTAxCiAgLSA1MwogIC0gOTcKICAtIDEwMQogIC0gNTMKICAtIDQ5CiAgLSA1NQogIC0gMTAwCiAgLSA0OAogIC0gOTgKICAtIDU2CiAgLSA1MwogIC0gNTMKICAtIDk4CiAgLSA1MAogIC0gNDkKICAtIDQ5CiAgLSA1NAogIC0gOTcKICAtIDUxCiAgLSA1MAogIC0gNDgKICAtIDUzCiAgLSA1MAogIC0gNDkKICAtIDQ5CiAgLSAxMDIKICAtIDEwMQogIC0gNTAKICAtIDQ5CiAgLSAyNgogIC0gNzMKICAtIDEwNAogIC0gMTE2CiAgLSAxMTYKICAtIDExMgogIC0gMTE1CiAgLSA1OAogIC0gNDcKICAtIDQ3CiAgLSAxMDcKICAtIDEwNQogIC0gMTE0CiAgLSA5NwogIC0gNDUKICAtIDExMAogIC0gMTAxCiAgLSAxMTYKICAtIDExOQogIC0gMTExCiAgLSAxMTQKICAtIDEwNwogIC0gNDYKICAtIDExNQogIC0gNTEKICAtIDQ1CiAgLSAxMDEKICAtIDExNwogIC0gNDUKICAtIDExOQogIC0gMTAxCiAgLSAxMTUKICAtIDExNgogIC0gNDUKICAtIDQ5CiAgLSA0NgogIC0gOTcKICAtIDEwOQogIC0gOTcKICAtIDEyMgogIC0gMTExCiAgLSAxMTAKICAtIDk3CiAgLSAxMTkKICAtIDExNQogIC0gNDYKICAtIDk5CiAgLSAxMTEKICAtIDEwOQogIC0gNDcKICAtIDk3CiAgLSAxMTUKICAtIDExNQogIC0gMTAxCiAgLSAxMTYKICAtIDExNQogIC0gNDcKICAtIDEwNQogIC0gMTA5CiAgLSAxMDMKICAtIDQ3CiAgLSAxMTYKICAtIDExMQogIC0gMTA3CiAgLSAxMDEKICAtIDExMAogIC0gMTE1CiAgLSA0NwogIC0gMTA3CiAgLSAxMDEKICAtIDEyMAogIC0gNDYKICAtIDExNQogIC0gMTE4CiAgLSAxMDMKICAtIDM0CiAgLSA3CiAgLSAxMTIKICAtIDEwNQogIC0gOTkKICAtIDExNgogIC0gMTE3CiAgLSAxMTQKICAtIDEwMQogIC0gNDAKICAtIDE4OQogIC0gMTIKICB4eHhfbm91bmtleWVkbGl0ZXJhbDoge30KICB4eHhfdW5yZWNvZ25pemVkOiBbXQogIHh4eF9zaXplY2FjaGU6IDAK",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+
+  > OR find all transactions for 
+  ```
+  sekaid query txs --events=submit_proposal.proposal_type=UpsertDataRegistry --output=json | jq
+  ```
+
+  __VERY LONG JSON with all txs__
+  ```json
+  {
+    "total_count": "4",
+    "count": "4",
+    "page_number": "1",
+    "page_total": "1",
+    "limit": "30",
+    "txs": [
+      {...}, 
+      {...}, 
+      {...}, 
+      {...}
+    ]
+  }
+  ```
+</details>
+
+<details>
+  <summary>Check the vote</summary>
+
+  ```
+  sekaid query customgov proposal 11 -o json | jq
+  ```
+
+  ```json
+  {
+    "proposal_id": "11",
+    "title": "Upserting date registry key 'icon'",
+    "description": "Assign value '<url>' to key 'icon'",
+    "content": {
+      "@type": "/kira.gov.UpsertDataRegistryProposal",
+      "key": "icon2",
+      "hash": "891bd9d3b2ee0c6eed43a8129b096bebc7e5ae517d0b855b2116a3205211fe21",
+      "reference": "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+      "encoding": "picture",
+      "size": "1597"
+    },
+    "submit_time": "2023-06-06T16:37:02.959659272Z",
+    "voting_end_time": "2023-06-06T16:43:02.959659272Z",
+    "enactment_end_time": "2023-06-06T16:48:02.959659272Z",
+    "min_voting_end_block_height": "93608",
+    "min_enactment_end_block_height": "93609",
+    "result": "VOTE_PENDING",
+    "exec_result": ""
+  }
+  ```
+</details>
+
+<details>
+  <summary>Check data registry (after successful vote)</summary>
+
+  List of all data registries:
+  ```
+  sekaid query customgov data-registry-keys --output=json | jq
+  ```
+
+  ```json
+  {
+    "keys": [
+      "icon" // it's a old passed value!
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+
+  Only specific value (_there is an example of old same registry_):
+  ```
+  /# sekaid query customgov data-registry icon -o json | jq
+  ```
+
+  ```json
+  {
+    "data": {
+      "hash": "891bd9d3b2ee0c6eed43a8129b096bebc7e5ae517d0b855b2116a3205211fe21",
+      "reference": "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+      "encoding": "picture",
+      "size": "1597"
+    }
+  }
+  ```
+</details>
 
 [Return to top](#sekai)
 
