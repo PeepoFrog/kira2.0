@@ -2036,7 +2036,7 @@ Global Flags:
   <summary>Where to find all symbols</summary>
 
   ```bash
-  sekaid query tokens all-aliases --output=json --home=/root/.sekai | jq ".data[].symbol"
+  sekaid query tokens all-aliases --output=json | jq ".data[].symbol"
   "KEX"
   "SAMO"
   "TEST"
@@ -2060,6 +2060,69 @@ Global Flags:
 [Return to top](#sekai)
 
 ##### 14.19.2 aliases-by-denom
+
+Get token aliases by denom.
+
+Usage:
+```
+sekaid query tokens aliases-by-denom [aliases] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for alias                                                                                   | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q tokens aliases-by-denom --help
+Get token aliases by denom
+
+Usage:
+  sekaid query tokens aliases-by-denom [aliases] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for aliases-by-denom
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid q tokens aliases-by-denom ukex -o json | jq
+{
+  "data": {
+    "ukex": {
+      "symbol": "KEX",
+      "name": "KIRA",
+      "icon": "http://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+      "decimals": 6,
+      "denoms": [
+        "ukex"
+      ],
+      "invalidated": false
+    }
+  }
+}
+```
 
 [Return to top](#sekai)
 
