@@ -45,6 +45,39 @@
       * [14.7 custody](#147-custody)
       * [14.8 customevidence](#148-customevidence)
       * [14.9 customgov](#149-customgov)
+        * [14.9.1 all-execution-fees](#1491-all-execution-fees)
+        * [14.9.2 all-identity-record-verify-requests](#1492-all-identity-record-verify-requests)
+        * [14.9.3 all-proposal-durations](#1493-all-proposal-durations)
+        * [14.9.4 all-roles](#1494-all-roles)
+        * [14.9.5 blacklisted-permission-addresses](#1495-blacklisted-permission-addresses)
+        * [14.9.6 council-registry](#1496-council-registry)
+        * [14.9.7 councilors](#1497-councilors)
+        * [14.9.8 data-registry](#1498-data-registry)
+        * [14.9.9 data-registry-keys](#1499-data-registry-keys)
+        * [14.9.10 execution-fee](#14910-execution-fee)
+        * [14.9.11 identity-record](#14911-identity-record)
+        * [14.9.12 identity-record-verify-request](#14912-identity-record-verify-request)
+        * [14.9.13 identity-record-verify-requests-by-approver](#14913-identity-record-verify-requests-by-approver)
+        * [14.9.14 identity-record-verify-requests-by-requester](#14914-identity-record-verify-requests-by-requester)
+        * [14.9.15 identity-records](#14915-identity-records)
+        * [14.9.16 identity-records-by-addr](#14916-identity-records-by-addr)
+        * [14.9.17 network-properties](#14917-network-properties)
+        * [14.9.18 non-councilors](#14918-non-councilors)
+        * [14.9.19 permissions](#14919-permissions)
+        * [14.9.20 poll-votes](#14920-poll-votes)
+        * [14.9.21 polls](#14921-polls)
+        * [14.9.22 poor-network-messages](#14922-poor-network-messages)
+        * [14.9.23 proposal](#14923-proposal)
+        * [14.9.24 proposal-duration](#14924-proposal-duration)
+        * [14.9.25 proposals](#14925-proposals)
+        * [14.9.26 proposer\_voters\_count](#14926-proposer_voters_count)
+        * [14.9.27 role](#14927-role)
+        * [14.9.28 roles](#14928-roles)
+        * [14.9.29 vote](#14929-vote)
+        * [14.9.30 voters](#14930-voters)
+        * [14.9.31 votes](#14931-votes)
+        * [14.9.32 whitelisted-permission-addresses](#14932-whitelisted-permission-addresses)
+        * [14.9.33 whitelisted-role-addresses](#14933-whitelisted-role-addresses)
       * [14.10 customslashing](#1410-customslashing)
       * [14.11 customstaking](#1411-customstaking)
       * [14.12 distributor](#1412-distributor)
@@ -1115,29 +1148,29 @@ Available Commands:
 
 | Subcommand                                                   | Description                                                                                                      |
 | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| [`account`](#151-account)                                    | Query for account by address                                                                                     |
-| [`auth`](#152-auth)                                          | Querying commands for the auth module                                                                            |
-| [`bank`](#153-bank)                                          | Querying commands for the bank module                                                                            |
-| [`basket`](#154-basket)                                      | query commands for the basket module                                                                             |
-| [`block`](#155-block)                                        | Get verified data for a the block at given height                                                                |
-| [`collectives`](#156-collectives)                            | query commands for the collectives module                                                                        |
-| [`custody`](#157-custody)                                    | query commands for the custody module                                                                            |
-| [`customevidence`](#158-customevidence)                      | Query for evidence by hash or for all (paginated) submitted evidence                                             |
-| [`customgov`](#159-customgov)                                | query commands for the customgov module                                                                          |
-| [`customslashing`](#1510-customslashing)                     | Querying commands for the slashing module                                                                        |
-| [`customstaking`](#1511-customstaking)                       | Querying commands for the staking module                                                                         |
-| [`distributor`](#1512-distributor)                           | query commands for the distributor module                                                                        |
-| [`layer2`](#1513-layer2)                                     | query commands for the layer2 module                                                                             |
-| [`multistaking`](#1514-multistaking)                         | Querying commands for the multistaking module                                                                    |
-| [`params`](#1515-params)                                     | Querying commands for the params module                                                                          |
-| [`recovery`](#1516-recovery)                                 | Querying commands for the recovery module                                                                        |
-| [`spending`](#1517-spending)                                 | query commands for the tokens module                                                                             |
-| [`tendermint-validator-set`](#1518-tendermint-validator-set) | Get the full tendermint validator set at given height                                                            |
-| [`tokens`](#1519-tokens)                                     | query commands for the tokens module                                                                             |
-| [`tx`](#1520-tx)                                             | Query for a transaction by hash, `"<addr>/<seq>"` combination or comma-separated signatures in a committed block |
-| [`txs`](#1521-txs)                                           | Query for paginated transactions that match a set of events                                                      |
-| [`ubi`](#1522-ubi)                                           | query commands for the ubi module                                                                                |
-| [`upgrade`](#1523-upgrade)                                   | Querying commands for the upgrade module                                                                         |
+| [`account`](#141-account)                                    | Query for account by address                                                                                     |
+| [`auth`](#142-auth)                                          | Querying commands for the auth module                                                                            |
+| [`bank`](#143-bank)                                          | Querying commands for the bank module                                                                            |
+| [`basket`](#144-basket)                                      | query commands for the basket module                                                                             |
+| [`block`](#145-block)                                        | Get verified data for a the block at given height                                                                |
+| [`collectives`](#146-collectives)                            | query commands for the collectives module                                                                        |
+| [`custody`](#147-custody)                                    | query commands for the custody module                                                                            |
+| [`customevidence`](#148-customevidence)                      | Query for evidence by hash or for all (paginated) submitted evidence                                             |
+| [`customgov`](#149-customgov)                                | query commands for the customgov module                                                                          |
+| [`customslashing`](#1410-customslashing)                     | Querying commands for the slashing module                                                                        |
+| [`customstaking`](#1411-customstaking)                       | Querying commands for the staking module                                                                         |
+| [`distributor`](#1412-distributor)                           | query commands for the distributor module                                                                        |
+| [`layer2`](#1413-layer2)                                     | query commands for the layer2 module                                                                             |
+| [`multistaking`](#1414-multistaking)                         | Querying commands for the multistaking module                                                                    |
+| [`params`](#1415-params)                                     | Querying commands for the params module                                                                          |
+| [`recovery`](#1416-recovery)                                 | Querying commands for the recovery module                                                                        |
+| [`spending`](#1417-spending)                                 | query commands for the tokens module                                                                             |
+| [`tendermint-validator-set`](#1418-tendermint-validator-set) | Get the full tendermint validator set at given height                                                            |
+| [`tokens`](#1419-tokens)                                     | query commands for the tokens module                                                                             |
+| [`tx`](#1420-tx)                                             | Query for a transaction by hash, `"<addr>/<seq>"` combination or comma-separated signatures in a committed block |
+| [`txs`](#1421-txs)                                           | Query for paginated transactions that match a set of events                                                      |
+| [`ubi`](#1422-ubi)                                           | query commands for the ubi module                                                                                |
+| [`upgrade`](#1423-upgrade)                                   | Querying commands for the upgrade module                                                                         |
 
 ```
 /# sekaid q --help
@@ -1943,6 +1976,287 @@ Global Flags:
 
 #### 14.9 customgov
 
+query commands for the customgov module.
+
+Usage:
+```
+sekaid query customgov [command]
+```
+
+Available Commands:
+
+| Subcommand                                                                                            | Description                                                                                       |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| [`all-execution-fees`](#1491-all-execution-fees)                                                      | Query all execution fees                                                                          |
+| [`all-identity-record-verify-requests`](#1492-all-identity-record-verify-requests)                    | Query all identity records verify requests                                                        |
+| [`all-proposal-durations`](#1493-all-proposal-durations)                                              | Query all proposal durations                                                                      |
+| [`all-roles`](#1494-all-roles)                                                                        | Query all registered roles                                                                        |
+| [`blacklisted-permission-addresses`](#1495-blacklisted-permission-addresses)                          | Query all KIRA addresses by a specific blacklisted permission                                     |
+| [`council-registry`](#1496-council-registry)                                                          | Query governance registry.                                                                        |
+| [`councilors`](#1497-councilors)                                                                      | Query councilors                                                                                  |
+| [`data-registry`](#1498-data-registry)                                                                | Query data registry by specific key                                                               |
+| [`data-registry-keys`](#1499-data-registry-keys)                                                      | Query all data registry keys                                                                      |
+| [`execution-fee`](#14910-execution-fee)                                                               | Query execution fee by the type of transaction                                                    |
+| [`identity-record`](#14911-identity-record)                                                           | Query identity record by id                                                                       |
+| [`identity-record-verify-request`](#14912-identity-record-verify-request)                             | Query identity record verify request by id                                                        |
+| [`identity-record-verify-requests-by-approver`](#14913-identity-record-verify-requests-by-approver)   | Query identity record verify request by approver                                                  |
+| [`identity-record-verify-requests-by-requester`](#14914-identity-record-verify-requests-by-requester) | Query identity records verify requests by requester                                               |
+| [`identity-records`](#14915-identity-records)                                                         | Query all identity records                                                                        |
+| [`identity-records-by-addr`](#14916-identity-records-by-addr)                                         | Query identity records by address                                                                 |
+| [`network-properties`](#14917-network-properties)                                                     | Query network properties                                                                          |
+| [`non-councilors`](#14918-non-councilors)                                                             | Query all governance members that are NOT Councilors                                              |
+| [`permissions`](#14919-permissions)                                                                   | Query permissions of an address                                                                   |
+| [`poll-votes`](#14920-poll-votes)                                                                     | Get poll votes by id                                                                              |
+| [`polls`](#14921-polls)                                                                               | Get polls by address                                                                              |
+| [`poor-network-messages`](#14922-poor-network-messages)                                               | Query poor network messages                                                                       |
+| [`proposal`](#14923-proposal)                                                                         | Query proposal details                                                                            |
+| [`proposal-duration`](#14924-proposal-duration)                                                       | Query a proposal duration                                                                         |
+| [`proposals`](#14925-proposals)                                                                       | Query proposals with optional filters                                                             |
+| [`proposer_voters_count`](#14926-proposer_voters_count)                                               | Query proposer and voters count that can create at least a type of proposal                       |
+| [`role`](#14927-role)                                                                                 | Query role by sid or id                                                                           |
+| [`roles`](#14928-roles)                                                                               | Query roles assigned to an address                                                                |
+| [`vote`](#14929-vote)                                                                                 | Query details of a single vote                                                                    |
+| [`voters`](#14930-voters)                                                                             | Query voters of a proposal                                                                        |
+| [`votes`](#14931-votes)                                                                               | Query votes on a proposal                                                                         |
+| [`whitelisted-permission-addresses](#14932-whitelisted-permission-addresses)                          | Query all KIRA addresses by a specific whitelisted permission                                     |
+| [`whitelisted-role-addresses`](#14933-whitelisted-role-addresses)                                     | Query all kira addresses by a specific whitelisted role (address does NOT have to be a Councilor) |
+
+
+
+| Flags        | Description        | Work  |
+| ------------ | ------------------ | ----- |
+| `-h, --help` | help for customgov | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work |
+| --------------------- | -------------------------------------------------------------------------------------- | ---- |
+| `--chain-id string`   | The network chain ID                                                                   | ❌ ?  |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ❌ ?  |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?  |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?  |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?  |
+
+```
+sekaid q customgov --help
+query commands for the customgov module
+
+Usage:
+  sekaid query customgov [command]
+
+Available Commands:
+  all-execution-fees                           Query all execution fees
+  all-identity-record-verify-requests          Query all identity records verify requests
+  all-proposal-durations                       Query all proposal durations
+  all-roles                                    Query all registered roles
+  blacklisted-permission-addresses             Query all KIRA addresses by a specific blacklisted permission
+  council-registry                             Query governance registry.
+  councilors                                   Query councilors
+  data-registry                                Query data registry by specific key
+  data-registry-keys                           Query all data registry keys
+  execution-fee                                Query execution fee by the type of transaction
+  identity-record                              Query identity record by id
+  identity-record-verify-request               Query identity record verify request by id
+  identity-record-verify-requests-by-approver  Query identity record verify request by approver
+  identity-record-verify-requests-by-requester Query identity records verify requests by requester
+  identity-records                             Query all identity records
+  identity-records-by-addr                     Query identity records by address
+  network-properties                           Query network properties
+  non-councilors                               Query all governance members that are NOT Councilors
+  permissions                                  Query permissions of an address
+  poll-votes                                   Get poll votes by id
+  polls                                        Get polls by address
+  poor-network-messages                        Query poor network messages
+  proposal                                     Query proposal details
+  proposal-duration                            Query a proposal duration
+  proposals                                    Query proposals with optional filters
+  proposer_voters_count                        Query proposer and voters count that can create at least a type of proposal
+  role                                         Query role by sid or id
+  roles                                        Query roles assigned to an address
+  vote                                         Query details of a single vote
+  voters                                       Query voters of a proposal
+  votes                                        Query votes on a proposal
+  whitelisted-permission-addresses             Query all KIRA addresses by a specific whitelisted permission
+  whitelisted-role-addresses                   Query all kira addresses by a specific whitelisted role (address does NOT have to be a Councilor)
+
+Flags:
+  -h, --help   help for customgov
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid query customgov [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+##### 14.9.1 all-execution-fees
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.2 all-identity-record-verify-requests
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.3 all-proposal-durations
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.4 all-roles
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.5 blacklisted-permission-addresses
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.6 council-registry
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.7 councilors
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.8 data-registry
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.9 data-registry-keys
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.10 execution-fee
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.11 identity-record
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.12 identity-record-verify-request
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.13 identity-record-verify-requests-by-approver
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.14 identity-record-verify-requests-by-requester
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.15 identity-records
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.16 identity-records-by-addr
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.17 network-properties
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.18 non-councilors
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.19 permissions
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.20 poll-votes
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.21 polls
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.22 poor-network-messages
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.23 proposal
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.24 proposal-duration
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.25 proposals
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.26 proposer_voters_count
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.27 role
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.28 roles
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.29 vote
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.30 voters
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.31 votes
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.32 whitelisted-permission-addresses
+
+[Return to "`query customgov`"](#149-customgov)  
+[Return to top](#sekai)
+
+##### 14.9.33 whitelisted-role-addresses
+
+[Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
 #### 14.10 customslashing
