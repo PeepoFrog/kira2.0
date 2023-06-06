@@ -31,6 +31,10 @@
     * [14. query](#14-query)
       * [14.1 account](#141-account)
       * [14.2 auth](#142-auth)
+        * [14.2.1 account](#1421-account)
+        * [14.2.2 accounts](#1422-accounts)
+        * [14.2.3 module-account](#1423-module-account)
+        * [14.2.4 params](#1424-params)
       * [14.3 bank](#143-bank)
         * [14.3.1 balances](#1431-balances)
         * [14.3.2 denom-metadata](#1432-denom-metadata)
@@ -796,9 +800,9 @@ Usage:
 sekaid keys parse <hex-or-bech32-address> [flags]
 ```
 
-| Flags        | Description       | Work  |
-| ------------ | ----------------- | ----- |
-| `-h, --help` | Help for mnemonic | ✅ yes |
+| Flags        | Description    | Work  |
+| ------------ | -------------- | ----- |
+| `-h, --help` | help for parse | ✅ yes |
 
 
 
@@ -1064,9 +1068,429 @@ Use "sekaid query [command] --help" for more information about a command.
 
 #### 14.1 account
 
+Query for account by address
+
+Usage:
+```
+sekaid query account [address] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for account                                                                                 | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query account --help
+Query for account by address
+
+Usage:
+  sekaid query account [address] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for account
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid query account kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --output=json | jq
+{
+  "@type": "/cosmos.auth.v1beta1.BaseAccount",
+  "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+  "pub_key": {
+    "@type": "/cosmos.crypto.secp256k1.PubKey",
+    "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+  },
+  "account_number": "0",
+  "sequence": "85"
+}
+```
+
 [Return to top](#sekai)
 
 #### 14.2 auth
+
+Querying commands for the auth module
+
+Usage:
+```
+  sekaid query auth [flags]
+  sekaid query auth [command]
+```
+
+Available Commands:
+
+| Subcommand                               | Description                              |
+| ---------------------------------------- | ---------------------------------------- |
+| [`account`](#1421-account)               | Query for account by address             |
+| [`accounts`](#1422-accounts)             | Query all the accounts                   |
+| [`module-account`](#1423-module-account) | Query module account info by module name |
+| [`params`](#1424-params)                 | Query the current auth parameters        |
+
+
+
+| Flags        | Description   | Work |
+| ------------ | ------------- | ---- |
+| `-h, --help` | help for auth |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid query auth account --help
+Query for account by address
+
+Usage:
+  sekaid query auth account [address] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for account
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+[Return to top](#sekai)
+
+##### 14.2.1 account
+
+Query for account by address.
+
+Usage:
+```
+sekaid query auth account [address] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for account                                                                                 | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query auth account --help
+Query for account by address
+
+Usage:
+  sekaid query auth account [address] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for account
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query auth account kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --output=json | jq
+{
+  "@type": "/cosmos.auth.v1beta1.BaseAccount",
+  "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+  "pub_key": {
+    "@type": "/cosmos.crypto.secp256k1.PubKey",
+    "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+  },
+  "account_number": "0",
+  "sequence": "85"
+}
+```
+
+On specific `--height` condition:
+```
+/# sekaid query auth account kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --height 40980 --output=json | jq
+{
+  "@type": "/cosmos.auth.v1beta1.BaseAccount",
+  "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+  "pub_key": {
+    "@type": "/cosmos.crypto.secp256k1.PubKey",
+    "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+  },
+  "account_number": "0",
+  "sequence": "70"
+}
+```
+
+[Return to top](#sekai)
+
+##### 14.2.2 accounts
+
+Query all the accounts
+
+Usage:
+```
+sekaid query auth accounts [flags]
+```
+
+| Flags                 | Description                                                                                         | Work  |
+| --------------------- | --------------------------------------------------------------------------------------------------- | ----- |
+| `--count-total`       | count total number of records in all-accounts to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)               | ✅ yes |
+| `-h, --help`          | help for accounts                                                                                   | ✅ yes |
+| `--limit uint`        | pagination limit of all-accounts to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`)    | ✅ yes |
+| `--offset uint`       | pagination offset of all-accounts to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                     | ✅ yes |
+| `--page uint`         | pagination page of all-accounts to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of all-accounts to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                              | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query auth accounts --help
+Query all the accounts
+
+Usage:
+  sekaid query auth accounts [flags]
+
+Flags:
+      --count-total       count total number of records in all-accounts to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for accounts
+      --limit uint        pagination limit of all-accounts to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of all-accounts to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of all-accounts to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of all-accounts to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid query auth accounts --limit=2 --reverse --output=json | jq
+{
+  "accounts": [
+    {
+      "@type": "/cosmos.auth.v1beta1.BaseAccount",
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "pub_key": {
+        "@type": "/cosmos.crypto.secp256k1.PubKey",
+        "key": "A5mB81789jXij6eUh5QGrRlhXdLheHFL1ix1LtxfMCvJ"
+      },
+      "account_number": "6",
+      "sequence": "5"
+    },
+    {
+      "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+      "base_account": {
+        "address": "kira17xpfvakm2amg962yls6f84z3kell8c5lqkfw2s",
+        "pub_key": null,
+        "account_number": "3",
+        "sequence": "0"
+      },
+      "name": "fee_collector",
+      "permissions": []
+    }
+  ],
+  "pagination": {
+    "next_key": "70V8dQvo1DIIoWZwiWl6lpuJ2s0=",
+    "total": "0"
+  }
+}
+```
+
+Other usages:
+```
+sekaid query auth accounts --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+
+sekaid query auth accounts --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+
+sekaid query auth accounts --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
+```
+
+**Pay attention**
+Can't use together:
+- `--page` and `--page-key`
+- `--offset` and `--page`
+- `--height` for future blocks
+
+[Return to top](#sekai)
+
+##### 14.2.3 module-account
+
+Query module account info by module name
+
+Usage:
+```
+sekaid query auth module-account [module-name] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for module-account                                                                          | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+```
+
+/# sekaid query auth module-account --help
+Query module account info by module name
+
+Usage:
+  sekaid query auth module-account [module-name] [flags]
+
+Examples:
+sekaid q auth module-account auth
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for module-account
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+#TODO haven't tested (unknown module names)
+
+🟨  
+🟨  
+🟨  
+
+[Return to top](#sekai)
+
+##### 14.2.4 params
+
+Query the current auth parameters.
+
+Usage:
+```
+sekaid query auth params [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for params                                                                                  | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query auth params --help
+Query the current auth parameters:
+
+$ <appd> query auth params
+
+Usage:
+  sekaid query auth params [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for params
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query auth params --output=json | jq
+{
+  "max_memo_characters": "256",
+  "tx_sig_limit": "7",
+  "tx_size_cost_per_byte": "10",
+  "sig_verify_cost_ed25519": "590",
+  "sig_verify_cost_secp256k1": "1000"
+}
+```
 
 [Return to top](#sekai)
 
@@ -1290,7 +1714,7 @@ sekaid query bank total [flags]
 | `--count-total`       | count total number of records in all balances to query for                                          | ❌ ?   |
 | `--denom string`      | The specific balance denomination to query for                                                      | ❌ ?   |
 | `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)               | ❌ ?   |
-| `-h, --help`          | help for balances                                                                                   | ✅ yes |
+| `-h, --help`          | help for total                                                                                      | ✅ yes |
 | `--limit uint`        | pagination limit of all balances to query for (default `100`)                                       | ✅ yes |
 | `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`)    | ✅ yes |
 | `--offset uint`       | pagination offset of all balances to query for                                                      | ❌ ?   |
@@ -1488,66 +1912,66 @@ sekaid start [flags]
 ```
 
 | Flags                                           | Description                                                                                                                                    | Work |
-|-------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| --abci string                                   | genesis file chain-id, if left blank will be randomly created                                                                                  | ❌?    |
-| --address string                                | Listen address (default "tcp://0.0.0.0:26658")                                                                                                 | ❌?    |
-| --consensus.create_empty_blocks                 | set this to false to only produce blocks when there are txs or when the AppHash changes (default true)                                         | ❌?    |
-| --consensus.create_empty_blocks_interval string | the possible interval between empty blocks (default "0s")                                                                                      | ❌?    |
-| --consensus.double_sign_check_height int        | how many blocks to look back to check existence of the node's consensus votes before joining consensus                                         | ❌?    |
-| --cpu-profile string                            | Enable CPU profiling and write to the provided file                                                                                            | ❌?    |
-| --db_backend string                             | database backend: goleveldb \| cleveldb \| boltdb \| rocksdb \| badgerdb (default "goleveldb")                                                 | ❌?    |
-| --db_dir string                                 | database directory (default "data")                                                                                                            | ❌?    |
-| --fast_sync                                     | fast blockchain syncing (default true)                                                                                                         | ❌?    |
-| --genesis_hash bytesHex                         | optional SHA-256 hash of the genesis file                                                                                                      | ❌?    |
-| --grpc-only                                     | Start the node in gRPC query only mode (no Tendermint process is started)                                                                      | ❌?    |
-| --grpc-web.address string                       | The gRPC-Web server address to listen on (default "0.0.0.0:9091")                                                                              | ❌?    |
-| --grpc-web.enable                               | Define if the gRPC-Web server should be enabled. (Note: gRPC must also be enabled.) (default true)                                             | ❌?    |
-| --grpc.address string                           | the gRPC server address to listen on (default "0.0.0.0:9090")                                                                                  | ❌?    |
-| --grpc.enable                                   | Define if the gRPC server should be enabled (default true)                                                                                     | ❌?    |
-| --halt-height uint                              | Block height at which to gracefully halt the chain and shutdown the node                                                                       | ❌?    |
-| --halt-time uint                                | Minimum block time (in Unix seconds) at which to gracefully halt the chain and shutdown the node                                               | ❌?    |
-| -h, --help                                      | help for start                                                                                                                                 | ❌?    |
-| --iavl-disable-fastnode                         | Enable fast node for IAVL tree (default true)                                                                                                  | ❌?    |
-| --inter-block-cache                             | Enable inter-block caching (default true)                                                                                                      | ❌?    |
-| --inv-check-period uint                         | Assert registered invariants every N blocks                                                                                                    | ❌?    |
-| --min-retain-blocks uint                        | Minimum block height offset during ABCI commit to prune Tendermint blocks                                                                      | ❌?    |
-| --minimum-gas-prices string                     | Minimum gas prices to accept for transactions; Any fee in a tx must meet this minimum (e.g. 0.01photino;0.0001stake)                           | ❌?    |
-| --moniker string                                | node name (default "validator.local")                                                                                                          | ❌?    |
-| --p2p.external-address string                   | ip:port address to advertise to peers for them to dial                                                                                         | ❌?    |
-| --p2p.laddr string                              | node listen address. (0.0.0.0:0 means any interface, any port) (default "tcp://0.0.0.0:26656")                                                 | ❌?    |
-| --p2p.persistent_peers string                   | comma-delimited ID@host:port persistent peers                                                                                                  | ❌?    |
-| --p2p.pex                                       | enable/disable Peer-Exchange (default true)                                                                                                    | ❌?    |
-| --p2p.private_peer_ids string                   | comma-delimited private peer IDs                                                                                                               | ❌?    |
-| --p2p.seed_mode                                 | enable/disable seed mode                                                                                                                       | ❌?    |
-| --p2p.seeds string                              | comma-delimited ID@host:port seed nodes                                                                                                        | ❌?    |
-| --p2p.unconditional_peer_ids string             | comma-delimited IDs of unconditional peers                                                                                                     | ❌?    |
-| --p2p.upnp                                      | enable/disable UPNP port forwarding                                                                                                            | ❌?    |
-| --priv_validator_laddr string                   | socket address to listen on for connections from external priv_validator process                                                               | ❌?    |
-| --proxy_app string                              | proxy app address, or one of: 'kvstore', 'persistent_kvstore', 'counter', 'e2e' or 'noop' for local testing. (default "tcp://127.0.0.1:26658") | ❌?    |
-| --pruning string                                | Pruning strategy (default\|nothing\|everything\|custom) (default "default")                                                                    | ❌?    |
-| --pruning-interval uint                         | Height interval at which pruned heights are removed from disk (ignored if pruning is not 'custom')                                             | ❌?    |
-| --pruning-keep-every uint                       | Offset heights to keep on disk after 'keep-every' (ignored if pruning is not 'custom')                                                         | ❌?    |
-| --pruning-keep-recent uint                      | Number of recent heights to keep on disk (ignored if pruning is not 'custom')                                                                  | ❌?    |
-| --rpc.grpc_laddr string                         | GRPC listen address (BroadcastTx only). Port required                                                                                          | ❌?    |
-| --rpc.laddr string                              | RPC listen address. Port required (default "tcp://127.0.0.1:26657")                                                                            | ✅yes  |
-| --rpc.pprof_laddr string                        | pprof listen address (https://golang.org/pkg/net/http/pprof)                                                                                   | ❌?    |
-| --rpc.unsafe                                    | enabled unsafe rpc methods                                                                                                                     | ❌?    |
-| --state-sync.snapshot-interval uint             | State sync snapshot interval                                                                                                                   | ❌?    |
-| --state-sync.snapshot-keep-recent uint32        | State sync snapshot to keep (default 2)                                                                                                        | ❌?    |
-| --trace-store string                            | Enable KVStore tracing to an output file                                                                                                       | ❌?    |
-| --transport string                              | Transport protocol: socket, grpc (default "socket")                                                                                            | ❌?    |
-| --unsafe-skip-upgrades ints                     | Skip a set of upgrade heights to continue the old binary                                                                                       | ❌?    |
-| --with-tendermint                               | Run abci app embedded in-process with tendermint (default true)                                                                                | ❌?    |
-| --x-crisis-skip-assert-invariants               | Skip x/crisis invariants check on startup                                                                                                      | ❌?    |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| --abci string                                   | genesis file chain-id, if left blank will be randomly created                                                                                  | ❌?   |
+| --address string                                | Listen address (default "tcp://0.0.0.0:26658")                                                                                                 | ❌?   |
+| --consensus.create_empty_blocks                 | set this to false to only produce blocks when there are txs or when the AppHash changes (default true)                                         | ❌?   |
+| --consensus.create_empty_blocks_interval string | the possible interval between empty blocks (default "0s")                                                                                      | ❌?   |
+| --consensus.double_sign_check_height int        | how many blocks to look back to check existence of the node's consensus votes before joining consensus                                         | ❌?   |
+| --cpu-profile string                            | Enable CPU profiling and write to the provided file                                                                                            | ❌?   |
+| --db_backend string                             | database backend: goleveldb \| cleveldb \| boltdb \| rocksdb \| badgerdb (default "goleveldb")                                                 | ❌?   |
+| --db_dir string                                 | database directory (default "data")                                                                                                            | ❌?   |
+| --fast_sync                                     | fast blockchain syncing (default true)                                                                                                         | ❌?   |
+| --genesis_hash bytesHex                         | optional SHA-256 hash of the genesis file                                                                                                      | ❌?   |
+| --grpc-only                                     | Start the node in gRPC query only mode (no Tendermint process is started)                                                                      | ❌?   |
+| --grpc-web.address string                       | The gRPC-Web server address to listen on (default "0.0.0.0:9091")                                                                              | ❌?   |
+| --grpc-web.enable                               | Define if the gRPC-Web server should be enabled. (Note: gRPC must also be enabled.) (default true)                                             | ❌?   |
+| --grpc.address string                           | the gRPC server address to listen on (default "0.0.0.0:9090")                                                                                  | ❌?   |
+| --grpc.enable                                   | Define if the gRPC server should be enabled (default true)                                                                                     | ❌?   |
+| --halt-height uint                              | Block height at which to gracefully halt the chain and shutdown the node                                                                       | ❌?   |
+| --halt-time uint                                | Minimum block time (in Unix seconds) at which to gracefully halt the chain and shutdown the node                                               | ❌?   |
+| -h, --help                                      | help for start                                                                                                                                 | ❌?   |
+| --iavl-disable-fastnode                         | Enable fast node for IAVL tree (default true)                                                                                                  | ❌?   |
+| --inter-block-cache                             | Enable inter-block caching (default true)                                                                                                      | ❌?   |
+| --inv-check-period uint                         | Assert registered invariants every N blocks                                                                                                    | ❌?   |
+| --min-retain-blocks uint                        | Minimum block height offset during ABCI commit to prune Tendermint blocks                                                                      | ❌?   |
+| --minimum-gas-prices string                     | Minimum gas prices to accept for transactions; Any fee in a tx must meet this minimum (e.g. 0.01photino;0.0001stake)                           | ❌?   |
+| --moniker string                                | node name (default "validator.local")                                                                                                          | ❌?   |
+| --p2p.external-address string                   | ip:port address to advertise to peers for them to dial                                                                                         | ❌?   |
+| --p2p.laddr string                              | node listen address. (0.0.0.0:0 means any interface, any port) (default "tcp://0.0.0.0:26656")                                                 | ❌?   |
+| --p2p.persistent_peers string                   | comma-delimited ID@host:port persistent peers                                                                                                  | ❌?   |
+| --p2p.pex                                       | enable/disable Peer-Exchange (default true)                                                                                                    | ❌?   |
+| --p2p.private_peer_ids string                   | comma-delimited private peer IDs                                                                                                               | ❌?   |
+| --p2p.seed_mode                                 | enable/disable seed mode                                                                                                                       | ❌?   |
+| --p2p.seeds string                              | comma-delimited ID@host:port seed nodes                                                                                                        | ❌?   |
+| --p2p.unconditional_peer_ids string             | comma-delimited IDs of unconditional peers                                                                                                     | ❌?   |
+| --p2p.upnp                                      | enable/disable UPNP port forwarding                                                                                                            | ❌?   |
+| --priv_validator_laddr string                   | socket address to listen on for connections from external priv_validator process                                                               | ❌?   |
+| --proxy_app string                              | proxy app address, or one of: 'kvstore', 'persistent_kvstore', 'counter', 'e2e' or 'noop' for local testing. (default "tcp://127.0.0.1:26658") | ❌?   |
+| --pruning string                                | Pruning strategy (default\|nothing\|everything\|custom) (default "default")                                                                    | ❌?   |
+| --pruning-interval uint                         | Height interval at which pruned heights are removed from disk (ignored if pruning is not 'custom')                                             | ❌?   |
+| --pruning-keep-every uint                       | Offset heights to keep on disk after 'keep-every' (ignored if pruning is not 'custom')                                                         | ❌?   |
+| --pruning-keep-recent uint                      | Number of recent heights to keep on disk (ignored if pruning is not 'custom')                                                                  | ❌?   |
+| --rpc.grpc_laddr string                         | GRPC listen address (BroadcastTx only). Port required                                                                                          | ❌?   |
+| --rpc.laddr string                              | RPC listen address. Port required (default "tcp://127.0.0.1:26657")                                                                            | ✅yes |
+| --rpc.pprof_laddr string                        | pprof listen address (https://golang.org/pkg/net/http/pprof)                                                                                   | ❌?   |
+| --rpc.unsafe                                    | enabled unsafe rpc methods                                                                                                                     | ❌?   |
+| --state-sync.snapshot-interval uint             | State sync snapshot interval                                                                                                                   | ❌?   |
+| --state-sync.snapshot-keep-recent uint32        | State sync snapshot to keep (default 2)                                                                                                        | ❌?   |
+| --trace-store string                            | Enable KVStore tracing to an output file                                                                                                       | ❌?   |
+| --transport string                              | Transport protocol: socket, grpc (default "socket")                                                                                            | ❌?   |
+| --unsafe-skip-upgrades ints                     | Skip a set of upgrade heights to continue the old binary                                                                                       | ❌?   |
+| --with-tendermint                               | Run abci app embedded in-process with tendermint (default true)                                                                                | ❌?   |
+| --x-crisis-skip-assert-invariants               | Skip x/crisis invariants check on startup                                                                                                      | ❌?   |
 
 
 
 | Global flags         | Description                                                                            | Work |
 | -------------------- | -------------------------------------------------------------------------------------- | ---- |
-| `--home`             | directory for config and data (default `"/root/.sekaid"`)                              | ❌?no  |
-| `--log_format`       | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌?no  |
-| `--log_level string` | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌?no  |
-| `--trace`            | Print out full stack trace on errors                                                   | ❌?no  |
+| `--home`             | directory for config and data (default `"/root/.sekaid"`)                              | ❌?no |
+| `--log_format`       | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌?no |
+| `--log_level string` | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌?no |
+| `--trace`            | Print out full stack trace on errors                                                   | ❌?no |
 
 ```
 sekaid start --rpc.laddr "tcp://0.0.0.0:26657" 
@@ -2353,6 +2777,451 @@ Global Flags:
 
 #### 21.3 broadcast
 
+Broadcast transactions created with the --generate-only flag and signed with the sign command.
+
+Usage:
+```
+sekaid tx broadcast [file_path] [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `--amino`                     | Generate Amino encoded JSON suitable for submiting to the txs REST endpoint                                                                                 | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ❌ ?   |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for broadcast                                                                                                                                          | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--multisig string`           | Address or key name of the multisig account on behalf of which the transaction shall be signed                                                              | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ❌ ?   |
+| `--output-document string`    | The document will be written to the given file instead of STDOUT                                                                                            | ❌ ?   |
+| `--overwrite`                 | Overwrite existing signatures with a new one. If disabled, new signature will be appended                                                                   | ❌ ?   |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--signature-only`            | Print only the signatures                                                                                                                                   | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ❌ ?   |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx broadcast --help
+Broadcast transactions created with the --generate-only
+flag and signed with the sign command. Read a transaction from [file_path] and
+broadcast it to a node. If you supply a dash (-) argument in place of an input
+filename, the command reads from standard input.
+
+$ <appd> tx broadcast ./mytxn.json
+
+Usage:
+  sekaid tx broadcast [file_path] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for broadcast
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+<details>
+  <summary>Pregenerate tx</summary>
+
+  Generate tx (Example of sending tokens via `bank` module):
+  ```
+  /# sekaid tx bank send kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt 100samolean --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --fees=99ukex --generate-only --output=json | jq > tx.json
+  ```
+
+  Sign tx:
+  ```
+  /# sekaid tx sign tx.json --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --output=json | jq >
+tx_signed.json
+  ```
+</details>
+
+```
+/# sekaid tx broadcast tx_signed.json  --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --output=json | jq
+{
+  "height": "0",
+  "txhash": "9AE59A7878EE853F6175B77BC83F6A132B243810308A1A17DF35641E703B29A9",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check tx execution</summary>
+
+  ```
+  /# sekaid q tx 9AE59A7878EE853F6175B77BC83F6A132B243810308A1A17DF35641E703B29A9 -o json | jq
+  ```
+
+  ```json
+  {
+    "height": "91894",
+    "txhash": "9AE59A7878EE853F6175B77BC83F6A132B243810308A1A17DF35641E703B29A9",
+    "codespace": "",
+    "code": 0,
+    "data": "0A1E0A1C2F636F736D6F732E62616E6B2E763162657461312E4D736753656E64",
+    "raw_log": "[{\"events\":[{\"type\":\"coin_received\",\"attributes\":[{\"key\":\"receiver\",\"value\":\"kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt\"},{\"key\":\"amount\",\"value\":\"100samolean\"}]},{\"type\":\"coin_spent\",\"attributes\":[{\"key\":\"spender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"100samolean\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/cosmos.bank.v1beta1.MsgSend\"},{\"key\":\"sender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"module\",\"value\":\"bank\"}]},{\"type\":\"transfer\",\"attributes\":[{\"key\":\"recipient\",\"value\":\"kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt\"},{\"key\":\"sender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"100samolean\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "coin_received",
+            "attributes": [
+              {
+                "key": "receiver",
+                "value": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt"
+              },
+              {
+                "key": "amount",
+                "value": "100samolean"
+              }
+            ]
+          },
+          {
+            "type": "coin_spent",
+            "attributes": [
+              {
+                "key": "spender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "100samolean"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/cosmos.bank.v1beta1.MsgSend"
+              },
+              {
+                "key": "sender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "module",
+                "value": "bank"
+              }
+            ]
+          },
+          {
+            "type": "transfer",
+            "attributes": [
+              {
+                "key": "recipient",
+                "value": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt"
+              },
+              {
+                "key": "sender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "100samolean"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/cosmos.bank.v1beta1.MsgSend",
+            "from_address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "to_address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+            "amount": [
+              {
+                "denom": "samolean",
+                "amount": "100"
+              }
+            ]
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "84"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "99"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "OukW9MMdqzxI2LUymHKu9DXz1A6B6+RxEZBSn55vw5QSnC7DHi+ryIm2tDcwMPRm84t2uDh55DGyniNyyHoSrg=="
+      ]
+    },
+    "timestamp": "2023-06-06T11:42:47Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC84NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "T3VrVzlNTWRxenhJMkxVeW1IS3U5RFh6MUE2QjYrUnhFWkJTbjU1dnc1UVNuQzdESGkrcnlJbTJ0RGN3TVBSbTg0dDJ1RGg1NURHeW5pTnl5SG9Tcmc9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "OTl1a2V4",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2Nvc21vcy5iYW5rLnYxYmV0YTEuTXNnU2VuZA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwc2Ftb2xlYW4=",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwc2Ftb2xlYW4=",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwc2Ftb2xlYW4=",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "bW9kdWxl",
+            "value": "YmFuaw==",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
+
 [Return to top](#sekai)
 
 #### 21.4 collectives
@@ -2397,6 +3266,117 @@ Global Flags:
 
 #### 21.14 multisign
 
+Sign transactions created with the --generate-only flag that require multisig signatures.
+
+Usage:
+```
+sekaid tx multisign [file] [name] [[signature]...] [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `--amino`                     | Generate Amino-encoded JSON suitable for submitting to the txs REST endpoint                                                                                | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ❌ ?   |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for multisign                                                                                                                                          | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--multisig string`           | Address or key name of the multisig account on behalf of which the transaction shall be signed                                                              | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ❌ ?   |
+| `--output-document string`    | The document is written to the given file instead of STDOUT                                                                                                 | ❌ ?   |
+| `--overwrite`                 | Overwrite existing signatures with a new one. If disabled, new signature will be appended                                                                   | ❌ ?   |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--signature-only`            | Print only the generated signature, then exit                                                                                                               | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ❌ ?   |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+# sekaid tx multisign --help
+Sign transactions created with the --generate-only flag that require multisig signatures.
+
+Read one or more signatures from one or more [signature] file, generate a multisig signature compliant to the
+multisig key [name], and attach the key name to the transaction read from [file].
+
+Example:
+$ sekaid tx multisign transaction.json k1k2k3 k1sig.json k2sig.json k3sig.json
+
+If --signature-only flag is on, output a JSON representation
+of only the generated signature.
+
+If the --offline flag is on, the client will not reach out to an external node.
+Account number or sequence number lookups are not performed so you must
+set these parameters manually.
+
+The current multisig implementation defaults to amino-json sign mode.
+The SIGN_MODE_DIRECT sign mode is not supported.'
+
+Usage:
+  sekaid tx multisign [file] [name] [[signature]...] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+      --amino                    Generate Amino-encoded JSON suitable for submitting to the txs REST endpoint
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for multisign
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+      --output-document string   The document is written to the given file instead of STDOUT
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --signature-only           Print only the generated signature, then exit
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+#TODO haven't tested
+
+🟨  
+🟨  
+🟨  
+
 [Return to top](#sekai)
 
 #### 21.15 multistaking
@@ -2409,9 +3389,320 @@ Global Flags:
 
 #### 21.17 sign
 
+Sign a transaction created with the '--generate-only' flag.
+
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `--amino`                     | Generate Amino encoded JSON suitable for submiting to the txs REST endpoint                                                                                 | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ❌ ?   |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for sign                                                                                                                                               | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--multisig string`           | Address or key name of the multisig account on behalf of which the transaction shall be signed                                                              | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ❌ ?   |
+| `--output-document string`    | The document will be written to the given file instead of STDOUT                                                                                            | ❌ ?   |
+| `--overwrite`                 | Overwrite existing signatures with a new one. If disabled, new signature will be appended                                                                   | ❌ ?   |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--signature-only`            | Print only the signatures                                                                                                                                   | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ❌ ?   |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx sign tx --help
+Sign a transaction created with the --generate-only flag.
+It will read a transaction from [file], sign it, and print its JSON encoding.
+
+If the --signature-only flag is set, it will output the signature parts only.
+
+The --offline flag makes sure that the client will not reach out to full node.
+As a result, the account and sequence number queries will not be performed and
+it is required to set such parameters manually. Note, invalid values will cause
+the transaction to fail.
+
+The --multisig=<multisig_key> flag generates a signature on behalf of a multisig account
+key. It implies --signature-only. Full multisig signed transactions may eventually
+be generated via the 'multisign' command.
+
+Usage:
+  sekaid tx sign [file] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+      --amino                    Generate Amino encoded JSON suitable for submiting to the txs REST endpoint
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for sign
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --multisig string          Address or key name of the multisig account on behalf of which the transaction shall be signed
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+      --output-document string   The document will be written to the given file instead of STDOUT
+      --overwrite                Overwrite existing signatures with a new one. If disabled, new signature will be appended
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --signature-only           Print only the signatures
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+<details>
+  <summary>Pregenerate tx</summary>
+
+  ```
+  /# sekaid tx bank send kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt 100samolean --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --fees=99ukex --generate-only --output=json | jq > tx.json
+  ```
+
+  tx.json:
+  ```json
+  {
+    "body": {
+      "messages": [
+        {
+          "@type": "/cosmos.bank.v1beta1.MsgSend",
+          "from_address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+          "to_address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+          "amount": [
+            {
+              "denom": "samolean",
+              "amount": "100"
+            }
+          ]
+        }
+      ],
+      "memo": "",
+      "timeout_height": "0",
+      "extension_options": [],
+      "non_critical_extension_options": []
+    },
+    "auth_info": {
+      "signer_infos": [],
+      "fee": {
+        "amount": [
+          {
+            "denom": "ukex",
+            "amount": "99"
+          }
+        ],
+        "gas_limit": "200000",
+        "payer": "",
+        "granter": ""
+      }
+    },
+    "signatures": []
+  }
+  ```
+
+  __Important to use the `--generate-only` flag__
+</details>
+
+```
+/# sekaid tx sign tx.json --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --output=json | jq
+{
+  "body": {
+    "messages": [
+      {
+        "@type": "/cosmos.bank.v1beta1.MsgSend",
+        "from_address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "to_address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+        "amount": [
+          {
+            "denom": "samolean",
+            "amount": "100"
+          }
+        ]
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [
+      {
+        "public_key": {
+          "@type": "/cosmos.crypto.secp256k1.PubKey",
+          "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+        },
+        "mode_info": {
+          "single": {
+            "mode": "SIGN_MODE_DIRECT"
+          }
+        },
+        "sequence": "84"
+      }
+    ],
+    "fee": {
+      "amount": [
+        {
+          "denom": "ukex",
+          "amount": "99"
+        }
+      ],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": [
+    "OukW9MMdqzxI2LUymHKu9DXz1A6B6+RxEZBSn55vw5QSnC7DHi+ryIm2tDcwMPRm84t2uDh55DGyniNyyHoSrg=="
+  ]
+}
+```
+
 [Return to top](#sekai)
 
 #### 21.18 sign-batch
+
+Sign batch files of transactions generated with `--generate-only`.
+
+Usage:
+```
+sekaid tx sign-batch [file] [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ❌ ?   |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ❌ ?   |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ❌ ?   |
+| `-h, --help`                  | help for sign-batch                                                                                                                                         | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ❌ ?   |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ❌ ?   |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--multisig string`           | Address or key name of the multisig account on behalf of which the transaction shall be signed                                                              | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ❌ ?   |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ❌ ?   |
+| `--output-document string`    | The document will be written to the given file instead of STDOUT                                                                                            | ❌ ?   |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--signature-only`            | Print only the generated signature, then exit (default `true`)                                                                                              | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ❌ ?   |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx sign-batch --help
+Sign batch files of transactions generated with --generate-only.
+The command processes list of transactions from file (one StdTx each line), generate
+signed transactions or signatures and print their JSON encoding, delimited by '\n'.
+As the signatures are generated, the command updates the account sequence number accordingly.
+
+If the --signature-only flag is set, it will output the signature parts only.
+
+The --offline flag makes sure that the client will not reach out to full node.
+As a result, the account and the sequence number queries will not be performed and
+it is required to set such parameters manually. Note, invalid values will cause
+the transaction to fail. The sequence will be incremented automatically for each
+transaction that is signed.
+
+The --multisig=<multisig_key> flag generates a signature on behalf of a multisig
+account key. It implies --signature-only.
+
+Usage:
+  sekaid tx sign-batch [file] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for sign-batch
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --multisig string          Address or key name of the multisig account on behalf of which the transaction shall be signed
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+      --output-document string   The document will be written to the given file instead of STDOUT
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --signature-only           Print only the generated signature, then exit (default true)
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+#TODO haven't tested
+
+🟨  
+🟨  
+🟨  
 
 [Return to top](#sekai)
 
@@ -2432,6 +3723,163 @@ Global Flags:
 [Return to top](#sekai)
 
 #### 21.23 validate-signatures
+
+Print the addresses that must sign the transaction, those who have already signed it, and make sure that signatures are in the correct order.
+
+Usage:
+```
+sekaid tx validate-signatures [file] [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ❌ ?   |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ❌ ?   |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ❌ ?   |
+| `-h, --help`                  | help for validate-signatures                                                                                                                                | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ❌ ?   |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ❌ ?   |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--multisig string`           | Address or key name of the multisig account on behalf of which the transaction shall be signed                                                              | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ❌ ?   |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ❌ ?   |
+| `--output-document string`    | The document will be written to the given file instead of STDOUT                                                                                            | ❌ ?   |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--signature-only`            | Print only the generated signature, then exit (default `true`)                                                                                              | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ❌ ?   |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx validate-signatures --help
+Print the addresses that must sign the transaction, those who have already
+signed it, and make sure that signatures are in the correct order.
+
+The command would check whether all required signers have signed the transactions, whether
+the signatures were collected in the right order, and if the signature is valid over the
+given transaction. If the --offline flag is also set, signature validation over the
+transaction will be not be performed as that will require RPC communication with a full node.
+
+Usage:
+  sekaid tx validate-signatures [file] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for validate-signatures
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+<details>
+  <summary>Pregenerate signed tx</summary>
+
+  ```
+  sekaid tx sign tx1.json --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --node=tcp://localhost:26657 --output=json | jq > tx1_signed.json
+  ```
+
+  tx1_signed.json:
+  ```json
+  {
+  "body": {
+    "messages": [
+      {
+        "@type": "/cosmos.bank.v1beta1.MsgSend",
+        "from_address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "to_address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+        "amount": [
+          {
+            "denom": "samolean",
+            "amount": "100"
+          }
+        ]
+      }
+    ],
+    "memo": "",
+    "timeout_height": "0",
+    "extension_options": [],
+    "non_critical_extension_options": []
+  },
+  "auth_info": {
+    "signer_infos": [
+      {
+        "public_key": {
+          "@type": "/cosmos.crypto.secp256k1.PubKey",
+          "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+        },
+        "mode_info": {
+          "single": {
+            "mode": "SIGN_MODE_DIRECT"
+          }
+        },
+        "sequence": "84"
+      }
+    ],
+    "fee": {
+      "amount": [],
+      "gas_limit": "200000",
+      "payer": "",
+      "granter": ""
+    }
+  },
+  "signatures": [
+    "yqZAxLBrN+vsF3oWozOCItihdziTv1iZkt5aOhS2krZpE2Wk8SaXRMpPaoeBRDiSYd7Nd26u0Zc9uQMYvk1e3g=="
+  ]
+}
+  ```
+</details>
+
+```
+/# sekaid tx validate-signatures --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test tx1_signed.json
+Signers:
+  0: kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4
+
+Signatures:
+  0: kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4                        [OK]
+```
 
 [Return to top](#sekai)
 
