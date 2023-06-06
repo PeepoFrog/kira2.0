@@ -800,9 +800,9 @@ Usage:
 sekaid keys parse <hex-or-bech32-address> [flags]
 ```
 
-| Flags        | Description       | Work  |
-| ------------ | ----------------- | ----- |
-| `-h, --help` | Help for mnemonic | ✅ yes |
+| Flags        | Description    | Work  |
+| ------------ | -------------- | ----- |
+| `-h, --help` | help for parse | ✅ yes |
 
 
 
@@ -1714,7 +1714,7 @@ sekaid query bank total [flags]
 | `--count-total`       | count total number of records in all balances to query for                                          | ❌ ?   |
 | `--denom string`      | The specific balance denomination to query for                                                      | ❌ ?   |
 | `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)               | ❌ ?   |
-| `-h, --help`          | help for balances                                                                                   | ✅ yes |
+| `-h, --help`          | help for total                                                                                      | ✅ yes |
 | `--limit uint`        | pagination limit of all balances to query for (default `100`)                                       | ✅ yes |
 | `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`)    | ✅ yes |
 | `--offset uint`       | pagination offset of all balances to query for                                                      | ❌ ?   |
@@ -1912,66 +1912,66 @@ sekaid start [flags]
 ```
 
 | Flags                                           | Description                                                                                                                                    | Work |
-|-------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| --abci string                                   | genesis file chain-id, if left blank will be randomly created                                                                                  | ❌?    |
-| --address string                                | Listen address (default "tcp://0.0.0.0:26658")                                                                                                 | ❌?    |
-| --consensus.create_empty_blocks                 | set this to false to only produce blocks when there are txs or when the AppHash changes (default true)                                         | ❌?    |
-| --consensus.create_empty_blocks_interval string | the possible interval between empty blocks (default "0s")                                                                                      | ❌?    |
-| --consensus.double_sign_check_height int        | how many blocks to look back to check existence of the node's consensus votes before joining consensus                                         | ❌?    |
-| --cpu-profile string                            | Enable CPU profiling and write to the provided file                                                                                            | ❌?    |
-| --db_backend string                             | database backend: goleveldb \| cleveldb \| boltdb \| rocksdb \| badgerdb (default "goleveldb")                                                 | ❌?    |
-| --db_dir string                                 | database directory (default "data")                                                                                                            | ❌?    |
-| --fast_sync                                     | fast blockchain syncing (default true)                                                                                                         | ❌?    |
-| --genesis_hash bytesHex                         | optional SHA-256 hash of the genesis file                                                                                                      | ❌?    |
-| --grpc-only                                     | Start the node in gRPC query only mode (no Tendermint process is started)                                                                      | ❌?    |
-| --grpc-web.address string                       | The gRPC-Web server address to listen on (default "0.0.0.0:9091")                                                                              | ❌?    |
-| --grpc-web.enable                               | Define if the gRPC-Web server should be enabled. (Note: gRPC must also be enabled.) (default true)                                             | ❌?    |
-| --grpc.address string                           | the gRPC server address to listen on (default "0.0.0.0:9090")                                                                                  | ❌?    |
-| --grpc.enable                                   | Define if the gRPC server should be enabled (default true)                                                                                     | ❌?    |
-| --halt-height uint                              | Block height at which to gracefully halt the chain and shutdown the node                                                                       | ❌?    |
-| --halt-time uint                                | Minimum block time (in Unix seconds) at which to gracefully halt the chain and shutdown the node                                               | ❌?    |
-| -h, --help                                      | help for start                                                                                                                                 | ❌?    |
-| --iavl-disable-fastnode                         | Enable fast node for IAVL tree (default true)                                                                                                  | ❌?    |
-| --inter-block-cache                             | Enable inter-block caching (default true)                                                                                                      | ❌?    |
-| --inv-check-period uint                         | Assert registered invariants every N blocks                                                                                                    | ❌?    |
-| --min-retain-blocks uint                        | Minimum block height offset during ABCI commit to prune Tendermint blocks                                                                      | ❌?    |
-| --minimum-gas-prices string                     | Minimum gas prices to accept for transactions; Any fee in a tx must meet this minimum (e.g. 0.01photino;0.0001stake)                           | ❌?    |
-| --moniker string                                | node name (default "validator.local")                                                                                                          | ❌?    |
-| --p2p.external-address string                   | ip:port address to advertise to peers for them to dial                                                                                         | ❌?    |
-| --p2p.laddr string                              | node listen address. (0.0.0.0:0 means any interface, any port) (default "tcp://0.0.0.0:26656")                                                 | ❌?    |
-| --p2p.persistent_peers string                   | comma-delimited ID@host:port persistent peers                                                                                                  | ❌?    |
-| --p2p.pex                                       | enable/disable Peer-Exchange (default true)                                                                                                    | ❌?    |
-| --p2p.private_peer_ids string                   | comma-delimited private peer IDs                                                                                                               | ❌?    |
-| --p2p.seed_mode                                 | enable/disable seed mode                                                                                                                       | ❌?    |
-| --p2p.seeds string                              | comma-delimited ID@host:port seed nodes                                                                                                        | ❌?    |
-| --p2p.unconditional_peer_ids string             | comma-delimited IDs of unconditional peers                                                                                                     | ❌?    |
-| --p2p.upnp                                      | enable/disable UPNP port forwarding                                                                                                            | ❌?    |
-| --priv_validator_laddr string                   | socket address to listen on for connections from external priv_validator process                                                               | ❌?    |
-| --proxy_app string                              | proxy app address, or one of: 'kvstore', 'persistent_kvstore', 'counter', 'e2e' or 'noop' for local testing. (default "tcp://127.0.0.1:26658") | ❌?    |
-| --pruning string                                | Pruning strategy (default\|nothing\|everything\|custom) (default "default")                                                                    | ❌?    |
-| --pruning-interval uint                         | Height interval at which pruned heights are removed from disk (ignored if pruning is not 'custom')                                             | ❌?    |
-| --pruning-keep-every uint                       | Offset heights to keep on disk after 'keep-every' (ignored if pruning is not 'custom')                                                         | ❌?    |
-| --pruning-keep-recent uint                      | Number of recent heights to keep on disk (ignored if pruning is not 'custom')                                                                  | ❌?    |
-| --rpc.grpc_laddr string                         | GRPC listen address (BroadcastTx only). Port required                                                                                          | ❌?    |
-| --rpc.laddr string                              | RPC listen address. Port required (default "tcp://127.0.0.1:26657")                                                                            | ✅yes  |
-| --rpc.pprof_laddr string                        | pprof listen address (https://golang.org/pkg/net/http/pprof)                                                                                   | ❌?    |
-| --rpc.unsafe                                    | enabled unsafe rpc methods                                                                                                                     | ❌?    |
-| --state-sync.snapshot-interval uint             | State sync snapshot interval                                                                                                                   | ❌?    |
-| --state-sync.snapshot-keep-recent uint32        | State sync snapshot to keep (default 2)                                                                                                        | ❌?    |
-| --trace-store string                            | Enable KVStore tracing to an output file                                                                                                       | ❌?    |
-| --transport string                              | Transport protocol: socket, grpc (default "socket")                                                                                            | ❌?    |
-| --unsafe-skip-upgrades ints                     | Skip a set of upgrade heights to continue the old binary                                                                                       | ❌?    |
-| --with-tendermint                               | Run abci app embedded in-process with tendermint (default true)                                                                                | ❌?    |
-| --x-crisis-skip-assert-invariants               | Skip x/crisis invariants check on startup                                                                                                      | ❌?    |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| --abci string                                   | genesis file chain-id, if left blank will be randomly created                                                                                  | ❌?   |
+| --address string                                | Listen address (default "tcp://0.0.0.0:26658")                                                                                                 | ❌?   |
+| --consensus.create_empty_blocks                 | set this to false to only produce blocks when there are txs or when the AppHash changes (default true)                                         | ❌?   |
+| --consensus.create_empty_blocks_interval string | the possible interval between empty blocks (default "0s")                                                                                      | ❌?   |
+| --consensus.double_sign_check_height int        | how many blocks to look back to check existence of the node's consensus votes before joining consensus                                         | ❌?   |
+| --cpu-profile string                            | Enable CPU profiling and write to the provided file                                                                                            | ❌?   |
+| --db_backend string                             | database backend: goleveldb \| cleveldb \| boltdb \| rocksdb \| badgerdb (default "goleveldb")                                                 | ❌?   |
+| --db_dir string                                 | database directory (default "data")                                                                                                            | ❌?   |
+| --fast_sync                                     | fast blockchain syncing (default true)                                                                                                         | ❌?   |
+| --genesis_hash bytesHex                         | optional SHA-256 hash of the genesis file                                                                                                      | ❌?   |
+| --grpc-only                                     | Start the node in gRPC query only mode (no Tendermint process is started)                                                                      | ❌?   |
+| --grpc-web.address string                       | The gRPC-Web server address to listen on (default "0.0.0.0:9091")                                                                              | ❌?   |
+| --grpc-web.enable                               | Define if the gRPC-Web server should be enabled. (Note: gRPC must also be enabled.) (default true)                                             | ❌?   |
+| --grpc.address string                           | the gRPC server address to listen on (default "0.0.0.0:9090")                                                                                  | ❌?   |
+| --grpc.enable                                   | Define if the gRPC server should be enabled (default true)                                                                                     | ❌?   |
+| --halt-height uint                              | Block height at which to gracefully halt the chain and shutdown the node                                                                       | ❌?   |
+| --halt-time uint                                | Minimum block time (in Unix seconds) at which to gracefully halt the chain and shutdown the node                                               | ❌?   |
+| -h, --help                                      | help for start                                                                                                                                 | ❌?   |
+| --iavl-disable-fastnode                         | Enable fast node for IAVL tree (default true)                                                                                                  | ❌?   |
+| --inter-block-cache                             | Enable inter-block caching (default true)                                                                                                      | ❌?   |
+| --inv-check-period uint                         | Assert registered invariants every N blocks                                                                                                    | ❌?   |
+| --min-retain-blocks uint                        | Minimum block height offset during ABCI commit to prune Tendermint blocks                                                                      | ❌?   |
+| --minimum-gas-prices string                     | Minimum gas prices to accept for transactions; Any fee in a tx must meet this minimum (e.g. 0.01photino;0.0001stake)                           | ❌?   |
+| --moniker string                                | node name (default "validator.local")                                                                                                          | ❌?   |
+| --p2p.external-address string                   | ip:port address to advertise to peers for them to dial                                                                                         | ❌?   |
+| --p2p.laddr string                              | node listen address. (0.0.0.0:0 means any interface, any port) (default "tcp://0.0.0.0:26656")                                                 | ❌?   |
+| --p2p.persistent_peers string                   | comma-delimited ID@host:port persistent peers                                                                                                  | ❌?   |
+| --p2p.pex                                       | enable/disable Peer-Exchange (default true)                                                                                                    | ❌?   |
+| --p2p.private_peer_ids string                   | comma-delimited private peer IDs                                                                                                               | ❌?   |
+| --p2p.seed_mode                                 | enable/disable seed mode                                                                                                                       | ❌?   |
+| --p2p.seeds string                              | comma-delimited ID@host:port seed nodes                                                                                                        | ❌?   |
+| --p2p.unconditional_peer_ids string             | comma-delimited IDs of unconditional peers                                                                                                     | ❌?   |
+| --p2p.upnp                                      | enable/disable UPNP port forwarding                                                                                                            | ❌?   |
+| --priv_validator_laddr string                   | socket address to listen on for connections from external priv_validator process                                                               | ❌?   |
+| --proxy_app string                              | proxy app address, or one of: 'kvstore', 'persistent_kvstore', 'counter', 'e2e' or 'noop' for local testing. (default "tcp://127.0.0.1:26658") | ❌?   |
+| --pruning string                                | Pruning strategy (default\|nothing\|everything\|custom) (default "default")                                                                    | ❌?   |
+| --pruning-interval uint                         | Height interval at which pruned heights are removed from disk (ignored if pruning is not 'custom')                                             | ❌?   |
+| --pruning-keep-every uint                       | Offset heights to keep on disk after 'keep-every' (ignored if pruning is not 'custom')                                                         | ❌?   |
+| --pruning-keep-recent uint                      | Number of recent heights to keep on disk (ignored if pruning is not 'custom')                                                                  | ❌?   |
+| --rpc.grpc_laddr string                         | GRPC listen address (BroadcastTx only). Port required                                                                                          | ❌?   |
+| --rpc.laddr string                              | RPC listen address. Port required (default "tcp://127.0.0.1:26657")                                                                            | ✅yes |
+| --rpc.pprof_laddr string                        | pprof listen address (https://golang.org/pkg/net/http/pprof)                                                                                   | ❌?   |
+| --rpc.unsafe                                    | enabled unsafe rpc methods                                                                                                                     | ❌?   |
+| --state-sync.snapshot-interval uint             | State sync snapshot interval                                                                                                                   | ❌?   |
+| --state-sync.snapshot-keep-recent uint32        | State sync snapshot to keep (default 2)                                                                                                        | ❌?   |
+| --trace-store string                            | Enable KVStore tracing to an output file                                                                                                       | ❌?   |
+| --transport string                              | Transport protocol: socket, grpc (default "socket")                                                                                            | ❌?   |
+| --unsafe-skip-upgrades ints                     | Skip a set of upgrade heights to continue the old binary                                                                                       | ❌?   |
+| --with-tendermint                               | Run abci app embedded in-process with tendermint (default true)                                                                                | ❌?   |
+| --x-crisis-skip-assert-invariants               | Skip x/crisis invariants check on startup                                                                                                      | ❌?   |
 
 
 
 | Global flags         | Description                                                                            | Work |
 | -------------------- | -------------------------------------------------------------------------------------- | ---- |
-| `--home`             | directory for config and data (default `"/root/.sekaid"`)                              | ❌?no  |
-| `--log_format`       | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌?no  |
-| `--log_level string` | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌?no  |
-| `--trace`            | Print out full stack trace on errors                                                   | ❌?no  |
+| `--home`             | directory for config and data (default `"/root/.sekaid"`)                              | ❌?no |
+| `--log_format`       | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌?no |
+| `--log_level string` | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌?no |
+| `--trace`            | Print out full stack trace on errors                                                   | ❌?no |
 
 ```
 sekaid start --rpc.laddr "tcp://0.0.0.0:26657" 
@@ -3405,7 +3405,7 @@ Sign a transaction created with the '--generate-only' flag.
 | `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
 | `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
 | `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
-| `-h, --help`                  | help for sign-batch                                                                                                                                         | ✅ yes |
+| `-h, --help`                  | help for sign                                                                                                                                               | ✅ yes |
 | `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
 | `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
 | `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
