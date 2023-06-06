@@ -166,6 +166,58 @@ sekaid add-genesis-account validator 150000000000000ukex,300000000000000test,200
 [Return to top](#sekai)
 
 ### 3. config
+Create or query an application CLI configuration file
+
+
+
+Usage:
+```
+sekaid config <key> [value] [flags]
+```
+| Flags              | Description                                                                        | Work |
+|--------------------|------------------------------------------------------------------------------------|------|
+| --help             | help for version                                                                   | ✅yes  |
+
+
+
+| Global Flags       |                                                                                    |      |
+|--------------------|------------------------------------------------------------------------------------|------|
+| --home string      | directory for config and data (default "/root/.sekaid")                            | ❌no   |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌no   |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌?    |
+| --trace            | print out full stack trace on errors                                               | ❌?    |
+```
+#sekaid config --help
+Create or query an application CLI configuration file
+
+Usage:
+  sekaid config <key> [value] [flags]
+
+Flags:
+  -h, --help   help for config
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+#if send ```sekaid config``` printing current config state of the node 
+```
+# sekaid config
+{
+        "chain-id": "",
+        "keyring-backend": "os",
+        "output": "text",
+        "node": "tcp://localhost:26657",
+        "broadcast-mode": "sync"
+}
+```
+#if keyring-backend value will be wrong it will break entire sekaid installation
+```
+sekaid config keyring-backend test
+```	
 
 [Return to top](#sekai)
 
