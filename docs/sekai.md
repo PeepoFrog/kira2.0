@@ -55,6 +55,13 @@
       * [14.17 spending](#1417-spending)
       * [14.18 tendermint-validator-set](#1418-tendermint-validator-set)
       * [14.19 tokens](#1419-tokens)
+        * [14.19.1 alias](#14191-alias)
+        * [14.19.2 aliases-by-denom](#14192-aliases-by-denom)
+        * [14.19.3 all-aliases](#14193-all-aliases)
+        * [14.19.4 all-rates](#14194-all-rates)
+        * [14.19.5 rate](#14195-rate)
+        * [14.19.6 rates-by-denom](#14196-rates-by-denom)
+        * [14.19.7 token-black-whites](#14197-token-black-whites)
       * [14.20 tx](#1420-tx)
       * [14.21 txs](#1421-txs)
       * [14.22 ubi](#1422-ubi)
@@ -1911,6 +1918,98 @@ Global Flags:
 [Return to top](#sekai)
 
 #### 14.19 tokens
+
+Query commands for the tokens module.
+
+Usage:
+```
+sekaid query tokens [command]
+```
+
+Available commands:
+
+| Subcommands                                       | Description                   |
+| ------------------------------------------------- | ----------------------------- |
+| [`alias`](#14191-alias)                           | Get the token alias by symbol |
+| [`aliases-by-denom`](#14192-aliases-by-denom)     | Get token aliases by denom    |
+| [`all-aliases`](#14193-all-aliases)               | Get all token aliases         |
+| [`all-rates`](#14194-all-rates)                   | Get all token rates           |
+| [`rate`](#14195-rate)                             | Get the token rate by denom   |
+| [`rates-by-denom`](#14196-rates-by-denom)         | Get token rates by denom      |
+| [`token-black-whites`](#14197-token-black-whites) | Get token black whites        |
+
+
+
+| Flags        | Description     | Work  |
+| ------------ | --------------- | ----- |
+| `-h, --help` | help for tokens | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid qeury tokens --help
+query commands for the tokens module
+
+Usage:
+  sekaid query tokens [command]
+
+Available Commands:
+  alias              Get the token alias by symbol
+  aliases-by-denom   Get token aliases by denom
+  all-aliases        Get all token aliases
+  all-rates          Get all token rates
+  rate               Get the token rate by denom
+  rates-by-denom     Get token rates by denom
+  token-black-whites Get token black whites
+
+Flags:
+  -h, --help   help for tokens
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid query tokens [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+##### 14.19.1 alias
+
+[Return to top](#sekai)
+
+##### 14.19.2 aliases-by-denom
+
+[Return to top](#sekai)
+
+##### 14.19.3 all-aliases
+
+[Return to top](#sekai)
+
+##### 14.19.4 all-rates
+
+[Return to top](#sekai)
+
+##### 14.19.5 rate
+
+[Return to top](#sekai)
+
+##### 14.19.6 rates-by-denom
+
+[Return to top](#sekai)
+
+##### 14.19.7 token-black-whites
 
 [Return to top](#sekai)
 
