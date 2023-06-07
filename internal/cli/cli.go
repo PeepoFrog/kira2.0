@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/mrlutik/kira2.0/internal/cli/version"
@@ -23,12 +24,18 @@ func NewCLI(cmds []*cobra.Command) *cobra.Command {
 		Use:   use,
 		Short: short,
 		Long:  long,
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			logLevel, _ := cmd.Flags().GetString("log-level")
+			if logLevel != "" {
+				logging.SetLevel(logLevel)
+			}
+		},
 	}
 	for _, cmd := range cmds {
 		rootCmd.AddCommand(cmd)
 	}
 	rootCmd.PersistentFlags().Bool("verbose", false, "Verbosity level. Default: `false` ")
-	rootCmd.PersistentFlags().String("log-level", "", fmt.Sprintf("Messages with this level and above will be logged. Valid levels are: %s", strings.Join(logging.ValidLogLevels, ", ")))
+	rootCmd.PersistentFlags().String("log-level", "panic", fmt.Sprintf("Messages with this level and above will be logged. Valid levels are: %s", strings.Join(logging.ValidLogLevels, ", ")))
 	return rootCmd
 }
 
@@ -36,12 +43,8 @@ func Start() {
 	cmds := []*cobra.Command{version.Version()}
 	c := NewCLI(cmds)
 	if err := c.Execute(); err != nil {
-		panic(err)
+		log.Errorf("Failed to execute command %v\n", err)
+		os.Exit(1)
 	}
 
-	logLevel, _ := c.Flags().GetString("log-level")
-
-	if logLevel != "" {
-		logging.SetLevel(logLevel)
-	}
 }
