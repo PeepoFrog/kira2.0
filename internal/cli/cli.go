@@ -29,7 +29,6 @@ func NewCLI(cmds []*cobra.Command) *cobra.Command {
 	}
 	rootCmd.PersistentFlags().Bool("verbose", false, "Verbosity level. Default: `false` ")
 	rootCmd.PersistentFlags().String("log-level", "", fmt.Sprintf("Messages with this level and above will be logged. Valid levels are: %s", strings.Join(logging.ValidLogLevels, ", ")))
-	log.Debug(rootCmd.Flags())
 	return rootCmd
 }
 

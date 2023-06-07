@@ -27,8 +27,7 @@ func Version() *cobra.Command {
 		Short: short,
 		Long:  long,
 		Run: func(cmd *cobra.Command, args []string) {
-			log.Infoln("Version: ", KiraLauncherVersion)
-			fmt.Fprintf(os.Stdout, "%v:%v\n", os.Args[0], KiraLauncherVersion)
+			fmt.Fprintf(os.Stdout, "%v\n", KiraLauncherVersion)
 		},
 	}
 	return versionCmd
