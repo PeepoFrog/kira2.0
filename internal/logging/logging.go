@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	Log = InitLogger(Hooks, "debug")
+	Log = InitLogger(Hooks, "panic")
 }
 
 var (
