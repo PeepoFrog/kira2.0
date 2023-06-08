@@ -2722,6 +2722,88 @@ Can't use together:
 
 ##### 14.9.16 identity-records-by-addr
 
+Query identity records by address.
+
+Usage:
+```
+sekaid query customgov identity-records-by-addr [addr] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for identity-records-by-addr                                                                | ✅ yes |
+| `--keys string`       | keys required when needs to be filtered                                                          | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov identity-records-by-addr --help
+Query identity records by address.
+
+Example:
+$ sekaid query gov identity-records-by-addr [addr]
+
+Usage:
+  sekaid query customgov identity-records-by-addr [addr] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for identity-records-by-addr
+      --keys string     keys required when needs to be filtered
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid query customgov identity-records-by-addr kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt -o json | jq
+{
+  "records": [
+    {
+      "id": "15",
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "key": "moniker",
+      "value": "validator2",
+      "date": "2023-05-25T13:18:03.396177800Z",
+      "verifiers": []
+    }
+  ]
+}
+```
+
+Filter by keys:
+```
+/# sekaid query customgov identity-records-by-addr kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --keys=moniker -o json | jq
+{
+  "records": [
+    {
+      "id": "15",
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "key": "moniker",
+      "value": "validator2",
+      "date": "2023-05-25T13:18:03.396177800Z",
+      "verifiers": []
+    }
+  ]
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
