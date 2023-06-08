@@ -3029,6 +3029,118 @@ Filter by keys:
 
 ##### 14.9.17 network-properties
 
+Query network properties.
+
+Usage:
+```
+sekaid query customgov network-properties [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for alias                                                                                   | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov network-properties --help
+Query network properties
+
+Usage:
+  sekaid query customgov network-properties [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for network-properties
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query customgov network-properties --output=json | jq
+{
+  "properties": {
+    "min_tx_fee": "99",
+    "max_tx_fee": "1000000",
+    "vote_quorum": "33",
+    "minimum_proposal_end_time": "360",
+    "proposal_enactment_time": "300",
+    "min_proposal_end_blocks": "2",
+    "min_proposal_enactment_blocks": "1",
+    "enable_foreign_fee_payments": true,
+    "mischance_rank_decrease_amount": "1",
+    "max_mischance": "50",
+    "mischance_confidence": "25",
+    "inactive_rank_decrease_percent": "0.500000000000000000",
+    "min_validators": "1",
+    "poor_network_max_bank_send": "1000000",
+    "unjail_max_time": "1209600",
+    "enable_token_whitelist": false,
+    "enable_token_blacklist": true,
+    "min_identity_approval_tip": "200",
+    "unique_identity_keys": "moniker,username",
+    "ubi_hardcap": "6000000",
+    "validators_fee_share": "0.500000000000000000",
+    "inflation_rate": "0.180000000000000000",
+    "inflation_period": "31557600",
+    "unstaking_period": "2629800",
+    "max_delegators": "100",
+    "min_delegation_pushout": "10",
+    "slashing_period": "3600",
+    "max_jailed_percentage": "0.250000000000000000",
+    "max_slashing_percentage": "0.010000000000000000",
+    "min_custody_reward": "200",
+    "max_custody_buffer_size": "10",
+    "max_custody_tx_size": "8192",
+    "abstention_rank_decrease_amount": "1",
+    "max_abstention": "2",
+    "min_collective_bond": "100000",
+    "min_collective_bonding_time": "86400",
+    "max_collective_outputs": "10",
+    "min_collective_claim_period": "14400",
+    "validator_recovery_bond": "300000",
+    "max_annual_inflation": "0.350000000000000000",
+    "max_proposal_title_size": "128",
+    "max_proposal_description_size": "1024",
+    "max_proposal_poll_option_size": "64",
+    "max_proposal_poll_option_count": "128",
+    "max_proposal_reference_size": "512",
+    "max_proposal_checksum_size": "128",
+    "min_dapp_bond": "1000000",
+    "max_dapp_bond": "10000000",
+    "dapp_liquidation_threshold": "0",
+    "dapp_liquidation_period": "0",
+    "dapp_bond_duration": "604800",
+    "dapp_verifier_bond": "0.001000000000000000",
+    "dapp_auto_denounce_time": "60",
+    "dapp_mischance_rank_decrease_amount": "1",
+    "dapp_max_mischance": "10",
+    "dapp_inactive_rank_decrease_percent": "10",
+    "dapp_pool_slippage_default": "0.100000000000000000",
+    "minting_ft_fee": "100000000000000",
+    "minting_nft_fee": "100000000000000"
+  }
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
