@@ -6517,6 +6517,428 @@ Use "sekaid tx customgov proposal [command] --help" for more information about a
 
 ###### 21.7.7.5 set-network-property
 
+🟨 Create a proposal to set a value on a network property. 🟨
+
+Usage:
+```
+sekaid tx customgov proposal set-network-property <property> <value> [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--description string`        | The description of the proposal, it can be a url, some text, etc.                                                                                           | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ❌ ?   |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for set-network-property                                                                                                                               | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default 'home' directory will be used                                                                         | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `--title string`              | The title of the proposal.                                                                                                                                  | ✅ yes |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov proposal set-network-property --help
+
+                $ %s tx customgov proposal set-network-property MIN_TX_FEE 100 --from=<key_or_address>
+
+                Available properties:
+                        MIN_TX_FEE
+                        MAX_TX_FEE
+                        VOTE_QUORUM
+                        PROPOSAL_END_TIME
+                        PROPOSAL_ENACTMENT_TIME
+                        ENABLE_FOREIGN_TX_FEE_PAYMENTS
+
+Usage:
+  sekaid tx customgov proposal set-network-property <property> <value> [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --description string       The description of the proposal, it can be a url, some text, etc.
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for set-network-property
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+      --title string             The title of the proposal.
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid tx customgov proposal set-network-property "MIN_TX_FEE" 10 --title="Reducing value of minimal fee for docs" --description="Changing value of minimal fee for testing for docs" --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --chain-id=localnet-4 --home=/root/.sekai --keyring-backend=test --fees=100ukex --yes --output=json | jq
+{
+  "height": "0",
+  "txhash": "0C192B8B81789853A107AD6B6283C0AB1784A2B2C32E1F9D6730341F41BDE413",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check tx execution</summary>
+
+  ```
+  sekaid q tx 0C192B8B81789853A107AD6B6283C0AB1784A2B2C32E1F9D6730341F41BDE413 -o json | jq
+  ```
+
+  ```json
+  {
+    "height": "110257",
+    "txhash": "0C192B8B81789853A107AD6B6283C0AB1784A2B2C32E1F9D6730341F41BDE413",
+    "codespace": "",
+    "code": 0,
+    "data": "0A210A1B2F6B6972612E676F762E4D73675375626D697450726F706F73616C1202080C",
+    "raw_log": "[{\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgSubmitProposal\"}]},{\"type\":\"submit_proposal\",\"attributes\":[{\"key\":\"proposal_id\",\"value\":\"12\"},{\"key\":\"proposal_type\",\"value\":\"SetNetworkProperty\"},{\"key\":\"proposal_content\",\"value\":\"proposer: kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\\ntitle: Reducing value of minimal fee for docs\\ndescription: Changing value of minimal fee for testing for docs\\ncontent:\\n  typeurl: /kira.gov.SetNetworkPropertyProposal\\n  value:\\n  - 18\\n  - 2\\n  - 8\\n  - 10\\n  xxx_nounkeyedliteral: {}\\n  xxx_unrecognized: []\\n  xxx_sizecache: 0\\n\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/kira.gov.MsgSubmitProposal"
+              }
+            ]
+          },
+          {
+            "type": "submit_proposal",
+            "attributes": [
+              {
+                "key": "proposal_id",
+                "value": "12"
+              },
+              {
+                "key": "proposal_type",
+                "value": "SetNetworkProperty"
+              },
+              {
+                "key": "proposal_content",
+                "value": "proposer: kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\ntitle: Reducing value of minimal fee for docs\ndescription: Changing value of minimal fee for testing for docs\ncontent:\n  typeurl: /kira.gov.SetNetworkPropertyProposal\n  value:\n  - 18\n  - 2\n  - 8\n  - 10\n  xxx_nounkeyedliteral: {}\n  xxx_unrecognized: []\n  xxx_sizecache: 0\n"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/kira.gov.MsgSubmitProposal",
+            "proposer": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "title": "Reducing value of minimal fee for docs",
+            "description": "Changing value of minimal fee for testing for docs",
+            "content": {
+              "@type": "/kira.gov.SetNetworkPropertyProposal",
+              "network_property": "MIN_TX_FEE",
+              "value": {
+                "value": "10",
+                "str_value": ""
+              }
+            }
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "93"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "100"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "UC3fpkO1X1udG0Hmk6PneiOqvRaQ/0ULOCGigKXuwVtIQONk2hVaTsXi9KdNhThD7dM0T+hvhHeUsQ4DAQcdWA=="
+      ]
+    },
+    "timestamp": "2023-06-08T16:19:07Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC85Mw==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "VUMzZnBrTzFYMXVkRzBIbWs2UG5laU9xdlJhUS8wVUxPQ0dpZ0tYdXdWdElRT05rMmhWYVRzWGk5S2ROaFRoRDdkTTBUK2h2aEhlVXNRNERBUWNkV0E9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "MTAwdWtleA==",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2tpcmEuZ292Lk1zZ1N1Ym1pdFByb3Bvc2Fs",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "submit_proposal",
+        "attributes": [
+          {
+            "key": "cHJvcG9zYWxfaWQ=",
+            "value": "MTI=",
+            "index": true
+          },
+          {
+            "key": "cHJvcG9zYWxfdHlwZQ==",
+            "value": "U2V0TmV0d29ya1Byb3BlcnR5",
+            "index": true
+          },
+          {
+            "key": "cHJvcG9zYWxfY29udGVudA==",
+            "value": "cHJvcG9zZXI6IGtpcmExdm13ZGd3NDI2YWo5ZngzM2ZxdXNtdGc2cjY1eXl1Y214NnJkdDQKdGl0bGU6IFJlZHVjaW5nIHZhbHVlIG9mIG1pbmltYWwgZmVlIGZvciBkb2NzCmRlc2NyaXB0aW9uOiBDaGFuZ2luZyB2YWx1ZSBvZiBtaW5pbWFsIGZlZSBmb3IgdGVzdGluZyBmb3IgZG9jcwpjb250ZW50OgogIHR5cGV1cmw6IC9raXJhLmdvdi5TZXROZXR3b3JrUHJvcGVydHlQcm9wb3NhbAogIHZhbHVlOgogIC0gMTgKICAtIDIKICAtIDgKICAtIDEwCiAgeHh4X25vdW5rZXllZGxpdGVyYWw6IHt9CiAgeHh4X3VucmVjb2duaXplZDogW10KICB4eHhfc2l6ZWNhY2hlOiAwCg==",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+
+  > OR find all transactions for
+  ```
+  sekaid query txs --events=submit_proposal.proposal_type=SetNetworkProperty --output=json | jq
+  ```
+
+  __VERY LONG JSON with all txs__
+  ```json
+  {
+    "total_count": "2",
+    "count": "2",
+    "page_number": "1",
+    "page_total": "1",
+    "limit": "30",
+    "txs": [
+      {...},
+      {...}
+    ]
+  }
+  ```
+</details>
+
+<details>
+  <summary>Check the vote</summary>
+
+  ```
+  sekaid query customgov proposal 12 -o json | jq
+  ```
+
+  ```json
+  {
+    "proposal_id": "12",
+    "title": "Reducing value of minimal fee for docs",
+    "description": "Changing value of minimal fee for testing for docs",
+    "content": {
+      "@type": "/kira.gov.SetNetworkPropertyProposal",
+      "network_property": "MIN_TX_FEE",
+      "value": {
+        "value": "10",
+        "str_value": ""
+      }
+    },
+    "submit_time": "2023-06-08T16:19:07.409676597Z",
+    "voting_end_time": "2023-06-08T16:25:07.409676597Z",
+    "enactment_end_time": "2023-06-08T16:30:07.409676597Z",
+    "min_voting_end_block_height": "110259",
+    "min_enactment_end_block_height": "110293",
+    "result": "VOTE_RESULT_ENACTMENT",
+    "exec_result": ""
+  }
+  ```
+</details>
+
+<details>
+  <summary>Check network property (after successful vote)</summary>
+
+  List of all network properties:
+  ```
+  sekaid query customgov network-properties --output=json | jq
+  ```
+
+  ```json
+  {
+    "properties": {
+      "min_tx_fee": "10",
+      "max_tx_fee": "1000000",
+      // . . .
+    }
+  }
+  ```
+</details>
+
 [Return to top](#sekai)
 
 ###### 21.7.7.6 set-poor-network-msgs
