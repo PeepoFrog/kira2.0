@@ -6,6 +6,7 @@ require (
 	github.com/docker/docker v24.0.2+incompatible
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.7.0
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 )
 
 require (
