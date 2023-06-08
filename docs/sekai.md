@@ -217,6 +217,55 @@ sekaid add-genesis-account validator 150000000000000ukex,300000000000000test,200
 
 ### 2. collect-gentxs
 
+Adds validator into the genesis set
+
+Usage:
+
+```
+sekaid gentx-claim [key_name] [flags]
+```
+
+| Flags                    | Description                                                             | Work  |
+| ------------------------ | ----------------------------------------------------------------------- | ----- |
+| -h, --help               | help for gentx-claim                                                    | ✅ yes |
+| --keyring-backend string | Select keyring's backend (os\|file\|kwallet\|pass\|test) (default "os") | ✅ yes |
+| --moniker string         | the Moniker                                                             | ✅ yes |
+| --pubkey string          | the public key                                                          | ❌ ?   |
+
+
+
+| Global Flags         |                                                                                        |       |
+| -------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--home string`      | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format`       | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ no  |
+| `--log_level string` | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`            | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+# sekaid gentx-claim --help
+Adds validator into the genesis set
+
+Usage:
+  sekaid gentx-claim [key_name] [flags]
+
+Flags:
+  -h, --help                     help for gentx-claim
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test) (default "os")
+      --moniker string           the Moniker
+      --pubkey string            the public key
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+# sekaid gentx-claim validator --keyring-backend=test --moniker="GENESIS VALIDATOR" --home=$SEKAID_HOME
+genesis state updated to include validator
+```
+
 [Return to top](#sekai)
 
 ### 3. config
