@@ -1586,9 +1586,13 @@ sekaid query auth accounts --limit=2 --reverse --output=json | jq
 Other usages:
 ```
 sekaid query auth accounts --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid query auth accounts --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid query auth accounts --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
 ```
 
@@ -2170,6 +2174,110 @@ Use "sekaid query customgov [command] --help" for more information about a comma
 
 ##### 14.9.2 all-identity-record-verify-requests
 
+Query all identity records verify requests.
+
+Usage:
+```
+sekaid query customgov all-identity-record-verify-requests [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--count-total`       | count total number of records in customgov to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for all-identity-record-verify-requests                                                     | ✅ yes |
+| `--limit uint`        | pagination limit of customgov to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `--offset uint`       | pagination offset of customgov to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+| `--page uint`         | pagination page of customgov to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of customgov to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                           | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov all-identity-record-verify-requests --help
+Query all identity records verify requests.
+
+Example:
+$ sekaid query gov all-identity-record-verify-requests
+
+Usage:
+  sekaid query customgov all-identity-record-verify-requests [flags]
+
+Flags:
+      --count-total       count total number of records in customgov to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for all-identity-record-verify-requests
+      --limit uint        pagination limit of customgov to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of customgov to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of customgov to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of customgov to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid q customgov all-identity-record-verify-requests -o json | jq
+{
+  "verify_records": [
+    {
+      "id": "3",
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "verifier": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "recordIds": [
+        "15"
+      ],
+      "tip": {
+        "denom": "ukex",
+        "amount": "200"
+      },
+      "lastRecordEditDate": "2023-05-25T13:18:03.396177800Z"
+    }
+  ],
+  "pagination": {
+    "next_key": null,
+    "total": "0"
+  }
+}
+```
+
+Other usages:
+```
+sekaid q customgov all-identity-record-verify-requests --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
+
+```
+sekaid q customgov all-identity-record-verify-requests --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
+
+```
+sekaid q customgov all-identity-record-verify-requests --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
+```
+
+**Pay attention**
+Can't use together:
+- `--page` and `--page-key`
+- `--offset` and `--page`
+- `--height` for future blocks
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
@@ -2360,30 +2468,561 @@ sekaid query customgov data-registry-keys --output=json | jq
 
 ##### 14.9.11 identity-record
 
+Query identity record by id.
+
+Usage:
+```
+sekaid query customgov identity-record [id] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for identity-record                                                                         | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov identity-record --help
+Query identity record by id.
+
+Example:
+$ sekaid query gov identity-record 1
+
+Usage:
+  sekaid query customgov identity-record [id] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for identity-record
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query customgov identity-record 1 -o json | jq
+{
+  "record": {
+    "id": "1",
+    "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+    "key": "moniker",
+    "value": "GENESIS VALIDATOR",
+    "date": "2023-05-25T12:56:59.866789362Z",
+    "verifiers": []
+  }
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
 ##### 14.9.12 identity-record-verify-request
+
+Query identity record verify request by id.
+
+Usage:
+```
+sekaid query customgov identity-record-verify-request [id] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for identity-record-verify-request                                                          | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov identity-record-verify-request --help
+Query identity record verify request by id.
+
+Example:
+$ sekaid query gov identity-record-verify-request 1
+
+Usage:
+  sekaid query customgov identity-record-verify-request [id] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for identity-record-verify-request
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query customgov identity-record-verify-request 3 -o json | jq
+{
+  "verify_record": {
+    "id": "3",
+    "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+    "verifier": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+    "recordIds": [
+      "15"
+    ],
+    "tip": {
+      "denom": "ukex",
+      "amount": "200"
+    },
+    "lastRecordEditDate": "2023-05-25T13:18:03.396177800Z"
+  }
+}
+```
 
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
 ##### 14.9.13 identity-record-verify-requests-by-approver
 
+Query identity record verify requests by approver.
+
+Usage:
+```
+sekaid query customgov identity-record-verify-requests-by-approver [addr] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--count-total`       | count total number of records in customgov to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for identity-record-verify-requests-by-approver                                             | ✅ yes |
+| `--limit uint`        | pagination limit of customgov to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `--offset uint`       | pagination offset of customgov to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+| `--page uint`         | pagination page of customgov to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of customgov to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                           | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov identity-record-verify-requests-by-approver --help
+Query identity record verify requests by approver.
+
+Example:
+$ sekaid query gov identity-record-verify-requests-by-approver [addr]
+
+Usage:
+  sekaid query customgov identity-record-verify-requests-by-approver [addr] [flags]
+
+Flags:
+      --count-total       count total number of records in customgov to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for identity-record-verify-requests-by-approver
+      --limit uint        pagination limit of customgov to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of customgov to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of customgov to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of customgov to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query customgov identity-record-verify-requests-by-approver kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --output=json | jq
+{
+  "verify_records": [
+    {
+      "id": "3",
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "verifier": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "recordIds": [
+        "15"
+      ],
+      "tip": {
+        "denom": "ukex",
+        "amount": "200"
+      },
+      "lastRecordEditDate": "2023-05-25T13:18:03.396177800Z"
+    }
+  ],
+  "pagination": {
+    "next_key": null,
+    "total": "0"
+  }
+}
+```
+
+Other usages:
+```
+sekaid query customgov identity-record-verify-requests-by-approver kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
+
+```
+sekaid query customgov identity-record-verify-requests-by-approver kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
+
+```
+sekaid query customgov identity-record-verify-requests-by-approver kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
+```
+
+**Pay attention**
+Can't use together:
+- `--page` and `--page-key`
+- `--offset` and `--page`
+- `--height` for future blocks
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
 ##### 14.9.14 identity-record-verify-requests-by-requester
+
+Query identity records verify requests by requester.
+
+Usage:
+```
+sekaid query customgov identity-record-verify-requests-by-requester [addr] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--count-total`       | count total number of records in customgov to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for identity-record-verify-requests-by-requester                                            | ✅ yes |
+| `--limit uint`        | pagination limit of customgov to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `--offset uint`       | pagination offset of customgov to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+| `--page uint`         | pagination page of customgov to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of customgov to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                           | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov identity-record-verify-requests-by-requester --help
+Query identity records verify requests by requester.
+
+Example:
+$ sekaid query gov identity-record-verify-requests-by-requester [addr]
+
+Usage:
+  sekaid query customgov identity-record-verify-requests-by-requester [addr] [flags]
+
+Flags:
+      --count-total       count total number of records in customgov to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for identity-record-verify-requests-by-requester
+      --limit uint        pagination limit of customgov to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of customgov to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of customgov to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of customgov to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query customgov identity-record-verify-requests-by-requester kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt -o json | jq
+{
+  "verify_records": [
+    {
+      "id": "3",
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "verifier": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "recordIds": [
+        "15"
+      ],
+      "tip": {
+        "denom": "ukex",
+        "amount": "200"
+      },
+      "lastRecordEditDate": "2023-05-25T13:18:03.396177800Z"
+    }
+  ],
+  "pagination": {
+    "next_key": null,
+    "total": "0"
+  }
+}
+```
+
+Other usages:
+```
+sekaid query customgov identity-record-verify-requests-by-requester kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
+
+```
+sekaid query customgov identity-record-verify-requests-by-requester kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
+
+```
+sekaid query customgov identity-record-verify-requests-by-requester kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
+```
+
+**Pay attention**
+Can't use together:
+- `--page` and `--page-key`
+- `--offset` and `--page`
+- `--height` for future blocks
 
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
 ##### 14.9.15 identity-records
 
+Query all identity records.
+
+Usage:
+```
+sekaid query customgov identity-records [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--count-total`       | count total number of records in customgov to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for identity-records                                                                        | ✅ yes |
+| `--limit uint`        | pagination limit of customgov to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `--offset uint`       | pagination offset of customgov to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+| `--page uint`         | pagination page of customgov to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of customgov to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                           | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov identity-records --help
+Query all identity records.
+
+Example:
+$ sekaid query gov identity-records
+
+Usage:
+  sekaid query customgov identity-records [flags]
+
+Flags:
+      --count-total       count total number of records in customgov to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for identity-records
+      --limit uint        pagination limit of customgov to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of customgov to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of customgov to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of customgov to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid q customgov identity-records -o json | jq
+{
+  "records": [
+    {
+      "id": "1",
+      "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "key": "moniker",
+      "value": "GENESIS VALIDATOR",
+      "date": "2023-05-25T12:56:59.866789362Z",
+      "verifiers": []
+    },
+
+    // ...
+
+    {
+      "id": "17",
+      "address": "kira1nqcqufejredawp25ycxqh37983n65pejpfyg9e",
+      "key": "moniker",
+      "value": "validator4",
+      "date": "2023-05-25T13:19:35.602583274Z",
+      "verifiers": [
+        "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+      ]
+    }
+  ],
+  "pagination": {
+    "next_key": null,
+    "total": "0"
+  }
+}
+```
+
+Other usages:
+```
+sekaid q customgov identity-records --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
+
+```
+sekaid q customgov identity-records --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
+
+```
+sekaid q customgov identity-records --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
+```
+
+**Pay attention**
+Can't use together:
+- `--page` and `--page-key`
+- `--offset` and `--page`
+- `--height` for future blocks
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
 ##### 14.9.16 identity-records-by-addr
+
+Query identity records by address.
+
+Usage:
+```
+sekaid query customgov identity-records-by-addr [addr] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for identity-records-by-addr                                                                | ✅ yes |
+| `--keys string`       | keys required when needs to be filtered                                                          | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov identity-records-by-addr --help
+Query identity records by address.
+
+Example:
+$ sekaid query gov identity-records-by-addr [addr]
+
+Usage:
+  sekaid query customgov identity-records-by-addr [addr] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for identity-records-by-addr
+      --keys string     keys required when needs to be filtered
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid query customgov identity-records-by-addr kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt -o json | jq
+{
+  "records": [
+    {
+      "id": "15",
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "key": "moniker",
+      "value": "validator2",
+      "date": "2023-05-25T13:18:03.396177800Z",
+      "verifiers": []
+    }
+  ]
+}
+```
+
+Filter by keys:
+```
+/# sekaid query customgov identity-records-by-addr kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --keys=moniker -o json | jq
+{
+  "records": [
+    {
+      "id": "15",
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "key": "moniker",
+      "value": "validator2",
+      "date": "2023-05-25T13:18:03.396177800Z",
+      "verifiers": []
+    }
+  ]
+}
+```
 
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
@@ -4495,6 +5134,422 @@ Available Commands:
 
 ##### 21.7.1 cancel-identity-records-verify-request
 
+Submit a transaction to cancel identity records verification request.
+
+Usage:
+```
+sekaid tx customgov cancel-identity-records-verify-request [id] [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ❌ ?   |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for cancel-identity-records-verify-request                                                                                                             | ✅ yes |
+| `--infos-file string`         | The infos file for identity request.                                                                                                                        | ✅ yes |
+| `--infos-json string`         | The infos json for identity request.                                                                                                                        | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ✅ yes |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `--record-ids string`         | Concatenated identity record ids array. e.g. `1,2`                                                                                                          | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `--tip string`                | The tip to be given to the verifier.                                                                                                                        | ✅ yes |
+| `--verifier string`           | The verifier of the record ids                                                                                                                              | ✅ yes |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov cancel-identity-records-verify-request --help
+Submit a transaction to cancel identity records verification request.
+
+Usage:
+  sekaid tx customgov cancel-identity-records-verify-request [id] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for cancel-identity-records-verify-request
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid tx customgov cancel-identity-records-verify-request 5 --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --fees=100ukex --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --yes --output=json | jq
+{
+  "height": "0",
+  "txhash": "9659E50E56F715EE67C935B2F440A7F02BBA131DDD7697E7510A5F866DAC8BA5",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check tx execution</summary>
+
+  ```
+  sekaid q tx 9659E50E56F715EE67C935B2F440A7F02BBA131DDD7697E7510A5F866DAC8BA5 --output=json | jq
+  ```
+
+  ```json
+  {
+    "height": "109602",
+    "txhash": "9659E50E56F715EE67C935B2F440A7F02BBA131DDD7697E7510A5F866DAC8BA5",
+    "codespace": "",
+    "code": 0,
+    "data": "0A310A2F2F6B6972612E676F762E4D736743616E63656C4964656E746974795265636F72647356657269667952657175657374",
+    "raw_log": "[{\"events\":[{\"type\":\"coin_received\",\"attributes\":[{\"key\":\"receiver\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]},{\"type\":\"coin_spent\",\"attributes\":[{\"key\":\"spender\",\"value\":\"kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgCancelIdentityRecordsVerifyRequest\"},{\"key\":\"sender\",\"value\":\"kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv\"}]},{\"type\":\"transfer\",\"attributes\":[{\"key\":\"recipient\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"sender\",\"value\":\"kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "coin_received",
+            "attributes": [
+              {
+                "key": "receiver",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          },
+          {
+            "type": "coin_spent",
+            "attributes": [
+              {
+                "key": "spender",
+                "value": "kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/kira.gov.MsgCancelIdentityRecordsVerifyRequest"
+              },
+              {
+                "key": "sender",
+                "value": "kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv"
+              }
+            ]
+          },
+          {
+            "type": "transfer",
+            "attributes": [
+              {
+                "key": "recipient",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "sender",
+                "value": "kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/kira.gov.MsgCancelIdentityRecordsVerifyRequest",
+            "executor": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "verify_request_id": "5"
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "92"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "100"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "G5+araW7aplPdSJiPAvrgkmVMdmE14SNi6QmKgS0t0cEKLDeJ/BotFN2ktlIYl7nDWZ7zNEFYgsLtRKTT1jtfw=="
+      ]
+    },
+    "timestamp": "2023-06-08T14:26:31Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC85Mg==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "RzUrYXJhVzdhcGxQZFNKaVBBdnJna21WTWRtRTE0U05pNlFtS2dTMHQwY0VLTERlSi9Cb3RGTjJrdGxJWWw3bkRXWjd6TkVGWWdzTHRSS1RUMWp0Znc9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "MTAwdWtleA==",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2tpcmEuZ292Lk1zZ0NhbmNlbElkZW50aXR5UmVjb3Jkc1ZlcmlmeVJlcXVlc3Q=",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTE4cTQ3dGtydHJ0aGY3Mnh5c2NlbnMya3Y1OHVmcHF0eXh2eHd1dg==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTE4cTQ3dGtydHJ0aGY3Mnh5c2NlbnMya3Y1OHVmcHF0eXh2eHd1dg==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTE4cTQ3dGtydHJ0aGY3Mnh5c2NlbnMya3Y1OHVmcHF0eXh2eHd1dg==",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
+
+<details>
+  <summary>Check cancelation</summary>
+
+  ```
+  sekaid query customgov identity-record-verify-request 5 -o json | jq
+  {
+    "verify_record": null
+  }
+  ```
+</details>
+
 [Return to top](#sekai)
 
 ##### 21.7.2 councilor
@@ -4503,9 +5558,750 @@ Available Commands:
 
 ##### 21.7.3 delete-identity-records
 
+Submit a transaction to delete an identity records.
+
+Usage:
+```
+sekaid tx customgov delete-identity-records [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `--approve`                   | The flag to approve or reject (default `true`)                                                                                                              | ✅ yes |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for delete-identity-records                                                                                                                            | ✅ yes |
+| `--infos-file string`         | The infos file for identity request.                                                                                                                        | ✅ yes |
+| `--infos-json string`         | The infos json for identity request.                                                                                                                        | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--keys string`               | The keys to remove.                                                                                                                                         | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ✅ yes |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov delete-identity-records --help
+Submit a transaction to delete an identity records.
+
+Usage:
+  sekaid tx customgov delete-identity-records [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for delete-identity-records
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --keys string              The keys to remove.
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid tx customgov delete-identity-records --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --keys=text --yes --fees=100ukex --output=json | jq
+{
+  "height": "0",
+  "txhash": "DA21A3D291C33308750ACED129E755B884D8B05DFCC94B8F420D63E5454AF9CA",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check tx execution</summary>
+
+  ```
+  sekaid q tx DA21A3D291C33308750ACED129E755B884D8B05DFCC94B8F420D63E5454AF9CA --output=json | jq
+  ```
+
+  ```json
+  {
+    "height": "109446",
+    "txhash": "DA21A3D291C33308750ACED129E755B884D8B05DFCC94B8F420D63E5454AF9CA",
+    "codespace": "",
+    "code": 0,
+    "data": "0A240A222F6B6972612E676F762E4D736744656C6574654964656E746974795265636F726473",
+    "raw_log": "[{\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgDeleteIdentityRecords\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/kira.gov.MsgDeleteIdentityRecords"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/kira.gov.MsgDeleteIdentityRecords",
+            "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "keys": [
+              "text"
+            ]
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "90"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "100"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "uFhwO7ESlxHgYUG97FYQsMrBxyH67Q8ZGIRS1R8mh+YFO6PQretDorKsuRdkwz03Ua9ea2ahichcLiYdZXWhQQ=="
+      ]
+    },
+    "timestamp": "2023-06-08T13:59:42Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC85MA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "dUZod083RVNseEhnWVVHOTdGWVFzTXJCeHlINjdROFpHSVJTMVI4bWgrWUZPNlBRcmV0RG9yS3N1UmRrd3owM1VhOWVhMmFoaWNoY0xpWWRaWFdoUVE9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "MTAwdWtleA==",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2tpcmEuZ292Lk1zZ0RlbGV0ZUlkZW50aXR5UmVjb3Jkcw==",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
+
+<details>
+  <summary>Check removal</summary>
+
+  ```
+  /# sekaid query customgov identity-record 19 -o json | jq
+  {
+    "record": null
+  }
+  ```
+</details>
+
 [Return to top](#sekai)
 
 ##### 21.7.4 handle-identity-records-verify-request
+
+Submit a transaction to approve or reject identity records verify request.
+
+Usage:
+```
+sekaid tx customgov handle-identity-records-verify-request [id] [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `--approve`                   | The flag to approve or reject (default `true`)                                                                                                              | ✅ yes |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for handle-identity-records-verify-request                                                                                                             | ✅ yes |
+| `--infos-file string`         | The infos file for identity request.                                                                                                                        | ✅ yes |
+| `--infos-json string`         | The infos json for identity request.                                                                                                                        | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ✅ yes |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov handle-identity-records-verify-request --help
+Submit a transaction to approve or reject identity records verify request.
+
+Usage:
+  sekaid tx customgov handle-identity-records-verify-request [id] [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+      --approve                  The flag to approve or reject (default true)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for handle-identity-records-verify-request
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid tx customgov handle-identity-records-verify-request 4 --home=/root/.sekai  --keyring-backend=test --chain-id=localnet-4 --from=kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --approve=true --yes --fees=100ukex -o json | jq
+{
+  "height": "0",
+  "txhash": "C2E70D94F60E97251B46702D0258F361969B9DA92511894514872338BC36F497",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check tx execution</summary>
+
+  ```
+  sekaid q tx C2E70D94F60E97251B46702D0258F361969B9DA92511894514872338BC36F497 -o json | jq
+  ```
+
+  ```json
+  {
+    "height": "109272",
+    "txhash": "C2E70D94F60E97251B46702D0258F361969B9DA92511894514872338BC36F497",
+    "codespace": "",
+    "code": 0,
+    "data": "0A310A2F2F6B6972612E676F762E4D736748616E646C654964656E746974795265636F72647356657269667952657175657374",
+    "raw_log": "[{\"events\":[{\"type\":\"coin_received\",\"attributes\":[{\"key\":\"receiver\",\"value\":\"kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]},{\"type\":\"coin_spent\",\"attributes\":[{\"key\":\"spender\",\"value\":\"kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgHandleIdentityRecordsVerifyRequest\"},{\"key\":\"sender\",\"value\":\"kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv\"}]},{\"type\":\"transfer\",\"attributes\":[{\"key\":\"recipient\",\"value\":\"kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt\"},{\"key\":\"sender\",\"value\":\"kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "coin_received",
+            "attributes": [
+              {
+                "key": "receiver",
+                "value": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          },
+          {
+            "type": "coin_spent",
+            "attributes": [
+              {
+                "key": "spender",
+                "value": "kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/kira.gov.MsgHandleIdentityRecordsVerifyRequest"
+              },
+              {
+                "key": "sender",
+                "value": "kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv"
+              }
+            ]
+          },
+          {
+            "type": "transfer",
+            "attributes": [
+              {
+                "key": "recipient",
+                "value": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt"
+              },
+              {
+                "key": "sender",
+                "value": "kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/kira.gov.MsgHandleIdentityRecordsVerifyRequest",
+            "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+            "verify_request_id": "4",
+            "yes": true
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "A5mB81789jXij6eUh5QGrRlhXdLheHFL1ix1LtxfMCvJ"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "5"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "100"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "7HuRJY8w20vSXg5Vu/3p/Yjqm/KRTAvduyOw62vzmlAFxjQY5jME7Xdo1r4fzPPD3wRBJV38exA1z+I3bZNLTQ=="
+      ]
+    },
+    "timestamp": "2023-06-08T13:29:48Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudC81",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "N0h1UkpZOHcyMHZTWGc1VnUvM3AvWWpxbS9LUlRBdmR1eU93NjJ2em1sQUZ4alFZNWpNRTdYZG8xcjRmelBQRDN3UkJKVjM4ZXhBMXorSTNiWk5MVFE9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "MTAwdWtleA==",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2tpcmEuZ292Lk1zZ0hhbmRsZUlkZW50aXR5UmVjb3Jkc1ZlcmlmeVJlcXVlc3Q=",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTE4cTQ3dGtydHJ0aGY3Mnh5c2NlbnMya3Y1OHVmcHF0eXh2eHd1dg==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTE4cTQ3dGtydHJ0aGY3Mnh5c2NlbnMya3Y1OHVmcHF0eXh2eHd1dg==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTE4cTQ3dGtydHJ0aGY3Mnh5c2NlbnMya3Y1OHVmcHF0eXh2eHd1dg==",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+
+</details>
+
+<details>
+  <summary>Check verification</summary>
+
+  ```
+  sekaid query customgov identity-record 19 -o json | jq
+  ```
+
+  > After the accepting verification the indentity will have the `verifiers`:
+
+  ```json
+  {
+    "record": {
+      "id": "19",
+      "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "key": "text",
+      "value": "Testing item regisrty for docs",
+      "date": "2023-06-08T12:25:11.014802004Z",
+      "verifiers": [
+        "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt"
+      ]
+    }
+  }
+  ```
+</details>
 
 [Return to top](#sekai)
 
@@ -5062,9 +6858,918 @@ sekaid tx customgov proposal upsert-data-registry icon2 891bd9d3b2ee0c6eed43a812
 
 ##### 21.7.8 register-identity-records
 
+Submit a transaction to create an identity record.
+
+Usage:
+```
+sekaid tx customgov register-identity-records [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for register-identity-records                                                                                                                          | ✅ yes |
+| `--infos-file string`         | The infos file for identity request.                                                                                                                        | ✅ yes |
+| `--infos-json string`         | The infos json for identity request.                                                                                                                        | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ✅ yes |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov register-identity-records --help
+Submit a transaction to create an identity record.
+
+Usage:
+  sekaid tx customgov register-identity-records [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for register-identity-records
+      --infos-file string        The infos file for identity request.
+      --infos-json string        The infos json for identity request.
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid tx customgov register-identity-records --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --home=/root/.sekai --chain-id=localnet-4 --keyring-backend=test --infos-json='{"text":"Testing item regisrty for docs"}' --yes --fees=99ukex --output=json | jq
+{
+  "height": "0",
+  "txhash": "38C6F2304E9FA5CB80CA4FEDF89E375FDE034E18B299DB068A725397E3D1912D",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check transaction execution</summary>
+
+  ```
+  sekaid q tx 38C6F2304E9FA5CB80CA4FEDF89E375FDE034E18B299DB068A725397E3D1912D -o json | jq
+  ```
+
+  ```json
+  {
+    "height": "108896",
+    "txhash": "38C6F2304E9FA5CB80CA4FEDF89E375FDE034E18B299DB068A725397E3D1912D",
+    "codespace": "",
+    "code": 0,
+    "data": "0A260A242F6B6972612E676F762E4D736752656769737465724964656E746974795265636F726473",
+    "raw_log": "[{\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgRegisterIdentityRecords\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/kira.gov.MsgRegisterIdentityRecords"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/kira.gov.MsgRegisterIdentityRecords",
+            "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "infos": [
+              {
+                "key": "text",
+                "info": "Testing item regisrty for docs"
+              }
+            ]
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "86"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "99"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "6uSHGVEc3MVhV7THxqKvGeQptF1co9FRiySMAti17zxKW0yxAGdx2cbZC4/SeKoLXWdc9kNaI/lZwHNhQLDkUw=="
+      ]
+    },
+    "timestamp": "2023-06-08T12:25:11Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC84Ng==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "NnVTSEdWRWMzTVZoVjdUSHhxS3ZHZVFwdEYxY285RlJpeVNNQXRpMTd6eEtXMHl4QUdkeDJjYlpDNC9TZUtvTFhXZGM5a05hSS9sWndITmhRTERrVXc9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "OTl1a2V4",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2tpcmEuZ292Lk1zZ1JlZ2lzdGVySWRlbnRpdHlSZWNvcmRz",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
+
+<details>
+  <summary>Check identity registry</summary>
+
+  List of all identity records:
+  ```
+  sekaid q customgov identity-records -o json | jq
+  ```
+
+  ```json
+  {
+    "records": [
+      {
+        "id": "1",
+        "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "key": "moniker",
+        "value": "GENESIS VALIDATOR",
+        "date": "2023-05-25T12:56:59.866789362Z",
+        "verifiers": []
+      },
+      // . . .
+      {
+        "id": "19",
+        "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "key": "text",
+        "value": "Testing item regisrty for docs",
+        "date": "2023-06-08T12:25:11.014802004Z",
+        "verifiers": []
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+
+  Identity record by ID:
+  ```
+  sekaid query customgov identity-record 19 -o json | jq
+  ```
+
+  ```json
+  {
+    "record": {
+      "id": "19",
+      "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "key": "text",
+      "value": "Testing item regisrty for docs",
+      "date": "2023-06-08T12:25:11.014802004Z",
+      "verifiers": []
+    }
+  }
+  ```
+
+  Identity records by address:
+  ```
+  sekaid query customgov identity-records-by-addr kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 -o json | jq
+  ```
+
+  Sorted by `key` output:
+  ```json
+{
+  "records": [
+    // . . .
+    {
+      "id": "19",
+      "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "key": "text",
+      "value": "Testing item regisrty for docs",
+      "date": "2023-06-08T12:25:11.014802004Z",
+      "verifiers": []
+    },
+    // . . .
+  ]
+}
+  ```
+</details>
+
 [Return to top](#sekai)
 
 ##### 21.7.9 request-identity-record-verify
+
+Submit a transaction to request an identity verify record.
+
+Usage:
+```
+sekaid tx customgov request-identity-record-verify [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ❌ ?   |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for request-identity-record-verify                                                                                                                     | ✅ yes |
+| `--infos-file string`         | The infos file for identity request.                                                                                                                        | ✅ yes |
+| `--infos-json string`         | The infos json for identity request.                                                                                                                        | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ✅ yes |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `--record-ids string`         | Concatenated identity record ids array. e.g. `1,2`                                                                                                          | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `--tip string`                | The tip to be given to the verifier.                                                                                                                        | ✅ yes |
+| `--verifier string`           | The verifier of the record ids                                                                                                                              | ✅ yes |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov request-identity-record-verify --help
+Submit a transaction to request an identity verify record.
+
+Usage:
+  sekaid tx customgov request-identity-record-verify [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for request-identity-record-verify
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+      --record-ids string        Concatenated identity record ids array. e.g. 1,2
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+      --tip string               The tip to be given to the verifier.
+      --verifier string          The verifier of the record ids
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+```
+
+> Make sure that `tip` is higher that the minimum value configured by the network
+> 
+> `min_identity_approval_tip` value 
+> 
+> from `sekaid query customgov network-properties --output=json | jq`
+
+```
+sekaid tx customgov request-identity-record-verify --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --verifier=kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --keyring-backend=test --chain-id=localnet-4 --home=/root/.sekai --record-ids=19 --fees=99ukex --tip=200ukex --yes -o json | jq
+{
+  "height": "0",
+  "txhash": "5E482557FCDFF9821A5314DABDC2A3F2360265BC30D26AD0100E82227E429CF0",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Chech tx execution</summary>
+
+  ```
+  sekaid q tx 5E482557FCDFF9821A5314DABDC2A3F2360265BC30D26AD0100E82227E429CF0 -o json | jq
+  ```
+
+  ```json
+  {
+    "height": "109062",
+    "txhash": "5E482557FCDFF9821A5314DABDC2A3F2360265BC30D26AD0100E82227E429CF0",
+    "codespace": "",
+    "code": 0,
+    "data": "0A2F0A292F6B6972612E676F762E4D7367526571756573744964656E746974795265636F72647356657269667912020804",
+    "raw_log": "[{\"events\":[{\"type\":\"coin_received\",\"attributes\":[{\"key\":\"receiver\",\"value\":\"kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]},{\"type\":\"coin_spent\",\"attributes\":[{\"key\":\"spender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgRequestIdentityRecordsVerify\"},{\"key\":\"sender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"}]},{\"type\":\"transfer\",\"attributes\":[{\"key\":\"recipient\",\"value\":\"kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv\"},{\"key\":\"sender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "coin_received",
+            "attributes": [
+              {
+                "key": "receiver",
+                "value": "kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          },
+          {
+            "type": "coin_spent",
+            "attributes": [
+              {
+                "key": "spender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/kira.gov.MsgRequestIdentityRecordsVerify"
+              },
+              {
+                "key": "sender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              }
+            ]
+          },
+          {
+            "type": "transfer",
+            "attributes": [
+              {
+                "key": "recipient",
+                "value": "kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv"
+              },
+              {
+                "key": "sender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/kira.gov.MsgRequestIdentityRecordsVerify",
+            "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+            "record_ids": [
+              "19"
+            ],
+            "tip": {
+              "denom": "ukex",
+              "amount": "200"
+            }
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "88"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "99"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "e5TXzbKnTeR9Hlf8980rEoJj7IMi0aXaADkO0nBnFbFXIF7DFyqVy5EZjyP9tVgd9wPdZws7QQLH760gQ+CU0w=="
+      ]
+    },
+    "timestamp": "2023-06-08T12:53:42Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC84OA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "ZTVUWHpiS25UZVI5SGxmODk4MHJFb0pqN0lNaTBhWGFBRGtPMG5CbkZiRlhJRjdERnlxVnk1RVpqeVA5dFZnZDl3UGRad3M3UVFMSDc2MGdRK0NVMHc9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "OTl1a2V4",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2tpcmEuZ292Lk1zZ1JlcXVlc3RJZGVudGl0eVJlY29yZHNWZXJpZnk=",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE4cTQ3dGtydHJ0aGY3Mnh5c2NlbnMya3Y1OHVmcHF0eXh2eHd1dg==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE4cTQ3dGtydHJ0aGY3Mnh5c2NlbnMya3Y1OHVmcHF0eXh2eHd1dg==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
+
+<details>
+  <summary>Chech identity record verify requests</summary>
+
+  Check all requests:
+  ```
+  sekaid q customgov all-identity-record-verify-requests -o json | jq
+  ```
+
+  ```json
+  {
+    "verify_records": [
+      // . . .
+      {
+        "id": "4",
+        "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+        "recordIds": [
+          "19"
+        ],
+        "tip": {
+          "denom": "ukex",
+          "amount": "200"
+        },
+        "lastRecordEditDate": "2023-06-08T12:25:11.014802004Z"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+
+  Check request by ID:
+  ```
+  sekaid query customgov identity-record-verify-request 4 -o json | jq
+  ```
+
+  ```json
+  {
+    "verify_record": {
+      "id": "4",
+      "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "recordIds": [
+        "19"
+      ],
+      "tip": {
+        "denom": "ukex",
+        "amount": "200"
+      },
+      "lastRecordEditDate": "2023-06-08T12:25:11.014802004Z"
+    }
+  }
+  ```
+
+  Check request by requester:
+  ```
+  sekaid query customgov identity-record-verify-requests-by-requester kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --output=json | jq
+  ```
+
+  ```json
+  {
+    "verify_records": [
+      {
+        "id": "4",
+        "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+        "recordIds": [
+          "19"
+        ],
+        "tip": {
+          "denom": "ukex",
+          "amount": "200"
+        },
+        "lastRecordEditDate": "2023-06-08T12:25:11.014802004Z"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+
+  Check request by approver:
+  ```
+  sekaid query customgov identity-record-verify-requests-by-approver kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --output=json | jq
+  ```
+
+  ```json
+  {
+    "verify_records": [
+      {
+        "id": "4",
+        "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+        "recordIds": [
+          "19"
+        ],
+        "tip": {
+          "denom": "ukex",
+          "amount": "200"
+        },
+        "lastRecordEditDate": "2023-06-08T12:25:11.014802004Z"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+</details>
 
 [Return to top](#sekai)
 
