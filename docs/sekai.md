@@ -2170,6 +2170,106 @@ Use "sekaid query customgov [command] --help" for more information about a comma
 
 ##### 14.9.2 all-identity-record-verify-requests
 
+Query all identity records verify requests.
+
+Usage:
+```
+sekaid query customgov all-identity-record-verify-requests [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--count-total`       | count total number of records in customgov to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for all-identity-record-verify-requests                                                     | ✅ yes |
+| `--limit uint`        | pagination limit of customgov to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `--offset uint`       | pagination offset of customgov to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+| `--page uint`         | pagination page of customgov to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of customgov to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                           | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov all-identity-record-verify-requests --help
+Query all identity records verify requests.
+
+Example:
+$ sekaid query gov all-identity-record-verify-requests
+
+Usage:
+  sekaid query customgov all-identity-record-verify-requests [flags]
+
+Flags:
+      --count-total       count total number of records in customgov to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for all-identity-record-verify-requests
+      --limit uint        pagination limit of customgov to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of customgov to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of customgov to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of customgov to query for
+      --reverse           results are sorted in descending order
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid q customgov all-identity-record-verify-requests -o json | jq
+{
+  "verify_records": [
+    {
+      "id": "3",
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "verifier": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "recordIds": [
+        "15"
+      ],
+      "tip": {
+        "denom": "ukex",
+        "amount": "200"
+      },
+      "lastRecordEditDate": "2023-05-25T13:18:03.396177800Z"
+    }
+  ],
+  "pagination": {
+    "next_key": null,
+    "total": "0"
+  }
+}
+```
+
+Other usages:
+```
+sekaid q customgov all-identity-record-verify-requests --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+
+sekaid q customgov all-identity-record-verify-requests --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+
+sekaid q customgov all-identity-record-verify-requests --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
+```
+
+**Pay attention**
+Can't use together:
+- `--page` and `--page-key`
+- `--offset` and `--page`
+- `--height` for future blocks
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
