@@ -9203,6 +9203,54 @@ Signatures:
 
 ### 22. val-address
 
+Get validator address from account address
+
+Usage: 
+
+```
+sekaid val-address [address] [flags]
+```
+
+| Flags               | Description                                                                           | Work  |
+| ------------------- | ------------------------------------------------------------------------------------- | ----- |
+| --height int        | Use a specific height to query state at (this can error if the node is pruning state) | ❌ no  |
+| -h, --help          | help for val-address                                                                  | ✅ yes |
+| --node string       | : to Tendermint RPC interface for this chain (default "tcp://localhost:26657")        | ❌ no  |
+| -o, --output string | Output format (text\|json) (default "text")                                           | ❌ no  |
+
+
+| Global flags       | Description                                                                        | Work |
+| ------------------ | ---------------------------------------------------------------------------------- | ---- |
+| --home string      | directory for config and data (default "/root/.sekaid")                            | ❌ no |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌ no |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌ ?  |
+| --trace            | print out full stack trace on errors                                               | ❌ ?  |
+
+```
+# sekaid val-address --help
+Get validator address from account address
+
+Usage:
+  sekaid val-address [address] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for val-address
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+# sekaid val-address kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm && echo
+kiravaloper1tcyq0y66mmdpydepexc8lwrmemp9wzgmmvlr0h
+```
+
 [Return to top](#sekai)
 
 ### 23. valcons-address
