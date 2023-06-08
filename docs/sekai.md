@@ -2427,6 +2427,73 @@ Global Flags:
 
 ##### 14.9.12 identity-record-verify-request
 
+Query identity record verify request by id.
+
+Usage:
+```
+sekaid query customgov identity-record-verify-request [id] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for identity-record-verify-request                                                          | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov identity-record-verify-request --help
+Query identity record verify request by id.
+
+Example:
+$ sekaid query gov identity-record-verify-request 1
+
+Usage:
+  sekaid query customgov identity-record-verify-request [id] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for identity-record-verify-request
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+/# sekaid query customgov identity-record-verify-request 3 -o json | jq
+{
+  "verify_record": {
+    "id": "3",
+    "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+    "verifier": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+    "recordIds": [
+      "15"
+    ],
+    "tip": {
+      "denom": "ukex",
+      "amount": "200"
+    },
+    "lastRecordEditDate": "2023-05-25T13:18:03.396177800Z"
+  }
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
