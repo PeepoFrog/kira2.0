@@ -5072,18 +5072,18 @@ sekaid tx customgov register-identity-records [flags]
 | Flags                         | Description                                                                                                                                                 | Work  |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
 | `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
-| `-b, --broadcast-mode string` | Transaction broadcasting mode (sync                                                                                                                         | async | block) (default "sync") | ✅ yes |
-| `--dry-run`                   | ignore the --`gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
 | `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
-| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ❌ ?   |
-| `--from string`               | Name or address of private key with which to sign                                                                                                           | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
 | `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
 | `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
 | `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
-| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
 | `-h, --help`                  | help for register-identity-records                                                                                                                          | ✅ yes |
-| `--infos-file string`         | The infos file for identity request.                                                                                                                        | ❌ ?   |
-| `--infos-json string`         | The infos json for identity request.                                                                                                                        | ❌ ?   |
+| `--infos-file string`         | The infos file for identity request.                                                                                                                        | ✅ yes |
+| `--infos-json string`         | The infos json for identity request.                                                                                                                        | ✅ yes |
 | `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
 | `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
 | `--ledger`                    | Use a connected Ledger device                                                                                                                               | ✅ yes |
@@ -5445,6 +5445,535 @@ sekaid tx customgov register-identity-records --from=kira1vmwdgw426aj9fx33fqusmt
 [Return to top](#sekai)
 
 ##### 21.7.9 request-identity-record-verify
+
+Submit a transaction to request an identity verify record.
+
+Usage:
+```
+sekaid tx customgov request-identity-record-verify [flags]
+```
+
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ❌ ?   |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for request-identity-record-verify                                                                                                                     | ✅ yes |
+| `--infos-file string`         | The infos file for identity request.                                                                                                                        | ✅ yes |
+| `--infos-json string`         | The infos json for identity request.                                                                                                                        | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ✅ yes |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `--record-ids string`         | Concatenated identity record ids array. e.g. `1,2`                                                                                                          | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `--tip string`                | The tip to be given to the verifier.                                                                                                                        | ✅ yes |
+| `--verifier string`           | The verifier of the record ids                                                                                                                              | ✅ yes |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov request-identity-record-verify --help
+Submit a transaction to request an identity verify record.
+
+Usage:
+  sekaid tx customgov request-identity-record-verify [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for request-identity-record-verify
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+      --record-ids string        Concatenated identity record ids array. e.g. 1,2
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+      --tip string               The tip to be given to the verifier.
+      --verifier string          The verifier of the record ids
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+```
+
+> Make sure that `tip` is higher that the minimum value configured by the network
+> 
+> `min_identity_approval_tip` value 
+> 
+> from `sekaid query customgov network-properties --output=json | jq`
+
+```
+sekaid tx customgov request-identity-record-verify --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --verifier=kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --keyring-backend=test --chain-id=localnet-4 --home=/root/.sekai --record-ids=19 --fees=99ukex --tip=200ukex --yes -o json | jq
+{
+  "height": "0",
+  "txhash": "5E482557FCDFF9821A5314DABDC2A3F2360265BC30D26AD0100E82227E429CF0",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Chech tx execution</summary>
+
+  ```
+  sekaid q tx 5E482557FCDFF9821A5314DABDC2A3F2360265BC30D26AD0100E82227E429CF0 -o json | jq
+  ```
+
+  ```json
+  {
+    "height": "109062",
+    "txhash": "5E482557FCDFF9821A5314DABDC2A3F2360265BC30D26AD0100E82227E429CF0",
+    "codespace": "",
+    "code": 0,
+    "data": "0A2F0A292F6B6972612E676F762E4D7367526571756573744964656E746974795265636F72647356657269667912020804",
+    "raw_log": "[{\"events\":[{\"type\":\"coin_received\",\"attributes\":[{\"key\":\"receiver\",\"value\":\"kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]},{\"type\":\"coin_spent\",\"attributes\":[{\"key\":\"spender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]},{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgRequestIdentityRecordsVerify\"},{\"key\":\"sender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"}]},{\"type\":\"transfer\",\"attributes\":[{\"key\":\"recipient\",\"value\":\"kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv\"},{\"key\":\"sender\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"amount\",\"value\":\"200ukex\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "coin_received",
+            "attributes": [
+              {
+                "key": "receiver",
+                "value": "kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          },
+          {
+            "type": "coin_spent",
+            "attributes": [
+              {
+                "key": "spender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          },
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/kira.gov.MsgRequestIdentityRecordsVerify"
+              },
+              {
+                "key": "sender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              }
+            ]
+          },
+          {
+            "type": "transfer",
+            "attributes": [
+              {
+                "key": "recipient",
+                "value": "kira18q47tkrtrthf72xyscens2kv58ufpqtyxvxwuv"
+              },
+              {
+                "key": "sender",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "amount",
+                "value": "200ukex"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/kira.gov.MsgRequestIdentityRecordsVerify",
+            "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+            "record_ids": [
+              "19"
+            ],
+            "tip": {
+              "denom": "ukex",
+              "amount": "200"
+            }
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "88"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "99"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "e5TXzbKnTeR9Hlf8980rEoJj7IMi0aXaADkO0nBnFbFXIF7DFyqVy5EZjyP9tVgd9wPdZws7QQLH760gQ+CU0w=="
+      ]
+    },
+    "timestamp": "2023-06-08T12:53:42Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC84OA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "ZTVUWHpiS25UZVI5SGxmODk4MHJFb0pqN0lNaTBhWGFBRGtPMG5CbkZiRlhJRjdERnlxVnk1RVpqeVA5dFZnZDl3UGRad3M3UVFMSDc2MGdRK0NVMHc9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "OTl1a2V4",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "OTl1a2V4",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2tpcmEuZ292Lk1zZ1JlcXVlc3RJZGVudGl0eVJlY29yZHNWZXJpZnk=",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE4cTQ3dGtydHJ0aGY3Mnh5c2NlbnMya3Y1OHVmcHF0eXh2eHd1dg==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE4cTQ3dGtydHJ0aGY3Mnh5c2NlbnMya3Y1OHVmcHF0eXh2eHd1dg==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MjAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
+
+<details>
+  <summary>Chech identity record verify requests</summary>
+
+  Check all requests:
+  ```
+  sekaid q customgov all-identity-record-verify-requests -o json | jq
+  ```
+
+  ```json
+  {
+    "verify_records": [
+      // . . .
+      {
+        "id": "4",
+        "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+        "recordIds": [
+          "19"
+        ],
+        "tip": {
+          "denom": "ukex",
+          "amount": "200"
+        },
+        "lastRecordEditDate": "2023-06-08T12:25:11.014802004Z"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+
+  Check request by ID:
+  ```
+  sekaid query customgov identity-record-verify-request 4 -o json | jq
+  ```
+
+  ```json
+  {
+    "verify_record": {
+      "id": "4",
+      "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "recordIds": [
+        "19"
+      ],
+      "tip": {
+        "denom": "ukex",
+        "amount": "200"
+      },
+      "lastRecordEditDate": "2023-06-08T12:25:11.014802004Z"
+    }
+  }
+  ```
+
+  Check request by requester:
+  ```
+  sekaid query customgov identity-record-verify-requests-by-requester kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --output=json | jq
+  ```
+
+  ```json
+  {
+    "verify_records": [
+      {
+        "id": "4",
+        "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+        "recordIds": [
+          "19"
+        ],
+        "tip": {
+          "denom": "ukex",
+          "amount": "200"
+        },
+        "lastRecordEditDate": "2023-06-08T12:25:11.014802004Z"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+
+  Check request by approver:
+  ```
+  sekaid query customgov identity-record-verify-requests-by-approver kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --output=json | jq
+  ```
+
+  ```json
+  {
+    "verify_records": [
+      {
+        "id": "4",
+        "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+        "verifier": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+        "recordIds": [
+          "19"
+        ],
+        "tip": {
+          "denom": "ukex",
+          "amount": "200"
+        },
+        "lastRecordEditDate": "2023-06-08T12:25:11.014802004Z"
+      }
+    ],
+    "pagination": {
+      "next_key": null,
+      "total": "0"
+    }
+  }
+  ```
+</details>
 
 [Return to top](#sekai)
 
