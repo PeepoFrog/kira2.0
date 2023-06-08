@@ -1586,9 +1586,13 @@ sekaid query auth accounts --limit=2 --reverse --output=json | jq
 Other usages:
 ```
 sekaid query auth accounts --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid query auth accounts --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid query auth accounts --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
 ```
 
@@ -2258,9 +2262,13 @@ Global Flags:
 Other usages:
 ```
 sekaid q customgov all-identity-record-verify-requests --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid q customgov all-identity-record-verify-requests --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid q customgov all-identity-record-verify-requests --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
 ```
 
@@ -2687,9 +2695,13 @@ Global Flags:
 Other usages:
 ```
 sekaid query customgov identity-record-verify-requests-by-approver kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid query customgov identity-record-verify-requests-by-approver kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid query customgov identity-record-verify-requests-by-approver kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
 ```
 
@@ -2792,9 +2804,13 @@ Global Flags:
 Other usages:
 ```
 sekaid query customgov identity-record-verify-requests-by-requester kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid query customgov identity-record-verify-requests-by-requester kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid query customgov identity-record-verify-requests-by-requester kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
 ```
 
@@ -2905,9 +2921,13 @@ sekaid q customgov identity-records -o json | jq
 Other usages:
 ```
 sekaid q customgov identity-records --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid q customgov identity-records --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
 
+```
 sekaid q customgov identity-records --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
 ```
 
