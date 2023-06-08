@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/mrlutik/kira2.0/internal/cli/deploy"
+	"github.com/mrlutik/kira2.0/internal/cli/keys"
 	"github.com/mrlutik/kira2.0/internal/cli/version"
 	"github.com/mrlutik/kira2.0/internal/logging"
 	"github.com/spf13/cobra"
@@ -40,7 +42,7 @@ func NewCLI(cmds []*cobra.Command) *cobra.Command {
 }
 
 func Start() {
-	cmds := []*cobra.Command{version.Version()}
+	cmds := []*cobra.Command{version.Version(), deploy.Node(), keys.Generate()}
 	c := NewCLI(cmds)
 	if err := c.Execute(); err != nil {
 		log.Errorf("Failed to execute command %v\n", err)
