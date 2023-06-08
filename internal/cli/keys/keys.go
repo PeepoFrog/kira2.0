@@ -15,8 +15,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// log is the logger instance for this package.
 var log = logging.Log
 
+// Generate returns a cobra.Command that generates RSA or ECDSA keys
+// with given length and output directory. The command's flags allow
+// specification of key type, key length, and output directory.
 func Generate() *cobra.Command {
 	log.Debugln("Adding `keys` command...")
 
@@ -48,6 +52,8 @@ func Generate() *cobra.Command {
 	return keysCmd
 }
 
+// generateRSA generates an RSA key pair with the given number of bits and
+// writes the keys to files in the specified output directory.
 func generateRSA(bits int, outDir string) error {
 	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
 	if err != nil {
@@ -73,6 +79,8 @@ func generateRSA(bits int, outDir string) error {
 	return ioutil.WriteFile(filepath.Join(outDir, "public.pem"), publicKeyPEM, 0644)
 }
 
+// generateECDSA generates an ECDSA key pair with the given curve size and
+// writes the keys to files in the specified output directory.
 func generateECDSA(curveBits int, outDir string) error {
 	var curve elliptic.Curve
 	switch curveBits {
