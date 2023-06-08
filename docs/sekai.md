@@ -3891,9 +3891,199 @@ Global Flags:
 
 #### 14.20 tx
 
+🟨 Query for a transaction by hash, "\<addr\>/\<seq\>" combination or comma-separated signatures in a committed block 🟨
+
+Usage:
+```
+sekaid query tx --type=[hash|acc_seq|signature] [hash|acc_seq|signature] [flags]
+```
+
+| Flags                 | Description                                                                                                 | Work  |
+| --------------------- | ----------------------------------------------------------------------------------------------------------- | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)                       | ✅ yes |
+| `-h, --help`          | help for tx                                                                                                 | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`)            | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                             | ✅ yes |
+| `--type string`       | The type to be used when querying tx, can be one of `"hash"`, `"acc_seq"`, `"signature"` (default `"hash"`) | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q tx --help
+Example:
+$ sekaid query tx <hash>
+$ sekaid query tx --type=acc_seq <addr>/<sequence>
+$ sekaid query tx --type=signature <sig1_base64>,<sig2_base64...>
+
+Usage:
+  sekaid query tx --type=[hash|acc_seq|signature] [hash|acc_seq|signature] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for tx
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+      --type string     The type to be used when querying tx, can be one of "hash", "acc_seq", "signature" (default "hash")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+By **hash**:
+```
+sekaid q tx 0C192B8B81789853A107AD6B6283C0AB1784A2B2C32E1F9D6730341F41BDE413 -o json | jq
+{
+  "height": "110257",
+  "txhash": "0C192B8B81789853A107AD6B6283C0AB1784A2B2C32E1F9D6730341F41BDE413",
+  "codespace": "",
+  "code": 0,
+  "data": "0A210A1B2F6B6972612E676F762E4D73675375626D697450726F706F73616C1202080C",
+  "raw_log": ". . .",
+  "logs": [
+    // . . .
+  ]
+}
+```
+
+By **sequence**:
+```
+sekaid query tx --type=acc_seq kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4/92 -o json | jq
+{
+  "height": "109602",
+  "txhash": "9659E50E56F715EE67C935B2F440A7F02BBA131DDD7697E7510A5F866DAC8BA5",
+  "codespace": "",
+  "code": 0,
+  "data": "0A310A2F2F6B6972612E676F762E4D736743616E63656C4964656E746974795265636F72647356657269667952657175657374",
+  "raw_log": ". . .",
+  "logs": [
+    // . . .
+  ]
+}
+```
+
+By **signature**:
+```
+sekaid query tx --type=signature G5+araW7aplPdSJiPAvrgkmVMdmE14SNi6QmKgS0t0cEKLDeJ/BotFN2ktlIYl7nDWZ7zNEFYgsLtRKTT1jtfw== -o json | jq
+{
+  "height": "109602",
+  "txhash": "9659E50E56F715EE67C935B2F440A7F02BBA131DDD7697E7510A5F866DAC8BA5",
+  "codespace": "",
+  "code": 0,
+  "data": "0A310A2F2F6B6972612E676F762E4D736743616E63656C4964656E746974795265636F72647356657269667952657175657374",
+  "raw_log": ". . .",
+  "logs": [
+    // . . .
+  ]
+}
+```
+
 [Return to top](#sekai)
 
 #### 14.21 txs
+
+Search for transactions that match the exact given events where results are paginated.
+
+Usage:
+```
+sekaid query txs [flags]
+```
+
+| Flags                 | Description                                                                                                 | Work  |
+| --------------------- | ----------------------------------------------------------------------------------------------------------- | ----- |
+| `--events string`     | list of transaction events in the form of `{eventType}.{eventAttribute}={value}`                            | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)                       | ✅ yes |
+| `-h, --help`          | help for txs                                                                                                | ✅ yes |
+| `--limit int`         | Query number of transactions results per page returned (default `30`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`)            | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                             | ✅ yes |
+| `--type string`       | The type to be used when querying tx, can be one of `"hash"`, `"acc_seq"`, `"signature"` (default `"hash"`) | ✅ yes |
+| `--page int`          | Query a specific page of paginated results (default `1`)                                                    | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | The application home directory (default `"/root/.sekaid"`)                             | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q txs --help
+Search for transactions that match the exact given events where results are paginated.
+Each event takes the form of '{eventType}.{eventAttribute}={value}'. Please refer
+to each module's documentation for the full set of events to query for. Each module
+documents its respective events under 'xx_events.md'.
+
+Example:
+$ sekaid query txs --events 'message.sender=cosmos1...&message.action=withdraw_delegator_reward' --page 1 --limit 30
+
+Usage:
+  sekaid query txs [flags]
+
+Flags:
+      --events string   list of transaction events in the form of {eventType}.{eventAttribute}={value}
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for txs
+      --limit int       Query number of transactions results per page returned (default 30)
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+      --page int        Query a specific page of paginated results (default 1)
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+> `--events` - is requeired flag!
+
+```
+sekaid q txs --events=submit_proposal.proposal_type=UpsertDataRegistry --output=json | jq
+{
+  "total_count": "4",
+  "count": "4",
+  "page_number": "1",
+  "page_total": "1",
+  "limit": "30",
+  "txs": [
+    {. . .},
+    {. . .},
+    {. . .},
+    {. . .}
+  ]
+}
+```
+
+Other usages:
+```
+sekaid q txs --events=submit_proposal.proposal_type=UpsertDataRegistry --limit=1 --page=2 --output=json | jq
+{
+  "total_count": "4",
+  "count": "1",
+  "page_number": "2",
+  "page_total": "4",
+  "limit": "1",
+  "txs": [
+    {. . .}
+  ]
+}
+```
 
 [Return to top](#sekai)
 
