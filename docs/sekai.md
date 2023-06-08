@@ -320,6 +320,61 @@ sekaid config keyring-backend test
 [Return to top](#sekai)
 
 ### 11. init
+Initialize validators's and node's configuration files.
+
+Usage:
+```
+sekaid init [moniker] [flags]
+```
+| Flags             | Description                                                     | Work  |
+| ----------------- | --------------------------------------------------------------- | ----- |
+| --chain-id string | genesis file chain-id, if left blank will be randomly created   | ✅ yes |
+| -h, --help        | help for init                                                   | ✅ yes |
+| -o --overwrite    | overwrite the genesis.json file                                 | ✅ yes |
+| --recover         | provide seed phrase to recover existing key instead of creating | ❌ ?   |
+
+
+
+| Global Flags       |                                                                                    |       |
+| ------------------ | ---------------------------------------------------------------------------------- | ----- |
+| --home string      | directory for config and data (default "/root/.sekaid")                            | ✅ yes |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌ no  |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌ ?   |
+| --trace            | print out full stack trace on errors                                               | ❌ ?   |
+
+```
+# sekaid init --help
+Initialize validators's and node's configuration files.
+
+Usage:
+  sekaid init [moniker] [flags]
+
+Flags:
+      --chain-id string   genesis file chain-id, if left blank will be randomly created
+  -h, --help              help for init
+  -o, --overwrite         overwrite the genesis.json file
+      --recover           provide seed phrase to recover existing key instead of creating
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errorsdoc 
+```
+
+```
+#sekaid init "MONIKER" --overwrite --chain-id=MyBlockchain-03  --home=~/.sekaid-MyBlockchain-03
+```
+<details>
+<summary>Click to expand</summary>
+
+```
+#sekaid init "MONIKER" --overwrite --chain-id=MyBlockchain-03  --home=~/.sekaid-MyBlockchain-03
+
+{"app_message":{"auth":{"accounts":[],"params":{"max_memo_characters":"256","sig_verify_cost_ed25519":"590","sig_verify_cost_secp256k1":"1000","tx_sig_limit":"7","tx_size_cost_per_byte":"10"}},"bank":{"balances":[],"denom_metadata":[],"params":{"default_send_enabled":true,"send_enabled":[]},"supply":[]},"basket":{"baskets":[],"historical_burns":[],"historical_mints":[],"historical_swaps":[]},"collectives":{"collectives":[],"contributers":[]},"custody":{},"customevidence":{"evidence":[]},"customgov":{"data_registry":{},"execution_fees":[{"default_parameters":"0","execution_fee":"100","failure_fee":"1","timeout":"10","transaction_type":"claim-validator"},{"default_parameters":"0","execution_fee":"100","failure_fee":"1","timeout":"10","transaction_type":"claim-councilor"},{"default_parameters":"0","execution_fee":"100","failure_fee":"1","timeout":"10","transaction_type":"claim-proposal-type-x"},{"default_parameters":"0","execution_fee":"100","failure_fee":"1","timeout":"10","transaction_type":"vote-proposal-type-x"},{"default_parameters":"0","execution_fee":"10","failure_fee":"1","timeout":"10","transaction_type":"submit-proposal-type-x"},{"default_parameters":"0","execution_fee":"100","failure_fee":"1","timeout":"10","transaction_type":"veto-proposal-type-x"},{"default_parameters":"0","execution_fee":"100","failure_fee":"1","timeout":"10","transaction_type":"upsert-token-alias"},{"default_parameters":"0","execution_fee":"100","failure_fee":"1000","timeout":"10","transaction_type":"activate"},{"default_parameters":"0","execution_fee":"100","failure_fee":"100","timeout":"10","transaction_type":"pause"},{"default_parameters":"0","execution_fee":"100","failure_fee":"100","timeout":"10","transaction_type":"unpause"}],"id_records_verify_requests":[],"identity_records":[],"last_id_record_verify_request_id":"0","last_identity_record_id":"0","network_actors":[],"network_properties":{"abstention_rank_decrease_amount":"1","dapp_auto_denounce_time":"60","dapp_bond_duration":"604800","dapp_inactive_rank_decrease_percent":"10","dapp_liquidation_period":"0","dapp_liquidation_threshold":"0","dapp_max_mischance":"10","dapp_mischance_rank_decrease_amount":"1","dapp_pool_slippage_default":"0.100000000000000000","dapp_verifier_bond":"0.001000000000000000","enable_foreign_fee_payments":true,"enable_token_blacklist":true,"enable_token_whitelist":false,"inactive_rank_decrease_percent":"0.500000000000000000","inflation_period":"31557600","inflation_rate":"0.180000000000000000","max_abstention":"2","max_annual_inflation":"0.350000000000000000","max_collective_outputs":"10","max_custody_buffer_size":"10","max_custody_tx_size":"8192","max_dapp_bond":"10000000","max_delegators":"100","max_jailed_percentage":"0.250000000000000000","max_mischance":"110","max_proposal_checksum_size":"128","max_proposal_description_size":"1024","max_proposal_poll_option_count":"128","max_proposal_poll_option_size":"64","max_proposal_reference_size":"512","max_proposal_title_size":"128","max_slashing_percentage":"0.010000000000000000","max_tx_fee":"1000000","min_collective_bond":"100000","min_collective_bonding_time":"86400","min_collective_claim_period":"14400","min_custody_reward":"200","min_dapp_bond":"1000000","min_delegation_pushout":"10","min_identity_approval_tip":"200","min_proposal_enactment_blocks":"1","min_proposal_end_blocks":"2","min_tx_fee":"100","min_validators":"1","minimum_proposal_end_time":"300","minting_ft_fee":"100000000000000","minting_nft_fee":"100000000000000","mischance_confidence":"10","mischance_rank_decrease_amount":"10","poor_network_max_bank_send":"1000000","proposal_enactment_time":"300","slashing_period":"3600","ubi_hardcap":"6000000","unique_identity_keys":"moniker,username","unjail_max_time":"600","unstaking_period":"2629800","validator_recovery_bond":"300000","validators_fee_share":"0.500000000000000000","vote_quorum":"33"},"next_role_id":"3","poor_network_messages":{"messages":["submit-proposal","set-network-properties","vote-proposal","claim-councilor","whitelist-permissions","blacklist-permissions","create-role","assign-role","remove-role","whitelist-role-permission","blacklist-role-permission","remove-whitelist-role-permission","remove-blacklist-role-permission","claim-validator","activate","pause","unpause","register-identity-records","edit-identity-record","request-identity-records-verify","handle-identity-records-verify-request","cancel-identity-records-verify-request"]},"proposal_durations":{},"proposals":[],"role_permissions":{"1":{"blacklist":[],"whitelist":[1,2,3,6,8,9,12,13,10,11,14,15,18,19,20,21,22,23,31,32,24,25,16,17,4,5,26,27,28,29,30,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66]},"2":{"blacklist":[],"whitelist":[2]}},"roles":[{"description":"Sudo role","id":1,"sid":"sudo"},{"description":"Validator role","id":2,"sid":"validator"}],"starting_proposal_id":"1","votes":[]},"customslashing":{"params":{"downtime_inactive_duration":"600s"},"signing_infos":[]},"customstaking":null,"distributor":{"fees_collected":[],"fees_treasury":[],"previous_proposer":"","snap_period":"1000","validator_votes":[],"year_start_snapshot":{"snapshot_amount":"0","snapshot_time":"0"}},"feeprocessing":{},"genutil":{"gen_txs":[]},"layer2":{"bridge":{"accounts":[],"helper":null,"tokens":[],"xams":[]},"dapps":[]},"multistaking":null,"params":null,"recovery":{"recovery_records":[],"recovery_tokens":[],"rewards":[],"rotations":[]},"spending":{"claims":[],"pools":[{"balances":[],"beneficiaries":{"accounts":[],"roles":[{"role":"2","weight":"1"}]},"claim_end":"0","claim_expiry":"0","claim_start":"0","dynamic_rate":false,"dynamic_rate_period":"0","last_dynamic_rate_calc_time":"0","name":"ValidatorBasicRewardsPool","owners":{"owner_accounts":[],"owner_roles":["2"]},"rates":[{"amount":"385.000000000000000000","denom":"ukex"}],"vote_enactment":"300","vote_period":"300","vote_quorum":"33"}]},"tokens":{"aliases":[{"decimals":6,"denoms":["ukex","mkex"],"icon":"","invalidated":false,"name":"Kira","symbol":"KEX"}],"rates":[{"denom":"ukex","fee_payments":true,"fee_rate":"1.000000000000000000","invalidated":false,"stake_cap":"0.500000000000000000","stake_min":"1","stake_token":true},{"denom":"ubtc","fee_payments":true,"fee_rate":"10.000000000000000000","invalidated":false,"stake_cap":"0.250000000000000000","stake_min":"1","stake_token":true},{"denom":"xeth","fee_payments":true,"fee_rate":"0.100000000000000000","invalidated":false,"stake_cap":"0.100000000000000000","stake_min":"1","stake_token":false},{"denom":"frozen","fee_payments":true,"fee_rate":"0.100000000000000000","invalidated":false,"stake_cap":"0.000000000000000000","stake_min":"1","stake_token":false}],"tokenBlackWhites":{"blacklisted":["frozen"],"whitelisted":["ukex"]}},"ubi":{"ubi_records":[{"amount":"500000","distribution_end":"0","distribution_last":"0","distribution_start":"0","dynamic":true,"name":"ValidatorBasicRewardsPoolUBI","period":"2592000","pool":"ValidatorBasicRewardsPool"}]},"upgrade":{"current_plan":null,"next_plan":null,"version":""}},"chain_id":"MyBlockchain-03","gentxs_dir":"","moniker":"MONIKER","node_id":"09f40bc7966028a2f58fe63130aadf02ff32bf29"}
+```
+</details>
+
 
 [Return to top](#sekai)
 
