@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo "v0.0.25"
+echo "v0.0.26"
 
 
