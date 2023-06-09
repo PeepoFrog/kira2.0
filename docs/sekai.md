@@ -9310,6 +9310,49 @@ kiravalcons1vmwdgw426aj9fx33fqusmtg6r65yyucmp0vjlc
 
 ### 24. validate-genesis
 
+Validates the genesis file at the default location or at the location passed as an arg
+
+Usage:
+
+```
+sekaid validate-genesis [file] [flags]
+```
+| Flags           | Description                                 | Work  |
+| --------------- | ------------------------------------------- | ----- |
+| --help          | help for version                            | ✅ yes |
+
+
+
+| Global flags       | Description                                                                        | Work  |
+| ------------------ | ---------------------------------------------------------------------------------- | ----- |
+| --home string      | directory for config and data (default "/root/.sekaid")                            | ✅ yes |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌ no  |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌ ?   |
+| --trace            | print out full stack trace on errors                                               | ❌ ?   |
+
+```
+# sekaid validate-genesis --help
+validates the genesis file at the default location or at the location passed as an arg
+
+Usage:
+  sekaid validate-genesis [file] [flags]
+
+Flags:
+  -h, --help   help for validate-genesis
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+```
+
+```
+# sekaid validate-genesis --home $SEKAID_HOME
+File at /root/.sekai/config/genesis.json is a valid genesis file
+```
+
 [Return to top](#sekai)
 
 ### 25. version
