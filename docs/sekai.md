@@ -350,6 +350,1280 @@ sekaid config keyring-backend test
 
 ### 6. export-metadata
 
+Get metadata for client interaction to the node
+
+Usage:
+
+```
+sekaid export-metadata [flags]
+```
+
+| Flags      | Description   | Work  |
+| ---------- | ------------- | ----- |
+| -h, --help | help for init | ✅ yes |
+
+
+
+| Global Flags       |                                                                                    |      |
+| ------------------ | ---------------------------------------------------------------------------------- | ---- |
+| --home string      | directory for config and data (default "/root/.sekaid")                            | ❌ no |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌ no |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌ ?  |
+| --trace            | print out full stack trace on errors                                               | ❌ ?  |
+
+```
+# sekaid export-metadata -h
+Get metadata for client interaction to the node
+
+Usage:
+  sekaid export-metadata [flags]
+
+Flags:
+  -h, --help   help for export-metadata
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+```
+
+```
+# sekaid export-metadata
+```
+<details>
+  <summary>Check export-metadata out</summary>
+
+```
+# sekaid export-metadata | jq    
+{
+  "permissions": [
+    {
+      "id": 1,
+      "name": "PERMISSION_SET_PERMISSIONS",
+      "module": "gov",
+      "description": "the permission that allows to Set Permissions to other actors"
+    },
+    {
+      "id": 2,
+      "name": "PERMISSION_CLAIM_VALIDATOR",
+      "module": "customstaking",
+      "description": "the permission that allows to Claim a validator Seat"
+    },
+    {
+      "id": 3,
+      "name": "PERMISSION_CLAIM_COUNCILOR",
+      "module": "gov",
+      "description": "the permission that allows to Claim a Councilor Seat"
+    },
+    {
+      "id": 4,
+      "name": "PERMISSION_WHITELIST_ACCOUNT_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals for whitelisting an account permission."
+    },
+    {
+      "id": 5,
+      "name": "PERMISSION_VOTE_WHITELIST_ACCOUNT_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to whitelist account permission"
+    },
+    {
+      "id": 6,
+      "name": "PERMISSION_UPSERT_TOKEN_ALIAS",
+      "module": "tokens",
+      "description": "the permission to upsert token alias"
+    },
+    {
+      "id": 7,
+      "name": "PERMISSION_CHANGE_TX_FEE",
+      "module": "tokens",
+      "description": "Permission to change tx fee"
+    },
+    {
+      "id": 8,
+      "name": "PERMISSION_UPSERT_TOKEN_RATE",
+      "module": "tokens",
+      "description": "Permission to upsert token rate"
+    },
+    {
+      "id": 9,
+      "name": "PERMISSION_UPSERT_ROLE",
+      "module": "gov",
+      "description": "Permission to upsert a role"
+    },
+    {
+      "id": 10,
+      "name": "PERMISSION_CREATE_UPSERT_DATA_REGISTRY_PROPOSAL",
+      "module": "gov",
+      "description": "makes possible to create a proposal to change the Data Registry"
+    },
+    {
+      "id": 11,
+      "name": "PERMISSION_VOTE_UPSERT_DATA_REGISTRY_PROPOSAL",
+      "module": "gov",
+      "description": "makes possible to vote on a proposal to change the Data Registry."
+    },
+    {
+      "id": 12,
+      "name": "PERMISSION_CREATE_SET_NETWORK_PROPERTY_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals for setting network property"
+    },
+    {
+      "id": 13,
+      "name": "PERMISSION_VOTE_SET_NETWORK_PROPERTY_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to set network property."
+    },
+    {
+      "id": 14,
+      "name": "PERMISSION_CREATE_UPSERT_TOKEN_ALIAS_PROPOSAL",
+      "module": "tokens",
+      "description": "the permission needed to create proposals for upsert token Alias."
+    },
+    {
+      "id": 15,
+      "name": "PERMISSION_VOTE_UPSERT_TOKEN_ALIAS_PROPOSAL",
+      "module": "tokens",
+      "description": "the permission needed to vote proposals for upsert token."
+    },
+    {
+      "id": 16,
+      "name": "PERMISSION_CREATE_SET_POOR_NETWORK_MESSAGES",
+      "module": "tokens",
+      "description": "the permission needed to create proposals for setting poor network messages."
+    },
+    {
+      "id": 17,
+      "name": "PERMISSION_VOTE_SET_POOR_NETWORK_MESSAGES_PROPOSAL",
+      "module": "tokens",
+      "description": "the permission needed to vote proposals to set poor network messages."
+    },
+    {
+      "id": 18,
+      "name": "PERMISSION_CREATE_UPSERT_TOKEN_RATE_PROPOSAL",
+      "module": "tokens",
+      "description": "the permission needed to create proposals for upsert token rate."
+    },
+    {
+      "id": 19,
+      "name": "PERMISSION_VOTE_UPSERT_TOKEN_RATE_PROPOSAL",
+      "module": "tokens",
+      "description": "the permission needed to vote proposals for upsert token rate."
+    },
+    {
+      "id": 20,
+      "name": "PERMISSION_CREATE_UNJAIL_VALIDATOR_PROPOSAL",
+      "module": "slashing",
+      "description": "the permission needed to create a proposal to unjail a validator."
+    },
+    {
+      "id": 21,
+      "name": "PERMISSION_VOTE_UNJAIL_VALIDATOR_PROPOSAL",
+      "module": "slashing",
+      "description": "the permission needed to vote a proposal to unjail a validator."
+    },
+    {
+      "id": 22,
+      "name": "PERMISSION_CREATE_CREATE_ROLE_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create a proposal to create a role."
+    },
+    {
+      "id": 23,
+      "name": "PERMISSION_VOTE_CREATE_ROLE_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to vote a proposal to create a role."
+    },
+    {
+      "id": 24,
+      "name": "PERMISSION_CREATE_TOKENS_WHITE_BLACK_CHANGE_PROPOSAL",
+      "module": "tokens",
+      "description": "the permission needed to create a proposal to blacklist/whitelisted tokens"
+    },
+    {
+      "id": 25,
+      "name": "PERMISSION_VOTE_TOKENS_WHITE_BLACK_CHANGE_PROPOSAL",
+      "module": "tokens",
+      "description": "the permission needed to vote on blacklist/whitelisted tokens proposal"
+    },
+    {
+      "id": 26,
+      "name": "PERMISSION_CREATE_RESET_WHOLE_VALIDATOR_RANK_PROPOSAL",
+      "module": "customstaking",
+      "description": "the permission needed to create a proposal to reset whole validator rank"
+    },
+    {
+      "id": 27,
+      "name": "PERMISSION_VOTE_RESET_WHOLE_VALIDATOR_RANK_PROPOSAL",
+      "module": "customstaking",
+      "description": "the permission needed to vote on reset whole validator rank proposal"
+    },
+    {
+      "id": 28,
+      "name": "PERMISSION_CREATE_SOFTWARE_UPGRADE_PROPOSAL",
+      "module": "upgrade",
+      "description": "the permission needed to create a proposal for software upgrade"
+    },
+    {
+      "id": 28,
+      "name": "PermVoteSoftwareUpgradeProposal",
+      "module": "upgrade",
+      "description": "the permission needed to vote on software upgrade proposal"
+    },
+    {
+      "id": 30,
+      "name": "PERMISSION_SET_CLAIM_VALIDATOR_PERMISSION",
+      "module": "customstaking",
+      "description": "the permission that allows to Set ClaimValidatorPermission to other actors."
+    },
+    {
+      "id": 31,
+      "name": "PERMISSION_CREATE_SET_PROPOSAL_DURATION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create a proposal to set proposal duration."
+    },
+    {
+      "id": 32,
+      "name": "PERMISSION_VOTE_SET_PROPOSAL_DURATION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to vote a proposal to set proposal duration."
+    },
+    {
+      "id": 33,
+      "name": "PERMISSION_BLACKLIST_ACCOUNT_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals for blacklisting an account permission."
+    },
+    {
+      "id": 34,
+      "name": "PERMISSION_VOTE_BLACKLIST_ACCOUNT_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to blacklist account permission."
+    },
+    {
+      "id": 35,
+      "name": "PERMISSION_REMOVE_WHITELISTED_ACCOUNT_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals for removing whitelisted permission from an account."
+    },
+    {
+      "id": 36,
+      "name": "PERMISSION_VOTE_REMOVE_WHITELISTED_ACCOUNT_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to remove a whitelisted account permission."
+    },
+    {
+      "id": 37,
+      "name": "PERMISSION_REMOVE_BLACKLISTED_ACCOUNT_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals for removing blacklisted permission from an account."
+    },
+    {
+      "id": 38,
+      "name": "PERMISSION_VOTE_REMOVE_BLACKLISTED_ACCOUNT_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to remove a blacklisted account permission."
+    },
+    {
+      "id": 39,
+      "name": "PERMISSION_WHITELIST_ROLE_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals for whitelisting an role permission."
+    },
+    {
+      "id": 40,
+      "name": "PERMISSION_VOTE_WHITELIST_ROLE_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to whitelist role permission."
+    },
+    {
+      "id": 41,
+      "name": "PERMISSION_BLACKLIST_ROLE_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals for blacklisting an role permission."
+    },
+    {
+      "id": 42,
+      "name": "PERMISSION_VOTE_BLACKLIST_ROLE_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to blacklist role permission."
+    },
+    {
+      "id": 43,
+      "name": "PERMISSION_REMOVE_WHITELISTED_ROLE_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals for removing whitelisted permission from a role."
+    },
+    {
+      "id": 44,
+      "name": "PERMISSION_VOTE_REMOVE_WHITELISTED_ROLE_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to remove a whitelisted role permission."
+    },
+    {
+      "id": 45,
+      "name": "PERMISSION_REMOVE_BLACKLISTED_ROLE_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals for removing blacklisted permission from a role."
+    },
+    {
+      "id": 46,
+      "name": "PERMISSION_VOTE_REMOVE_BLACKLISTED_ROLE_PERMISSION_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to remove a blacklisted role permission."
+    },
+    {
+      "id": 47,
+      "name": "PERMISSION_ASSIGN_ROLE_TO_ACCOUNT_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals to assign role to an account."
+    },
+    {
+      "id": 48,
+      "name": "PERMISSION_VOTE_ASSIGN_ROLE_TO_ACCOUNT_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to assign role to an account"
+    },
+    {
+      "id": 49,
+      "name": "PERMISSION_UNASSIGN_ROLE_FROM_ACCOUNT_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create proposals to unassign role from an account"
+    },
+    {
+      "id": 50,
+      "name": "PERMISSION_VOTE_UNASSIGN_ROLE_FROM_ACCOUNT_PROPOSAL",
+      "module": "gov",
+      "description": "the permission that an actor must have in order to vote a proposal to unassign role from an account"
+    },
+    {
+      "id": 51,
+      "name": "PERMISSION_CREATE_REMOVE_ROLE_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create a proposal to remove a role."
+    },
+    {
+      "id": 52,
+      "name": "PERMISSION_VOTE_REMOVE_ROLE_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to vote a proposal to remove a role."
+    },
+    {
+      "id": 53,
+      "name": "PERMISSION_CREATE_UPSERT_UBI_PROPOSAL",
+      "module": "ubi",
+      "description": "the permission needed to create proposals to upsert ubi."
+    },
+    {
+      "id": 54,
+      "name": "PERMISSION_VOTE_UPSERT_UBI_PROPOSAL",
+      "module": "ubi",
+      "description": "the permission that an actor must have in order to vote a proposal to upsert ubi"
+    },
+    {
+      "id": 55,
+      "name": "PERMISSION_CREATE_REMOVE_UBI_PROPOSAL",
+      "module": "ubi",
+      "description": "the permission needed to create a proposal to remove ubi"
+    },
+    {
+      "id": 56,
+      "name": "PERMISSION_VOTE_REMOVE_UBI_PROPOSAL",
+      "module": "ubi",
+      "description": "the permission needed to vote a proposal to remove ubi."
+    },
+    {
+      "id": 57,
+      "name": "PERMISSION_CREATE_SLASH_VALIDATOR_PROPOSAL",
+      "module": "slashing",
+      "description": "the permission needed to create a proposal to slash validator"
+    },
+    {
+      "id": 58,
+      "name": "PERMISSION_VOTE_SLASH_VALIDATOR_PROPOSAL",
+      "module": "slashing",
+      "description": "the permission needed to vote a proposal to slash validator"
+    },
+    {
+      "id": 59,
+      "name": "PERMISSION_CREATE_BASKET_PROPOSAL",
+      "module": "basket",
+      "description": "the permission needed to create a proposal related to basket"
+    },
+    {
+      "id": 60,
+      "name": "PERMISSION_VOTE_BASKET_PROPOSAL",
+      "module": "basket",
+      "description": "the permission needed to vote a proposal related to basket"
+    },
+    {
+      "id": 61,
+      "name": "PERMISSION_HANDLE_BASKET_EMERGENCY",
+      "module": "basket",
+      "description": "the permission needed to handle emergency issues on basket"
+    },
+    {
+      "id": 62,
+      "name": "PERMISSION_CREATE_RESET_WHOLE_COUNCILOR_RANK_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create a proposal to reset whole councilor rank"
+    },
+    {
+      "id": 63,
+      "name": "PERMISSION_VOTE_RESET_WHOLE_COUNCILOR_RANK_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to vote on reset whole councilor rank proposal"
+    },
+    {
+      "id": 64,
+      "name": "PERMISSION_CREATE_JAIL_COUNCILOR_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to create a proposal to jail councilors"
+    },
+    {
+      "id": 65,
+      "name": "PERMISSION_VOTE_JAIL_COUNCILOR_PROPOSAL",
+      "module": "gov",
+      "description": "the permission needed to vote on jail councilors proposal"
+    }
+  ],
+  "properties": [
+    {
+      "name": "MinTxFee",
+      "format": "uint64",
+      "description": "Minimum transaction fee on the network"
+    },
+    {
+      "name": "MaxTxFee",
+      "format": "uint64",
+      "description": "Maximum transaction fee on the network"
+    },
+    {
+      "name": "VoteQuorum",
+      "format": "uint64",
+      "description": "Vote quorum to meet for a proposal to pass."
+    },
+    {
+      "name": "MinimumProposalEndTime",
+      "format": "uint64",
+      "description": "Minimum proposal voting duration for a proposal should be live for voting."
+    },
+    {
+      "name": "ProposalEnactmentTime",
+      "format": "uint64",
+      "description": "Proposal enactment time."
+    },
+    {
+      "name": "MinProposalEndBlocks",
+      "format": "uint64",
+      "description": "Minimum number of blocks a proposal should be live for voting."
+    },
+    {
+      "name": "MinProposalEnactmentBlocks",
+      "format": "uint64",
+      "description": "Minimum number of blocks a proposal should be in enactment."
+    },
+    {
+      "name": "EnableForeignFeePayments",
+      "format": "bool",
+      "description": "Flag that describes foreign token (non-KEX) is enabled as fees."
+    },
+    {
+      "name": "MischanceRankDecreaseAmount",
+      "format": "uint64",
+      "description": "Rank decrease amount when a validator miss a block."
+    },
+    {
+      "name": "MaxMischance",
+      "format": "uint64",
+      "description": "Maximun number of sequencial miss on blocks before penalties."
+    },
+    {
+      "name": "MischanceConfidence",
+      "format": "uint64",
+      "description": "Number of missed blocks accepted before increasing misschance."
+    },
+    {
+      "name": "InactiveRankDecreasePercent",
+      "format": "decimal",
+      "description": "Percentage of rank decrease when a validator node become inactive."
+    },
+    {
+      "name": "MinValidators",
+      "format": "uint64",
+      "description": "Number of active validators to be an active network."
+    },
+    {
+      "name": "PoorNetworkMaxBankSend",
+      "format": "uint64",
+      "description": "Maximum number of tokens transferrable on poor network."
+    },
+    {
+      "name": "UnjailMaxTime",
+      "format": "uint64",
+      "description": "Maximum time a validator can unjail after jail."
+    },
+    {
+      "name": "EnableTokenWhitelist",
+      "format": "bool",
+      "description": "Flag to let only whitelisted tokens are transferrable"
+    },
+    {
+      "name": "EnableTokenBlacklist",
+      "format": "bool",
+      "description": "Flag to prevent transfer of blacklisted tokens"
+    },
+    {
+      "name": "MinIdentityApprovalTip",
+      "format": "uint64",
+      "description": "Minimum amount of tokens to be given for an identity record approval"
+    },
+    {
+      "name": "UniqueIdentityKeys",
+      "format": "string",
+      "description": "Comma separated list of identity keys that should be unique across all identity keys"
+    },
+    {
+      "name": "UbiHardcap",
+      "format": "uint64",
+      "description": "The maximum amount of tokens that can be allocated for sum of ubi records"
+    },
+    {
+      "name": "ValidatorsFeeShare",
+      "format": "decimal",
+      "description": "The portion of fees to be given to the validator from the block fees"
+    },
+    {
+      "name": "InflationRate",
+      "format": "decimal",
+      "description": "The rate of inflation during the inflation period"
+    },
+    {
+      "name": "InflationPeriod",
+      "format": "uint64",
+      "description": "The duration unit for InflationRate"
+    },
+    {
+      "name": "UnstakingPeriod",
+      "format": "uint64",
+      "description": "The unstaking duration on multistaking module"
+    },
+    {
+      "name": "MaxDelegators",
+      "format": "uint64",
+      "description": "The maximum number of pool delegators for a single pool"
+    },
+    {
+      "name": "MinDelegationPushout",
+      "format": "uint64",
+      "description": "The multiplier to push out a min delegation user when the maximum number of delegators filled in"
+    },
+    {
+      "name": "SlashingPeriod",
+      "format": "uint64",
+      "description": "The period to take colluders on slash proposal"
+    },
+    {
+      "name": "MaxJailedPercentage",
+      "format": "decimal",
+      "description": "The percentage of jails acceptable before slash proposal happens"
+    },
+    {
+      "name": "MaxSlashingPercentage",
+      "format": "decimal",
+      "description": "The maximum slash percentage to for jail"
+    },
+    {
+      "name": "MinCustodyReward",
+      "format": "uint64",
+      "description": "The minimum custody reward"
+    },
+    {
+      "name": "MaxCustodyBufferSize",
+      "format": "uint64",
+      "description": "The minimum custody buffer size"
+    },
+    {
+      "name": "MaxCustodyTxSize",
+      "format": "uint64",
+      "description": "The minimum custody transaction size"
+    },
+    {
+      "name": "AbstentionRankDecreaseAmount",
+      "format": "uint64",
+      "description": "Rank decrease amount when a councilor does not participate in voting"
+    },
+    {
+      "name": "MaxAbstention",
+      "format": "uint64",
+      "description": "The maximum absention count on voting for an active councilor"
+    },
+    {
+      "name": "MinCollectiveBond",
+      "format": "uint64",
+      "description": "The minimum size of collective to be bootstrapped within bonding period"
+    },
+    {
+      "name": "MinCollectiveBondingTime",
+      "format": "uint64",
+      "description": "The time to bootstrap minimum collectives bonds"
+    },
+    {
+      "name": "MaxCollectiveOutputs",
+      "format": "uint64",
+      "description": "The maximum number of outputs a bonding pool could have"
+    },
+    {
+      "name": "MinCollectiveClaimPeriod",
+      "format": "uint64",
+      "description": "The minimum acceptable collective claim period"
+    }
+  ],
+  "transactions": {
+    "Activate": {
+      "function_id": 35,
+      "description": "MsgActivate defines a message to activate an inactive validator.",
+      "parameters": {
+        "validator_addr": {
+          "type": "string",
+          "optional": false,
+          "description": "bech32 format of validator address. e.g. kiravaloper1ewgq8gtsefakhal687t8hnsw5zl4y8eksup39w"
+        }
+      }
+    },
+    "AssignRole": {
+      "function_id": 26,
+      "description": "MsgAssignRole defines a message to assign a role to an address.",
+      "parameters": {
+        "address": {
+          "type": "string",
+          "optional": false,
+          "description": "Address to set role to."
+        },
+        "proposer": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer who propose this message."
+        },
+        "role": {
+          "type": "uint32",
+          "optional": false,
+          "description": "role identifier."
+        }
+      }
+    },
+    "BlacklistPermissions": {
+      "function_id": 24,
+      "description": "MsgBlacklistPermissions defines a message to blacklist permission of an address.",
+      "parameters": {
+        "address": {
+          "type": "string",
+          "optional": false,
+          "description": "Address to blacklist permission to."
+        },
+        "permission": {
+          "type": "uint32",
+          "optional": false,
+          "description": "Permission to be blacklisted."
+        },
+        "proposer": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer who propose this message."
+        }
+      }
+    },
+    "BlacklistRolePermission": {
+      "function_id": 29,
+      "description": "MsgBlacklistRolePermission defines a message to blacklist permission for a role.",
+      "parameters": {
+        "permission": {
+          "type": "uint32",
+          "optional": false,
+          "description": "Permission to be blacklisted."
+        },
+        "proposer": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer who propose this message."
+        },
+        "role": {
+          "type": "uint32",
+          "optional": false,
+          "description": "role identifier."
+        }
+      }
+    },
+    "CancelIdentityRecordsVerifyRequest": {
+      "function_id": 16,
+      "description": "MsgCancelIdentityRecordsVerifyRequest defines a proposal message to cancel an identity record request.",
+      "parameters": {
+        "executor": {
+          "type": "string",
+          "optional": false,
+          "description": "the address of requester."
+        },
+        "verify_request_id": {
+          "type": "uint64",
+          "optional": false,
+          "description": "the id of verification request."
+        }
+      }
+    },
+    "ClaimCouncilor": {
+      "function_id": 22,
+      "description": "MsgClaimCouncilor defines a message to claim councilor when the proposer.",
+      "parameters": {
+        "address": {
+          "type": "string",
+          "optional": false,
+          "description": "Address to be set as councilor. This address should be proposer address as well."
+        },
+        "moniker": {
+          "type": "string",
+          "optional": false,
+          "description": "validator's name or nickname."
+        }
+      }
+    },
+    "ClaimValidator": {
+      "function_id": 32,
+      "description": "MsgClaimValidator defines a message for claiming a new validator.",
+      "parameters": {
+        "moniker": {
+          "type": "string",
+          "optional": false,
+          "description": "validator's name or nickname."
+        },
+        "pub_key": {
+          "type": "string",
+          "optional": false,
+          "description": "validator bech32 public key"
+        },
+        "val_key": {
+          "type": "val_address",
+          "optional": false,
+          "description": "validator operator address"
+        }
+      }
+    },
+    "CreateRole": {
+      "function_id": 25,
+      "description": "MsgCreateRole defines a message to create a role.",
+      "parameters": {
+        "proposer": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer who propose this message."
+        },
+        "role": {
+          "type": "uint32",
+          "optional": false,
+          "description": "Identifier of this role."
+        }
+      }
+    },
+    "CreateSpendingPool": {
+      "function_id": 41,
+      "description": "MsgCreateSpendingPool represents a message to create a spending pool.",
+      "parameters": {
+        "beneficiaries": {
+          "type": "PermInfo",
+          "optional": false,
+          "description": ""
+        },
+        "claim_end": {
+          "type": "time",
+          "optional": false,
+          "description": ""
+        },
+        "claim_start": {
+          "type": "time",
+          "optional": false,
+          "description": ""
+        },
+        "expire": {
+          "type": "uint64",
+          "optional": false,
+          "description": ""
+        },
+        "name": {
+          "type": "string",
+          "optional": false,
+          "description": ""
+        },
+        "owners": {
+          "type": "PermInfo",
+          "optional": false,
+          "description": ""
+        },
+        "rate": {
+          "type": "decimal",
+          "optional": false,
+          "description": ""
+        },
+        "sender": {
+          "type": "string",
+          "optional": false,
+          "description": ""
+        },
+        "token": {
+          "type": "string",
+          "optional": false,
+          "description": ""
+        },
+        "vote_enactment": {
+          "type": "uint64",
+          "optional": false,
+          "description": ""
+        },
+        "vote_period": {
+          "type": "uint64",
+          "optional": false,
+          "description": ""
+        },
+        "vote_quorum": {
+          "type": "uint64",
+          "optional": false,
+          "description": ""
+        }
+      }
+    },
+    "EditIdentityRecord": {
+      "function_id": 13,
+      "description": "MsgDeleteIdentityRecords defines a method to delete identity records owned by an address.",
+      "parameters": {
+        "address": {
+          "type": "string",
+          "optional": false,
+          "description": "the address of requester."
+        },
+        "keys": {
+          "type": "array",
+          "optional": false,
+          "description": "the array string that defines identity record key values to be deleted."
+        }
+      }
+    },
+    "HandleIdentityRecordsVerifyRequest": {
+      "function_id": 15,
+      "description": "MsgHandleIdentityRecordsVerifyRequest defines a proposal message to approve or reject an identity record request.",
+      "parameters": {
+        "verifier": {
+          "type": "string",
+          "optional": false,
+          "description": "the address of verifier."
+        },
+        "verify_request_id": {
+          "type": "uint64",
+          "optional": false,
+          "description": "the id of verification request."
+        },
+        "yes": {
+          "type": "bool",
+          "optional": true,
+          "description": "defines approval or rejecting an identity request (default false)"
+        }
+      }
+    },
+    "Pause": {
+      "function_id": 36,
+      "description": "MsgRefuteSlashingProposal defines a message to refute a validator slash proposal.",
+      "parameters": {
+        "refutation": {
+          "type": "string",
+          "optional": false,
+          "description": "refutation link of on the proposal"
+        },
+        "sender": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer of the message."
+        },
+        "validator": {
+          "type": "string",
+          "optional": false,
+          "description": "bech32 format of validator address. e.g. kiravaloper1ewgq8gtsefakhal687t8hnsw5zl4y8eksup39w"
+        }
+      }
+    },
+    "RegisterIdentityRecords": {
+      "function_id": 12,
+      "description": "MsgRegisterIdentityRecords defines a proposal message to create a identity record.",
+      "parameters": {
+        "address": {
+          "type": "string",
+          "optional": false,
+          "description": "the address for the identity record."
+        },
+        "infos": {
+          "type": "array",
+          "optional": false,
+          "description": "key/value array for the mappings of the identity record."
+        }
+      }
+    },
+    "RemoveBlacklistRolePermission": {
+      "function_id": 31,
+      "description": "MsgRemoveBlacklistRolePermission defines a message to remove blacklisted permission for a role.",
+      "parameters": {
+        "permission": {
+          "type": "uint32",
+          "optional": false,
+          "description": "Permission to be removed from blacklisted listing."
+        },
+        "proposer": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer who propose this message."
+        },
+        "role": {
+          "type": "uint32",
+          "optional": false,
+          "description": "role identifier."
+        }
+      }
+    },
+    "RemoveRole": {
+      "function_id": 27,
+      "description": "MsgRemoveRole defines a message to remove a role from an address.",
+      "parameters": {
+        "address": {
+          "type": "string",
+          "optional": false,
+          "description": "Address to remove role from."
+        },
+        "proposer": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer who propose this message."
+        },
+        "role": {
+          "type": "uint32",
+          "optional": false,
+          "description": "role identifier."
+        }
+      }
+    },
+    "RemoveWhitelistRolePermission": {
+      "function_id": 30,
+      "description": "MsgRemoveWhitelistRolePermission defines a message to remove whitelisted permission for a role.",
+      "parameters": {
+        "permission": {
+          "type": "uint32",
+          "optional": false,
+          "description": "Permission to be removed from whitelisted listing."
+        },
+        "proposer": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer who propose this message."
+        },
+        "role": {
+          "type": "uint32",
+          "optional": false,
+          "description": "role identifier."
+        }
+      }
+    },
+    "RequestIdentityRecordsVerify": {
+      "function_id": 14,
+      "description": "MsgRequestIdentityRecordsVerify defines a proposal message to request an identity record verification from a specific verifier.",
+      "parameters": {
+        "address": {
+          "type": "string",
+          "optional": false,
+          "description": "the address of requester."
+        },
+        "record_ids": {
+          "type": "array<uint64>",
+          "optional": false,
+          "description": "the id of records to be verified."
+        },
+        "tip": {
+          "type": "coins",
+          "optional": false,
+          "description": "the amount of coins to be given up-on accepting the request."
+        },
+        "verifier": {
+          "type": "string",
+          "optional": false,
+          "description": "the address of verifier."
+        }
+      }
+    },
+    "SetExecutionFee": {
+      "function_id": 21,
+      "description": "MsgSetExecutionFee defines a message to set execution fee with specific permission.",
+      "parameters": {
+        "default_parameters": {
+          "type": "bool",
+          "optional": false,
+          "description": "Default values that the function in question will consume as input parameters before execution"
+        },
+        "execution_fee": {
+          "type": "uint64",
+          "optional": false,
+          "description": "How much user should pay for executing this specific function"
+        },
+        "failure_fee": {
+          "type": "uint64",
+          "optional": false,
+          "description": "How much user should pay if function fails to execute"
+        },
+        "proposer": {
+          "type": "address",
+          "optional": false,
+          "description": "proposer who propose this message."
+        },
+        "timeout": {
+          "type": "uint64",
+          "optional": false,
+          "description": "After what time function execution should fail"
+        },
+        "transaction_type": {
+          "type": "string",
+          "optional": false,
+          "description": "Type of the transaction that given permission allows to execute"
+        }
+      }
+    },
+    "SetNetworkProperties": {
+      "function_id": 20,
+      "description": "MsgSetNetworkProperties defines a message to set network properties with specific permission.",
+      "parameters": {
+        "network_properties": {
+          "type": "<Object>",
+          "optional": false,
+          "description": "network properties to be set.",
+          "fields": {
+            "enable_foreign_fee_payments": {
+              "type": "bool",
+              "optional": false,
+              "description": "flag to show if foreign fee payment is enabled"
+            },
+            "max_tx_fee": {
+              "type": "uint64",
+              "optional": false,
+              "description": "maximum transaction fee"
+            },
+            "min_tx_fee": {
+              "type": "uint64",
+              "optional": false,
+              "description": "minimum transaction fee"
+            },
+            "proposal_enactment_time": {
+              "type": "uint64",
+              "optional": false,
+              "description": "proposal enactment time"
+            },
+            "proposal_end_time": {
+              "type": "uint64",
+              "optional": false,
+              "description": "proposal end time"
+            },
+            "vote_quorum": {
+              "type": "uint64",
+              "optional": false,
+              "description": "vote quorum"
+            }
+          }
+        },
+        "proposer": {
+          "type": "address",
+          "optional": false,
+          "description": "proposer who propose this message."
+        }
+      }
+    },
+    "SubmitEvidence": {
+      "function_id": 3,
+      "description": "MsgSubmitEvidence defines a message to submit an evidence",
+      "parameters": {
+        "evidence": {
+          "type": "object",
+          "optional": false,
+          "description": "evidence object"
+        },
+        "submitter": {
+          "type": "string",
+          "optional": false,
+          "description": "evidence submitter address"
+        }
+      }
+    },
+    "SubmitProposal": {
+      "function_id": 10,
+      "description": "MsgSubmitProposal defines a proposal message to submit a proposal.",
+      "parameters": {
+        "content": {
+          "type": "object",
+          "optional": false,
+          "description": "the content of the proposal - different by type of proposal"
+        },
+        "description": {
+          "type": "string",
+          "optional": false,
+          "description": "the description of the proposal."
+        },
+        "proposer": {
+          "type": "address",
+          "optional": false,
+          "description": "the proposer of the proposal."
+        },
+        "title": {
+          "type": "string",
+          "optional": false,
+          "description": "the title of the proposal."
+        }
+      }
+    },
+    "Unpause": {
+      "function_id": 37,
+      "description": "MsgUnpause defines a message to unpause a paused validator.",
+      "parameters": {
+        "validator_addr": {
+          "type": "string",
+          "optional": false,
+          "description": "bech32 format of validator address. e.g. kiravaloper1ewgq8gtsefakhal687t8hnsw5zl4y8eksup39w"
+        }
+      }
+    },
+    "UpsertTokenAlias": {
+      "function_id": 33,
+      "description": "MsgUpsertTokenAlias represents a message to register token alias.",
+      "parameters": {
+        "decimals": {
+          "type": "uint32",
+          "optional": false,
+          "description": "Integer number of max decimals."
+        },
+        "denoms": {
+          "type": "array<string>",
+          "optional": false,
+          "description": "An array of token denoms to be aliased."
+        },
+        "icon": {
+          "type": "string",
+          "optional": false,
+          "description": "Graphical Symbol (url link to graphics)."
+        },
+        "name": {
+          "type": "string",
+          "optional": false,
+          "description": "Token Name (e.g. Cosmos, Kira, Bitcoin)."
+        },
+        "proposer": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer who propose this message."
+        },
+        "symbol": {
+          "type": "string",
+          "optional": false,
+          "description": "Ticker (eg. ATOM, KEX, BTC)."
+        }
+      }
+    },
+    "UpsertTokenRate": {
+      "function_id": 34,
+      "description": "MsgUpsertTokenRate represents a message to register token rate.",
+      "parameters": {
+        "denom": {
+          "type": "string",
+          "optional": false,
+          "description": "denomination target."
+        },
+        "fee_payments": {
+          "type": "bool",
+          "optional": false,
+          "description": "defining if it is enabled or disabled as fee payment method."
+        },
+        "proposer": {
+          "type": "address",
+          "optional": false,
+          "description": "proposer who propose this message."
+        },
+        "rate": {
+          "type": "float",
+          "optional": false,
+          "description": "Exchange rate in terms of KEX token. e.g. 0.1, 10.5"
+        }
+      }
+    },
+    "VoteProposal": {
+      "function_id": 11,
+      "description": "MsgVoteProposal defines a proposal message to vote on a submitted proposal.",
+      "parameters": {
+        "proposal_id": {
+          "type": "uint64",
+          "optional": false,
+          "description": "id of proposal to be voted."
+        },
+        "value": {
+          "type": "enum<VoteOption>",
+          "optional": false,
+          "description": "vote option: [yes, no, veto, abstain]"
+        },
+        "voter": {
+          "type": "address",
+          "optional": false,
+          "description": "the address of the voter who vote on the proposal."
+        }
+      }
+    },
+    "WhitelistPermissions": {
+      "function_id": 23,
+      "description": "MsgWhitelistPermissions defines a message to whitelist permission of an address.",
+      "parameters": {
+        "address": {
+          "type": "string",
+          "optional": false,
+          "description": "Address to whitelist permission to."
+        },
+        "permission": {
+          "type": "uint32",
+          "optional": false,
+          "description": "Permission to be whitelisted."
+        },
+        "proposer": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer who propose this message."
+        }
+      }
+    },
+    "WhitelistRolePermission": {
+      "function_id": 28,
+      "description": "MsgWhitelistRolePermission defines a message to whitelist permission for a role.",
+      "parameters": {
+        "permission": {
+          "type": "uint32",
+          "optional": false,
+          "description": "Permission to be whitelisted."
+        },
+        "proposer": {
+          "type": "string",
+          "optional": false,
+          "description": "proposer who propose this message."
+        },
+        "role": {
+          "type": "uint32",
+          "optional": false,
+          "description": "role identifier."
+        }
+      }
+    }
+  }
+}
+
+```
+</details>
+
+
 [Return to top](#sekai)
 
 ### 7. export-minimized-genesis
