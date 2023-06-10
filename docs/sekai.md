@@ -366,6 +366,65 @@ sekaid config keyring-backend test
 
 ### 10. help
 
+Help provides help for any command in the application.
+Simply type sekaid help [path to command] for full details.
+
+Usage:
+
+```
+sekaid help [command] [flags]
+```
+| Flags      | Description   | Work  |
+| ---------- | ------------- | ----- |
+| -h, --help | help for init | ✅ yes |
+
+
+
+| Global Flags       |                                                                                    |      |
+| ------------------ | ---------------------------------------------------------------------------------- | ---- |
+| --home string      | directory for config and data (default "/root/.sekaid")                            | ❌ no |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌ no |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌ ?  |
+| --trace            | print out full stack trace on errors                                               | ❌ ?  |
+
+```
+# sekaid help -h
+Help provides help for any command in the application.
+Simply type sekaid help [path to command] for full details.
+
+Usage:
+  sekaid help [command] [flags]
+
+Flags:
+  -h, --help   help for help
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+```
+
+```
+# sekaid help version
+Print the application binary version information
+
+Usage:
+  sekaid version [flags]
+
+Flags:
+  -h, --help            help for version
+      --long            Print long version information
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
 [Return to top](#sekai)
 
 ### 11. init
