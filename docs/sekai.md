@@ -330,17 +330,226 @@ sekaid config keyring-backend test
 
 ### 4. debug
 
+
+Tool for helping with debugging your application
+
+Usage:
+
+```
+  sekaid debug [flags]
+```
+
+```
+  sekaid debug [command]
+```
+
+| Subcommand                   | Description                                          |
+| ---------------------------- | ---------------------------------------------------- |
+| [`addr`](#41-addr)           | Convert an address between hex and bech32            |
+| [`pubkey`](#42-pubkey)       | Decode a pubkey from proto JSON                      |
+| [`raw-bytes`](#43-raw-bytes) | Convert raw bytes output (eg. [10 21 13 255]) to hex |
+
+
+
+| Flags        | Description   | Work  |
+| ------------ | ------------- | ----- |
+| `-h, --help` | Help for keys | ✅ yes |
+
+
+
+
+| Global Flags          | Description                                                                            | Work |
+| --------------------- | -------------------------------------------------------------------------------------- | ---- |
+| `--home string`       | Directory for config and data (default `"/root/.sekaid"`)                              | ❌ no |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?  |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?  |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?  |
+
+```
+# sekaid debug -h
+Tool for helping with debugging your application
+
+Usage:
+  sekaid debug [flags]
+  sekaid debug [command]
+
+Available Commands:
+  addr        Convert an address between hex and bech32
+  pubkey      Decode a pubkey from proto JSON
+  raw-bytes   Convert raw bytes output (eg. [10 21 13 255]) to hex
+
+Flags:
+  -h, --help   help for debug
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid debug [command] --help" for more information about a command.
+```
+
 [Return to top](#sekai)
 
 #### 4.1 addr
+
+Convert an address between hex encoding and bech32.
+
+Usage:
+
+```
+sekaid debug addr [address] [flags]
+```
+
+| Flags  | Description      | Work |
+| ------ | ---------------- | ---- |
+| --help | help for version | ✅yes |
+
+
+
+| Global Flags         |                                                                                        |     |
+| -------------------- | -------------------------------------------------------------------------------------- | --- |
+| `--home string`      | directory for config and data (default `"/root/.sekaid"`)                              | ❌no |
+| `--log_format`       | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌no |
+| `--log_level string` | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌?  |
+| `--trace`            | print out full stack trace on errors                                                   | ❌?  |
+
+
+```
+# sekaid debug addr -h
+Convert an address between hex encoding and bech32.
+
+Example:
+$ sekaid debug addr cosmos1e0jnq2sun3dzjh8p2xq95kk0expwmd7shwjpfg
+
+Usage:
+  sekaid debug addr [address] [flags]
+
+Flags:
+  -h, --help   help for addr
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+# sekaid debug addr kira1wh5zkqgg87tes5r6ycp5r56qgyvzglhply5yu4
+Address: [117 232 43 1 8 63 151 152 80 122 38 3 65 211 64 65 24 36 126 225]
+Address (hex): 75E82B01083F9798507A260341D3404118247EE1
+Bech32 Acc: kira1wh5zkqgg87tes5r6ycp5r56qgyvzglhply5yu4
+Bech32 Val: kiravaloper1wh5zkqgg87tes5r6ycp5r56qgyvzglhpvzg8ye
+```
 
 [Return to top](#sekai)
 
 #### 4.2 pubkey
 
+Decode a pubkey from proto JSON and display it's address.
+
+Usage:
+
+```
+sekaid debug pubkey [pubkey] [flags]
+```
+
+| Flags  | Description      | Work |
+| ------ | ---------------- | ---- |
+| --help | help for version | ✅yes |
+
+
+
+| Global Flags         |                                                                                        |     |
+| -------------------- | -------------------------------------------------------------------------------------- | --- |
+| `--home string`      | directory for config and data (default `"/root/.sekaid"`)                              | ❌no |
+| `--log_format`       | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌no |
+| `--log_level string` | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌?  |
+| `--trace`            | print out full stack trace on errors                                                   | ❌?  |
+
+
+
+```
+# sekaid debug pubkey  -h
+Decode a pubkey from proto JSON and display it's address.
+
+Example:
+$ sekaid debug pubkey '{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"AurroA7jvfPd1AadmmOvWM2rJSwipXfRf8yD6pLbA2DJ"}'
+
+Usage:
+  sekaid debug pubkey [pubkey] [flags]
+
+Flags:
+  -h, --help   help for pubkey
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+# sekaid debug pubkey  '{"@type":"/cosmos.crypto.secp256k1.PubKey","key":"A5O/lBKffZNUZN2rJLbu48mOX/Q/QKHBOjXGPlFn/jJ6"}'
+Address: 03C5F71626A9F436387F232823DFE73AFBD46ABC
+PubKey Hex: 0393bf94129f7d935464ddab24b6eee3c98e5ff43f40a1c13a35c63e5167fe327a
+```
+
 [Return to top](#sekai)
 
 #### 4.3 raw-bytes
+
+Convert raw-bytes to hex.
+
+⚠️ maybe not working properly or the description is wrong
+
+Usage:
+
+```
+sekaid debug addr [address] [flags]
+```
+
+| Flags  | Description      | Work |
+| ------ | ---------------- | ---- |
+| --help | help for version | ✅yes |
+
+
+
+| Global Flags         |                                                                                        |     |
+| -------------------- | -------------------------------------------------------------------------------------- | --- |
+| `--home string`      | directory for config and data (default `"/root/.sekaid"`)                              | ❌no |
+| `--log_format`       | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌no |
+| `--log_level string` | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌?  |
+| `--trace`            | print out full stack trace on errors                                                   | ❌?  |
+
+
+
+```
+# sekaid debug raw-bytes -h
+Convert raw-bytes to hex.
+
+Example:
+$ sekaid debug raw-bytes [72 101 108 108 111 44 32 112 108 97 121 103 114 111 117 110 100]
+
+Usage:
+  sekaid debug raw-bytes [raw-bytes] [flags]
+
+Flags:
+  -h, --help   help for raw-bytes
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+# sekaid debug raw-bytes '72 101 108 108 111 44 32 112 108 97 121 103 114 111 117 110 100'
+48656C6C6F2C20706C617967726F756E64
+```
 
 [Return to top](#sekai)
 
