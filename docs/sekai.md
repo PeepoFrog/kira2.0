@@ -346,6 +346,1029 @@ sekaid config keyring-backend test
 
 ### 5. export
 
+Export state to JSON
+
+Usage:
+
+```
+sekaid export [flags]
+```
+
+| Flags                        | Description                                                                 | Work   |
+| ---------------------------- | --------------------------------------------------------------------------- | ------ |
+| --for-zero-height            | Export state to start at height zero (perform preproccessing)               | ❌ ? no |
+| --height int                 | Export state from a particular height (-1 means latest height) (default -1) | ❌ ? no |
+| -h, --help                   | help for export                                                             | ✅ yes  |
+| --jail-allowed-addrs strings | Comma-separated list of operator addresses of jailed validators to unjail   | ❌ ?    |
+
+
+
+| Global Flags       |                                                                                    |       |
+| ------------------ | ---------------------------------------------------------------------------------- | ----- |
+| --home string      | directory for config and data (default "/root/.sekaid")                            | ✅ yes |
+| --log_format       | The logging format (json\|plain) (default "plain")                                 | ❌ no  |
+| --log_level string | The logging level (trace\|debug\|info\|warn\|error\|fatal\|panic) (default "info") | ❌ ?   |
+| --trace            | print out full stack trace on errors                                               | ❌ ?   |
+
+```
+# sekaid export -h
+Export state to JSON
+
+Usage:
+  sekaid export [flags]
+
+Flags:
+      --for-zero-height              Export state to start at height zero (perform preproccessing)
+      --height int                   Export state from a particular height (-1 means latest height) (default -1)
+  -h, --help                         help for export
+      --jail-allowed-addrs strings   Comma-separated list of operator addresses of jailed validators to unjail
+
+Global Flags:
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid export
+```
+
+<details>
+  <summary>Check export out</summary>
+  
+```
+# sekaid export | jq
+{
+  "app_hash": "",
+  "app_state": {
+    "auth": {
+      "accounts": [
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "account_number": "5",
+            "address": "kira1yckd06xnz444h9c38gmnepx4x2yak3fsgpdq5w",
+            "pub_key": null,
+            "sequence": "0"
+          },
+          "name": "spending",
+          "permissions": []
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "account_number": "0",
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "pub_key": {
+            "@type": "/cosmos.crypto.secp256k1.PubKey",
+            "key": "Ask+LXUBzB8JEPA9fyuCBM+163QLcl2kwH2dHcHxtLNU"
+          },
+          "sequence": "29"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "account_number": "2",
+          "address": "kira1hcj5m0y3gmr6d80funkn6zj8e4amye3wk5jdmk",
+          "pub_key": {
+            "@type": "/cosmos.crypto.secp256k1.PubKey",
+            "key": "A2iLCs+68myGXWJjrucYAtvMOSFoLRC7ILCNsjDc15HN"
+          },
+          "sequence": "1"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.BaseAccount",
+          "account_number": "1",
+          "address": "kira1m2m98e2fahrzvlhdc6rvf645plzt2e626knhn8",
+          "pub_key": {
+            "@type": "/cosmos.crypto.secp256k1.PubKey",
+            "key": "Ag/kOuIB+9YTzgLFPoQcEJQXoD4BuO7lMX8eX7DYtloV"
+          },
+          "sequence": "1"
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "account_number": "4",
+            "address": "kira1m3h30wlvsf8llruxtpukdvsy0km2kum8c7dkxd",
+            "pub_key": null,
+            "sequence": "0"
+          },
+          "name": "mint",
+          "permissions": [
+            "minter"
+          ]
+        },
+        {
+          "@type": "/cosmos.auth.v1beta1.ModuleAccount",
+          "base_account": {
+            "account_number": "3",
+            "address": "kira17xpfvakm2amg962yls6f84z3kell8c5lqkfw2s",
+            "pub_key": null,
+            "sequence": "0"
+          },
+          "name": "fee_collector",
+          "permissions": []
+        }
+      ],
+      "params": {
+        "max_memo_characters": "256",
+        "sig_verify_cost_ed25519": "590",
+        "sig_verify_cost_secp256k1": "1000",
+        "tx_sig_limit": "7",
+        "tx_size_cost_per_byte": "10"
+      }
+    },
+    "bank": {
+      "balances": [
+        {
+          "address": "kira1yckd06xnz444h9c38gmnepx4x2yak3fsgpdq5w",
+          "coins": [
+            {
+              "amount": "500000000000",
+              "denom": "ukex"
+            }
+          ]
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "coins": [
+            {
+              "amount": "1000000",
+              "denom": "lol"
+            },
+            {
+              "amount": "2000000000000000000000000000",
+              "denom": "samolean"
+            },
+            {
+              "amount": "29999780000000000",
+              "denom": "test"
+            },
+            {
+              "amount": "299998799997100",
+              "denom": "ukex"
+            }
+          ]
+        },
+        {
+          "address": "kira1hcj5m0y3gmr6d80funkn6zj8e4amye3wk5jdmk",
+          "coins": [
+            {
+              "amount": "1000000",
+              "denom": "lol"
+            },
+            {
+              "amount": "3000000000000000000000000000",
+              "denom": "samolean"
+            },
+            {
+              "amount": "200000000000",
+              "denom": "test"
+            },
+            {
+              "amount": "999999900",
+              "denom": "ukex"
+            }
+          ]
+        },
+        {
+          "address": "kira1m2m98e2fahrzvlhdc6rvf645plzt2e626knhn8",
+          "coins": [
+            {
+              "amount": "10000000000",
+              "denom": "test"
+            },
+            {
+              "amount": "99999900",
+              "denom": "ukex"
+            }
+          ]
+        },
+        {
+          "address": "kira17xpfvakm2amg962yls6f84z3kell8c5lqkfw2s",
+          "coins": [
+            {
+              "amount": "13616387924",
+              "denom": "ukex"
+            }
+          ]
+        }
+      ],
+      "denom_metadata": [],
+      "params": {
+        "default_send_enabled": true,
+        "send_enabled": []
+      },
+      "supply": [
+        {
+          "amount": "2000000",
+          "denom": "lol"
+        },
+        {
+          "amount": "5000000000000000000000000000",
+          "denom": "samolean"
+        },
+        {
+          "amount": "29999990000000000",
+          "denom": "test"
+        },
+        {
+          "amount": "300513516384824",
+          "denom": "ukex"
+        }
+      ]
+    },
+    "basket": {
+      "baskets": [],
+      "historical_burns": [],
+      "historical_mints": [],
+      "historical_swaps": []
+    },
+    "collectives": {
+      "collectives": [],
+      "contributers": []
+    },
+    "custody": null,
+    "customevidence": {
+      "evidence": []
+    },
+    "customgov": {
+      "data_registry": {},
+      "execution_fees": [
+        {
+          "default_parameters": "0",
+          "execution_fee": "100",
+          "failure_fee": "1000",
+          "timeout": "10",
+          "transaction_type": "activate"
+        },
+        {
+          "default_parameters": "0",
+          "execution_fee": "100",
+          "failure_fee": "1",
+          "timeout": "10",
+          "transaction_type": "claim-councilor"
+        },
+        {
+          "default_parameters": "0",
+          "execution_fee": "100",
+          "failure_fee": "1",
+          "timeout": "10",
+          "transaction_type": "claim-proposal-type-x"
+        },
+        {
+          "default_parameters": "0",
+          "execution_fee": "100",
+          "failure_fee": "1",
+          "timeout": "10",
+          "transaction_type": "claim-validator"
+        },
+        {
+          "default_parameters": "0",
+          "execution_fee": "100",
+          "failure_fee": "100",
+          "timeout": "10",
+          "transaction_type": "pause"
+        },
+        {
+          "default_parameters": "0",
+          "execution_fee": "10",
+          "failure_fee": "1",
+          "timeout": "10",
+          "transaction_type": "submit-proposal-type-x"
+        },
+        {
+          "default_parameters": "0",
+          "execution_fee": "100",
+          "failure_fee": "100",
+          "timeout": "10",
+          "transaction_type": "unpause"
+        },
+        {
+          "default_parameters": "0",
+          "execution_fee": "100",
+          "failure_fee": "1",
+          "timeout": "10",
+          "transaction_type": "upsert-token-alias"
+        },
+        {
+          "default_parameters": "0",
+          "execution_fee": "100",
+          "failure_fee": "1",
+          "timeout": "10",
+          "transaction_type": "veto-proposal-type-x"
+        },
+        {
+          "default_parameters": "0",
+          "execution_fee": "100",
+          "failure_fee": "1",
+          "timeout": "10",
+          "transaction_type": "vote-proposal-type-x"
+        }
+      ],
+      "id_records_verify_requests": [],
+      "identity_records": [
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:48:01.608922330Z",
+          "id": "1",
+          "key": "moniker",
+          "value": "GENESIS VALIDATOR",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:49:44.599380563Z",
+          "id": "2",
+          "key": "description",
+          "value": "This is genesis validator account of the KIRA Team",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:49:54.615435843Z",
+          "id": "3",
+          "key": "social",
+          "value": "https://tg.kira.network,twitter.kira.network",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:50:04.631054986Z",
+          "id": "4",
+          "key": "contact",
+          "value": "https://support.kira.network",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:50:14.664373675Z",
+          "id": "5",
+          "key": "website",
+          "value": "https://kira.network",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:50:24.692282875Z",
+          "id": "6",
+          "key": "username",
+          "value": "KIRA",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:50:34.717593161Z",
+          "id": "7",
+          "key": "logo",
+          "value": "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:50:44.750398780Z",
+          "id": "8",
+          "key": "avatar",
+          "value": "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:50:54.786173458Z",
+          "id": "9",
+          "key": "pentest1",
+          "value": "<iframe src=javascript:alert(1)>",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:51:04.821495895Z",
+          "id": "10",
+          "key": "pentest2",
+          "value": "<img/src=x a='' onerror=alert(2)>",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:51:14.876204916Z",
+          "id": "11",
+          "key": "pentest3",
+          "value": "<img src=1 onerror=alert(3)>",
+          "verifiers": []
+        },
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "date": "2023-05-20T08:51:24.930421584Z",
+          "id": "12",
+          "key": "validator_node_id",
+          "value": "7c681cf7ea7b891e45207b3c3245926043df0f4f",
+          "verifiers": []
+        },
+        {
+          "address": "kira1m2m98e2fahrzvlhdc6rvf645plzt2e626knhn8",
+          "date": "2023-05-20T08:51:34.975587365Z",
+          "id": "13",
+          "key": "username",
+          "value": "test",
+          "verifiers": []
+        },
+        {
+          "address": "kira1hcj5m0y3gmr6d80funkn6zj8e4amye3wk5jdmk",
+          "date": "2023-05-20T08:51:44.995161060Z",
+          "id": "14",
+          "key": "username",
+          "value": "faucet",
+          "verifiers": []
+        }
+      ],
+      "last_id_record_verify_request_id": "0",
+      "last_identity_record_id": "14",
+      "network_actors": [
+        {
+          "address": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm",
+          "permissions": {
+            "blacklist": [],
+            "whitelist": [
+              4,
+              35,
+              14,
+              28,
+              5,
+              36,
+              15,
+              29
+            ]
+          },
+          "roles": [
+            "1"
+          ],
+          "skin": "1",
+          "status": "ACTIVE",
+          "votes": [
+            "VOTE_OPTION_YES",
+            "VOTE_OPTION_ABSTAIN",
+            "VOTE_OPTION_NO",
+            "VOTE_OPTION_NO_WITH_VETO"
+          ]
+        }
+      ],
+      "network_properties": {
+        "abstention_rank_decrease_amount": "1",
+        "dapp_auto_denounce_time": "60",
+        "dapp_bond_duration": "604800",
+        "dapp_inactive_rank_decrease_percent": "10",
+        "dapp_liquidation_period": "0",
+        "dapp_liquidation_threshold": "0",
+        "dapp_max_mischance": "10",
+        "dapp_mischance_rank_decrease_amount": "1",
+        "dapp_pool_slippage_default": "0.100000000000000000",
+        "dapp_verifier_bond": "0.001000000000000000",
+        "enable_foreign_fee_payments": true,
+        "enable_token_blacklist": true,
+        "enable_token_whitelist": false,
+        "inactive_rank_decrease_percent": "0.500000000000000000",
+        "inflation_period": "31557600",
+        "inflation_rate": "0.180000000000000000",
+        "max_abstention": "2",
+        "max_annual_inflation": "0.350000000000000000",
+        "max_collective_outputs": "10",
+        "max_custody_buffer_size": "10",
+        "max_custody_tx_size": "8192",
+        "max_dapp_bond": "10000000",
+        "max_delegators": "100",
+        "max_jailed_percentage": "0.250000000000000000",
+        "max_mischance": "50",
+        "max_proposal_checksum_size": "128",
+        "max_proposal_description_size": "1024",
+        "max_proposal_poll_option_count": "128",
+        "max_proposal_poll_option_size": "64",
+        "max_proposal_reference_size": "512",
+        "max_proposal_title_size": "128",
+        "max_slashing_percentage": "0.010000000000000000",
+        "max_tx_fee": "1000000",
+        "min_collective_bond": "100000",
+        "min_collective_bonding_time": "86400",
+        "min_collective_claim_period": "14400",
+        "min_custody_reward": "200",
+        "min_dapp_bond": "1000000",
+        "min_delegation_pushout": "10",
+        "min_identity_approval_tip": "200",
+        "min_proposal_enactment_blocks": "1",
+        "min_proposal_end_blocks": "2",
+        "min_tx_fee": "100",
+        "min_validators": "1",
+        "minimum_proposal_end_time": "360",
+        "minting_ft_fee": "100000000000000",
+        "minting_nft_fee": "100000000000000",
+        "mischance_confidence": "25",
+        "mischance_rank_decrease_amount": "1",
+        "poor_network_max_bank_send": "1000000",
+        "proposal_enactment_time": "300",
+        "slashing_period": "3600",
+        "ubi_hardcap": "6000000",
+        "unique_identity_keys": "moniker,username",
+        "unjail_max_time": "1209600",
+        "unstaking_period": "2629800",
+        "validator_recovery_bond": "300000",
+        "validators_fee_share": "0.500000000000000000",
+        "vote_quorum": "33"
+      },
+      "next_role_id": "3",
+      "poor_network_messages": {
+        "messages": [
+          "submit-proposal",
+          "set-network-properties",
+          "vote-proposal",
+          "claim-councilor",
+          "whitelist-permissions",
+          "blacklist-permissions",
+          "create-role",
+          "assign-role",
+          "remove-role",
+          "whitelist-role-permission",
+          "blacklist-role-permission",
+          "remove-whitelist-role-permission",
+          "remove-blacklist-role-permission",
+          "claim-validator",
+          "activate",
+          "pause",
+          "unpause",
+          "register-identity-records",
+          "edit-identity-record",
+          "request-identity-records-verify",
+          "handle-identity-records-verify-request",
+          "cancel-identity-records-verify-request"
+        ]
+      },
+      "proposal_durations": {},
+      "proposals": [
+        {
+          "content": {
+            "@type": "/kira.tokens.ProposalUpsertTokenAlias",
+            "decimals": 6,
+            "denoms": [
+              "ukex"
+            ],
+            "icon": "http://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+            "invalidated": false,
+            "name": "KIRA",
+            "symbol": "KEX"
+          },
+          "description": "Initial Setup From KIRA Manager",
+          "enactment_end_time": "2023-05-20T09:02:55.050874780Z",
+          "exec_result": "executed successfully",
+          "min_enactment_end_block_height": "44",
+          "min_voting_end_block_height": "25",
+          "proposal_id": "1",
+          "result": "VOTE_RESULT_PASSED",
+          "submit_time": "2023-05-20T08:51:55.050874780Z",
+          "title": "Upsert KEX icon URL link",
+          "voting_end_time": "2023-05-20T08:57:55.050874780Z"
+        },
+        {
+          "content": {
+            "@type": "/kira.tokens.ProposalUpsertTokenAlias",
+            "decimals": 8,
+            "denoms": [
+              "test"
+            ],
+            "icon": "http://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/test.svg",
+            "invalidated": false,
+            "name": "Test TestCoin",
+            "symbol": "TEST"
+          },
+          "description": "Initial Setup From KIRA Manager",
+          "enactment_end_time": "2023-05-20T09:03:15.104192359Z",
+          "exec_result": "executed successfully",
+          "min_enactment_end_block_height": "44",
+          "min_voting_end_block_height": "27",
+          "proposal_id": "2",
+          "result": "VOTE_RESULT_PASSED",
+          "submit_time": "2023-05-20T08:52:15.104192359Z",
+          "title": "Upsert Test TestCoin icon URL link",
+          "voting_end_time": "2023-05-20T08:58:15.104192359Z"
+        },
+        {
+          "content": {
+            "@type": "/kira.tokens.ProposalUpsertTokenAlias",
+            "decimals": 18,
+            "denoms": [
+              "samolean"
+            ],
+            "icon": "http://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/samolean.svg",
+            "invalidated": false,
+            "name": "Samolean TestCoin",
+            "symbol": "SAMO"
+          },
+          "description": "Initial Setup From KIRA Manager",
+          "enactment_end_time": "2023-05-20T09:03:35.177132478Z",
+          "exec_result": "executed successfully",
+          "min_enactment_end_block_height": "44",
+          "min_voting_end_block_height": "29",
+          "proposal_id": "3",
+          "result": "VOTE_RESULT_PASSED",
+          "submit_time": "2023-05-20T08:52:35.177132478Z",
+          "title": "Upsert Samolean TestCoin icon URL link",
+          "voting_end_time": "2023-05-20T08:58:35.177132478Z"
+        },
+        {
+          "content": {
+            "@type": "/kira.upgrade.ProposalSoftwareUpgrade",
+            "instate_upgrade": true,
+            "max_enrolment_duration": "666",
+            "memo": "Genesis Setup Plan",
+            "name": "genesis",
+            "new_chain_id": "localnet-47",
+            "old_chain_id": "localnet-47",
+            "reboot_required": true,
+            "resources": [
+              {
+                "checksum": "",
+                "id": "kira",
+                "url": "https://github.com/KiraCore/kira/releases/download/v0.11.21/kira.zip",
+                "version": ""
+              }
+            ],
+            "rollback_checksum": "genesis",
+            "skip_handler": true,
+            "upgrade_time": "1684573615"
+          },
+          "description": "",
+          "enactment_end_time": "2023-05-20T09:03:55.214931655Z",
+          "exec_result": "execution failed",
+          "min_enactment_end_block_height": "44",
+          "min_voting_end_block_height": "31",
+          "proposal_id": "4",
+          "result": "VOTE_RESULT_PASSED",
+          "submit_time": "2023-05-20T08:52:55.214931655Z",
+          "title": "",
+          "voting_end_time": "2023-05-20T08:58:55.214931655Z"
+        }
+      ],
+      "role_permissions": {
+        "1": {
+          "blacklist": [],
+          "whitelist": [
+            1,
+            2,
+            3,
+            6,
+            8,
+            9,
+            12,
+            13,
+            10,
+            11,
+            14,
+            15,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            31,
+            32,
+            24,
+            25,
+            16,
+            17,
+            4,
+            5,
+            26,
+            27,
+            28,
+            29,
+            30,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66
+          ]
+        },
+        "2": {
+          "blacklist": [],
+          "whitelist": [
+            2
+          ]
+        }
+      },
+      "roles": [
+        {
+          "description": "Sudo role",
+          "id": 1,
+          "sid": "sudo"
+        },
+        {
+          "description": "Validator role",
+          "id": 2,
+          "sid": "validator"
+        }
+      ],
+      "starting_proposal_id": "5",
+      "votes": [
+        {
+          "option": "VOTE_OPTION_YES",
+          "proposal_id": "1",
+          "slash": "0.010000000000000000",
+          "voter": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm"
+        },
+        {
+          "option": "VOTE_OPTION_YES",
+          "proposal_id": "2",
+          "slash": "0.010000000000000000",
+          "voter": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm"
+        },
+        {
+          "option": "VOTE_OPTION_YES",
+          "proposal_id": "3",
+          "slash": "0.010000000000000000",
+          "voter": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm"
+        },
+        {
+          "option": "VOTE_OPTION_YES",
+          "proposal_id": "4",
+          "slash": "0.010000000000000000",
+          "voter": "kira1tcyq0y66mmdpydepexc8lwrmemp9wzgmg2rqhm"
+        }
+      ]
+    },
+    "customslashing": {
+      "params": {
+        "downtime_inactive_duration": "600s"
+      },
+      "signing_infos": [
+        {
+          "address": "kiravalcons1dcu5arfvrfvwe9wxrdgtfap0ry3yru02s8rj76",
+          "validator_signing_info": {
+            "address": "kiravalcons1dcu5arfvrfvwe9wxrdgtfap0ry3yru02s8rj76",
+            "inactive_until": "1970-01-01T00:00:00Z",
+            "last_present_block": "3973",
+            "mischance": "0",
+            "mischance_confidence": "0",
+            "missed_blocks_counter": "0",
+            "produced_blocks_counter": "3972",
+            "start_height": "0"
+          }
+        }
+      ]
+    },
+    "customstaking": {
+      "validators": [
+        {
+          "pub_key": {
+            "@type": "/cosmos.crypto.ed25519.PubKey",
+            "key": "T6DNclgBnpmdXM4mduAoVwP5T8U2E+fg749Roig9wPI="
+          },
+          "rank": "3972",
+          "status": "ACTIVE",
+          "streak": "3972",
+          "val_key": "kiravaloper1tcyq0y66mmdpydepexc8lwrmemp9wzgmmvlr0h"
+        }
+      ]
+    },
+    "distributor": {
+      "fees_collected": [],
+      "fees_treasury": [
+        {
+          "amount": "13616387924",
+          "denom": "ukex"
+        }
+      ],
+      "previous_proposer": "kiravalcons1dcu5arfvrfvwe9wxrdgtfap0ry3yru02s8rj76",
+      "snap_period": "1000",
+      "validator_votes": [],
+      "year_start_snapshot": {
+        "snapshot_amount": "300499900000000",
+        "snapshot_time": "1684572480"
+      }
+    },
+    "feeprocessing": null,
+    "genutil": {
+      "gen_txs": []
+    },
+    "layer2": {
+      "bridge": {
+        "accounts": [],
+        "helper": null,
+        "tokens": [],
+        "xams": []
+      },
+      "dapps": []
+    },
+    "multistaking": {
+      "info": [],
+      "pools": [],
+      "rewards": [],
+      "undelegations": []
+    },
+    "params": null,
+    "recovery": {
+      "recovery_records": [],
+      "recovery_tokens": [],
+      "rewards": [],
+      "rotations": []
+    },
+    "spending": {
+      "claims": [],
+      "pools": [
+        {
+          "balances": [
+            {
+              "amount": "500000000000",
+              "denom": "ukex"
+            }
+          ],
+          "beneficiaries": {
+            "accounts": [],
+            "roles": [
+              {
+                "role": "2",
+                "weight": "1"
+              }
+            ]
+          },
+          "claim_end": "0",
+          "claim_expiry": "0",
+          "claim_start": "0",
+          "dynamic_rate": false,
+          "dynamic_rate_period": "0",
+          "last_dynamic_rate_calc_time": "0",
+          "name": "ValidatorBasicRewardsPool",
+          "owners": {
+            "owner_accounts": [],
+            "owner_roles": [
+              "2"
+            ]
+          },
+          "rates": [
+            {
+              "amount": "385.000000000000000000",
+              "denom": "ukex"
+            }
+          ],
+          "vote_enactment": "300",
+          "vote_period": "300",
+          "vote_quorum": "33"
+        }
+      ]
+    },
+    "tokens": {
+      "aliases": [
+        {
+          "decimals": 6,
+          "denoms": [
+            "ukex"
+          ],
+          "icon": "http://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+          "invalidated": false,
+          "name": "KIRA",
+          "symbol": "KEX"
+        },
+        {
+          "decimals": 18,
+          "denoms": [
+            "samolean"
+          ],
+          "icon": "http://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/samolean.svg",
+          "invalidated": false,
+          "name": "Samolean TestCoin",
+          "symbol": "SAMO"
+        },
+        {
+          "decimals": 8,
+          "denoms": [
+            "test"
+          ],
+          "icon": "http://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/test.svg",
+          "invalidated": false,
+          "name": "Test TestCoin",
+          "symbol": "TEST"
+        }
+      ],
+      "rates": [
+        {
+          "denom": "frozen",
+          "fee_payments": true,
+          "fee_rate": "0.100000000000000000",
+          "invalidated": false,
+          "stake_cap": "0.000000000000000000",
+          "stake_min": "1",
+          "stake_token": false
+        },
+        {
+          "denom": "ubtc",
+          "fee_payments": true,
+          "fee_rate": "10.000000000000000000",
+          "invalidated": false,
+          "stake_cap": "0.250000000000000000",
+          "stake_min": "1",
+          "stake_token": true
+        },
+        {
+          "denom": "ukex",
+          "fee_payments": true,
+          "fee_rate": "1.000000000000000000",
+          "invalidated": false,
+          "stake_cap": "0.500000000000000000",
+          "stake_min": "1",
+          "stake_token": true
+        },
+        {
+          "denom": "xeth",
+          "fee_payments": true,
+          "fee_rate": "0.100000000000000000",
+          "invalidated": false,
+          "stake_cap": "0.100000000000000000",
+          "stake_min": "1",
+          "stake_token": false
+        }
+      ],
+      "tokenBlackWhites": {
+        "blacklisted": [
+          "frozen"
+        ],
+        "whitelisted": [
+          "ukex"
+        ]
+      }
+    },
+    "ubi": {
+      "ubi_records": [
+        {
+          "amount": "500000",
+          "distribution_end": "0",
+          "distribution_last": "1684572480",
+          "distribution_start": "0",
+          "dynamic": true,
+          "name": "ValidatorBasicRewardsPoolUBI",
+          "period": "2592000",
+          "pool": "ValidatorBasicRewardsPool"
+        }
+      ]
+    },
+    "upgrade": {
+      "current_plan": null,
+      "next_plan": null,
+      "version": "v0.1.22.11"
+    }
+  },
+  "chain_id": "localnet-47",
+  "consensus_params": {
+    "block": {
+      "max_bytes": "22020096",
+      "max_gas": "-1",
+      "time_iota_ms": "1000"
+    },
+    "evidence": {
+      "max_age_duration": "172800000000000",
+      "max_age_num_blocks": "100000",
+      "max_bytes": "1048576"
+    },
+    "validator": {
+      "pub_key_types": [
+        "ed25519"
+      ]
+    },
+    "version": {}
+  },
+  "genesis_time": "2023-05-20T08:48:00.848282749Z",
+  "initial_height": "3974"
+}
+```
+</details>
+
+
 [Return to top](#sekai)
 
 ### 6. export-metadata
@@ -10650,9 +11673,9 @@ Usage:
 ```
 sekaid validate-genesis [file] [flags]
 ```
-| Flags           | Description                                 | Work  |
-| --------------- | ------------------------------------------- | ----- |
-| --help          | help for version                            | ✅ yes |
+| Flags  | Description      | Work  |
+| ------ | ---------------- | ----- |
+| --help | help for version | ✅ yes |
 
 
 
