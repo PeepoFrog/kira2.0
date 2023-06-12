@@ -6596,7 +6596,7 @@ sekaid query customgov proposal [proposal-id] [flags]
 | Flags                 | Description                                                                                      | Work  |
 | --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
 | `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
-| `-h, --help`          | help for alias                                                                                   | ✅ yes |
+| `-h, --help`          | help for proposal                                                                                | ✅ yes |
 | `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
 | `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
 
@@ -6663,6 +6663,61 @@ sekaid q customgov proposal 13 -o json | jq
 [Return to top](#sekai)
 
 ##### 14.9.24 proposal-duration
+
+Query all all proposal durations.
+
+Usage:
+```
+sekaid query customgov proposal-duration [proposal_type] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for proposal-duration                                                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov proposal-duration --help
+Query all all proposal durations.
+
+Example:
+$ sekaid query gov proposal-duration SetNetworkProperty
+
+Usage:
+  sekaid query customgov proposal-duration [proposal_type] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for proposal-duration
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid q customgov proposal-duration CreateRoleProposal -o json | jq
+{
+  "duration": "360"
+}
+```
 
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
