@@ -10013,6 +10013,94 @@ Use "sekaid tx customgov proposal [command] --help" for more information about a
 
 ###### 21.7.7.1 account
 
+Account proposals management subcommands.
+
+Usage:
+```
+sekaid tx customgov proposal account [flags]
+sekaid tx customgov proposal account [command]
+```
+
+Available Commands:
+
+| Subcommand                                                               | Description                                                           |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| [`assign-role`](#217711-assign-role)                                     | Create a proposal to assign a role to an address.                     |
+| [`blacklist-permission`](#217712-blacklist-permission)                   | Create a proposal to blacklist a permission to an address.            |
+| [`remove-blacklisted-permission`](#217713-remove-blacklisted-permission) | Create a proposal to remove a blacklisted permission from an address. |
+| [`remove-whitelisted-permission`](#217714-remove-whitelisted-permission) | Create a proposal to remove a whitelisted permission from an address. |
+| [`unassign-role`](#217715-unassign-role)                                 | Create a proposal to unassign a role from an address.                 |
+| [`whitelist-permission`](#217716-whitelist-permission)                   | Create a proposal to whitelist a permission to an address.            |
+
+
+
+| Flags         | Description      | Work  |
+| ------------- | ---------------- | ----- |
+| ` -h, --help` | help for account | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work |
+| --------------------- | -------------------------------------------------------------------------------------- | ---- |
+| `--chain-id string`   | The network chain ID                                                                   | ❌ ?  |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ❌ ?  |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?  |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?  |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?  |
+
+```
+/# sekaid tx customgov proposal account --help
+Account proposals management subcommands
+
+Usage:
+  sekaid tx customgov proposal account [flags]
+  sekaid tx customgov proposal account [command]
+
+Available Commands:
+  assign-role                   Create a proposal to assign a role to an address.
+  blacklist-permission          Create a proposal to blacklist a permission to an address.
+  remove-blacklisted-permission Create a proposal to remove a blacklisted permission from an address.
+  remove-whitelisted-permission Create a proposal to remove a whitelisted permission from an address.
+  unassign-role                 Create a proposal to unassign a role from an address.
+  whitelist-permission          Create a proposal to whitelist a permission to an address.
+
+Flags:
+  -h, --help   help for account
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid tx customgov proposal account [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+###### 21.7.7.1.1 assign-role
+
+[Return to top](#sekai)
+
+###### 21.7.7.1.2 blacklist-permission
+
+[Return to top](#sekai)
+
+###### 21.7.7.1.3 remove-blacklisted-permission
+
+[Return to top](#sekai)
+
+###### 21.7.7.1.4 remove-whitelisted-permission
+
+[Return to top](#sekai)
+
+###### 21.7.7.1.5 unassign-role
+
+[Return to top](#sekai)
+
+###### 21.7.7.1.6 whitelist-permission
+
 [Return to top](#sekai)
 
 ###### 21.7.7.2 proposal-jail-councilor
