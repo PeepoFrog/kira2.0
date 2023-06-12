@@ -131,6 +131,12 @@
           - [21.7.7.2 proposal-jail-councilor](#21772-proposal-jail-councilor)
           - [21.7.7.3 proposal-reset-whole-councilor-rank](#21773-proposal-reset-whole-councilor-rank)
           - [21.7.7.4 role](#21774-role)
+          - [21.7.7.4.1 blacklist-permission](#217741-blacklist-permission)
+          - [21.7.7.4.2 create](#217742-create)
+          - [21.7.7.4.3 remove](#217743-remove)
+          - [21.7.7.4.4 remove-blacklisted-permission](#217744-remove-blacklisted-permission)
+          - [21.7.7.4.5 remove-whitelisted-permission](#217745-remove-whitelisted-permission)
+          - [21.7.7.4.6 whitelist-permission](#217746-whitelist-permission)
           - [21.7.7.5 set-network-property](#21775-set-network-property)
           - [21.7.7.6 set-poor-network-msgs](#21776-set-poor-network-msgs)
           - [21.7.7.7 set-proposal-durations-proposal](#21777-set-proposal-durations-proposal)
@@ -12486,6 +12492,94 @@ Global Flags:
 [Return to top](#sekai)
 
 ###### 21.7.7.4 role
+
+Role proposals management subcommands.
+
+Usage:
+```
+sekaid tx customgov proposal role [flags]
+sekaid tx customgov proposal role [command]
+```
+
+Available Commands:
+
+| Subcommands                         | Description                                                               |
+| ----------------------------------- | ------------------------------------------------------------------------- |
+| [`blacklist-permission`]()          | Raise governance proposal to blacklist a permission for a role.           |
+| [`create`]()                        | Raise governance proposal to create a new role.                           |
+| [`remove`]()                        | Raise governance proposal to remove a role.                               |
+| [`remove-blacklisted-permission`]() | Raise governance proposal to remove a blacklisted permission from a role. |
+| [`remove-whitelisted-permission`]() | Raise governance proposal to remove whitelisted permission from a role.   |
+| [`whitelist-permission`]()          | Raise governance proposal to whitelist a permission for a role.           |
+
+
+
+| Flags        | Description   | Work |
+| ------------ | ------------- | ---- |
+| `-h, --help` | help for role |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov proposal role --help
+Role proposals management subcommands
+
+Usage:
+  sekaid tx customgov proposal role [flags]
+  sekaid tx customgov proposal role [command]
+
+Available Commands:
+  blacklist-permission          Raise governance proposal to blacklist a permission for a role.
+  create                        Raise governance proposal to create a new role.
+  remove                        Raise governance proposal to remove a role.
+  remove-blacklisted-permission Raise governance proposal to remove a blacklisted permission from a role.
+  remove-whitelisted-permission Raise governance proposal to remove whitelisted permission from a role.
+  whitelist-permission          Raise governance proposal to whitelist a permission for a role.
+
+Flags:
+  -h, --help   help for role
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid tx customgov proposal role [command] --help" for more information about a command.
+```
+
+[Return to top](#sekai)
+
+###### 21.7.7.4.1 blacklist-permission
+
+[Return to top](#sekai)
+
+###### 21.7.7.4.2 create
+
+[Return to top](#sekai)
+
+###### 21.7.7.4.3 remove
+
+[Return to top](#sekai)
+
+###### 21.7.7.4.4 remove-blacklisted-permission
+
+[Return to top](#sekai)
+
+###### 21.7.7.4.5 remove-whitelisted-permission
+
+[Return to top](#sekai)
+
+###### 21.7.7.4.6 whitelist-permission
 
 [Return to top](#sekai)
 
