@@ -6586,6 +6586,79 @@ Global Flags:
 
 ##### 14.9.23 proposal
 
+Query details for a proposal.
+
+Usage:
+```
+sekaid query customgov proposal [proposal-id] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for alias                                                                                   | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov proposal --help
+Query details for a proposal. You can find the
+proposal-id by running "sekaid query gov proposals".
+
+Example:
+$ sekaid query gov proposal 1
+
+Usage:
+  sekaid query customgov proposal [proposal-id] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for proposal
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid q customgov proposal 13 -o json | jq
+{
+  "proposal_id": "13",
+  "title": "Reducing value of minimal fee for docs",
+  "description": "Changing value of minimal fee for testing for docs",
+  "content": {
+    "@type": "/kira.gov.SetNetworkPropertyProposal",
+    "network_property": "MAX_TX_FEE",
+    "value": {
+      "value": "1000",
+      "str_value": ""
+    }
+  },
+  "submit_time": "2023-06-12T09:22:10.251027877Z",
+  "voting_end_time": "2023-06-12T09:28:10.251027877Z",
+  "enactment_end_time": "2023-06-12T09:33:10.251027877Z",
+  "min_voting_end_block_height": "141342",
+  "min_enactment_end_block_height": "141376",
+  "result": "VOTE_RESULT_PASSED",
+  "exec_result": "executed successfully"
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
