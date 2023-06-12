@@ -5552,6 +5552,179 @@ Use "sekaid query customgov [command] --help" for more information about a comma
 
 ##### 14.9.1 all-execution-fees
 
+Query all execution fees.
+
+Usage:
+```
+sekaid query customgov all-execution-fees [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for all-execution-fees                                                                      | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov all-execution-fees --help
+Query all execution fees
+
+Usage:
+  sekaid query customgov all-execution-fees [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for all-execution-fees
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid q customgov all-execution-fees -o json | jq
+{
+  "fees": [
+    {
+      "transaction_type": "activate",
+      "execution_fee": "100",
+      "failure_fee": "1000",
+      "timeout": "10",
+      "default_parameters": "0"
+    },
+    {
+      "transaction_type": "claim-councilor",
+      "execution_fee": "100",
+      "failure_fee": "1",
+      "timeout": "10",
+      "default_parameters": "0"
+    },
+    {
+      "transaction_type": "claim-proposal-type-x",
+      "execution_fee": "100",
+      "failure_fee": "1",
+      "timeout": "10",
+      "default_parameters": "0"
+    },
+    {
+      "transaction_type": "claim-validator",
+      "execution_fee": "100",
+      "failure_fee": "1",
+      "timeout": "10",
+      "default_parameters": "0"
+    },
+    {
+      "transaction_type": "pause",
+      "execution_fee": "100",
+      "failure_fee": "100",
+      "timeout": "10",
+      "default_parameters": "0"
+    },
+    {
+      "transaction_type": "submit-proposal-type-x",
+      "execution_fee": "10",
+      "failure_fee": "1",
+      "timeout": "10",
+      "default_parameters": "0"
+    },
+    {
+      "transaction_type": "unpause",
+      "execution_fee": "100",
+      "failure_fee": "100",
+      "timeout": "10",
+      "default_parameters": "0"
+    },
+    {
+      "transaction_type": "upsert-token-alias",
+      "execution_fee": "100",
+      "failure_fee": "1",
+      "timeout": "10",
+      "default_parameters": "0"
+    },
+    {
+      "transaction_type": "veto-proposal-type-x",
+      "execution_fee": "100",
+      "failure_fee": "1",
+      "timeout": "10",
+      "default_parameters": "0"
+    },
+    {
+      "transaction_type": "vote-proposal-type-x",
+      "execution_fee": "100",
+      "failure_fee": "1",
+      "timeout": "10",
+      "default_parameters": "0"
+    }
+  ],
+  "tx_types": [
+    "remove-blacklist-role-permission",
+    "deposit-spending-pool",
+    "remove-from-custody-whitelist",
+    "submit_evidence",
+    "whitelist-permissions",
+    "create-role",
+    "blacklist-role-permission",
+    "create-spending-pool",
+    "register-spending-pool-beneficiary",
+    "remove-role",
+    "claim_rewards",
+    "request-identity-records-verify",
+    "set-network-properties",
+    "blacklist-permissions",
+    "whitelist-role-permission",
+    "remove-whitelist-role-permission",
+    "claim-validator",
+    "pause",
+    "delegate",
+    "submit-proposal",
+    "cancel-identity-records-verify-request",
+    "assign-role",
+    "decline-custody-transaction",
+    "undelegate",
+    "drop-custody-whitelist",
+    "approve-custody-transaction",
+    "activate",
+    "register_delegator",
+    "add-to-custody-custodians",
+    "register-identity-records",
+    "claim_undelegation",
+    "set_compound_info",
+    "handle-identity-records-verify-request",
+    "set-execution-fee",
+    "upsert-token-rate",
+    "unpause",
+    "claim-spending-pool",
+    "multisend",
+    "vote-proposal",
+    "edit-identity-record",
+    "create-custody",
+    "add-to-custody-whitelist",
+    "upsert_staking_pool",
+    "remove-from-custody-custodians",
+    "drop-custody-custodians",
+    "send",
+    "claim-councilor",
+    "upsert-token-alias"
+  ]
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
