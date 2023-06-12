@@ -6846,6 +6846,25 @@ sekaid q customgov proposals -o json | jq
 }
 ```
 
+Other usages:
+```
+sekaid q customgov proposals --limit=2 --offset=4 --reverse --height=80000 --count-total --output=json | jq
+```
+
+```
+sekaid q customgov proposals --limit=2 --page=2 --reverse --height=80000 --count-total --output=json | jq
+```
+
+```
+sekaid q customgov proposals --limit=2 --page-key="<next_key>" --reverse --height=80000 --count-total --output=json | jq
+```
+
+**Pay attention**
+Can't use together:
+- `--page` and `--page-key`
+- `--offset` and `--page`
+- `--height` for future blocks
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
