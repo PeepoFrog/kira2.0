@@ -6100,6 +6100,64 @@ sekaid query customgov data-registry-keys --output=json | jq
 
 ##### 14.9.10 execution-fee
 
+Query execution fee by the type of transaction.
+
+Usage:
+```
+sekaid query customgov execution-fee [transaction_type] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for execution-fee                                                                           | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov execution-fee --help
+Query execution fee by the type of transaction
+
+Usage:
+  sekaid query customgov execution-fee [transaction_type] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for execution-fee
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid q customgov execution-fee pause -o json | jq
+{
+  "fee": {
+    "transaction_type": "pause",
+    "execution_fee": "100",
+    "failure_fee": "100",
+    "timeout": "10",
+    "default_parameters": "0"
+  }
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
