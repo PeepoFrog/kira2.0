@@ -5617,6 +5617,87 @@ Can't use together:
 
 ##### 14.9.3 all-proposal-durations
 
+Query all proposal durations.
+
+Usage:
+```
+sekaid query customgov all-proposal-durations [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for all-proposal-durations                                                                  | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov all-proposal-durations --help
+Query all proposal durations.
+
+Example:
+$ sekaid query gov all-proposal-durations
+
+Usage:
+  sekaid query customgov all-proposal-durations [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for all-proposal-durations
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid q customgov all-proposal-durations -o json | jq
+{
+  "proposal_durations": {
+    "AssignRoleToAccount": "360",
+    "BlacklistAccountPermission": "360",
+    "BlacklistRolePermission": "360",
+    "CancelSoftwareUpgrade": "360",
+    "CreateRoleProposal": "360",
+    "RemoveBlacklistedAccountPermission": "360",
+    "RemoveBlacklistedRolePermission": "360",
+    "RemoveRoleProposal": "360",
+    "RemoveWhitelistedAccountPermission": "360",
+    "RemoveWhitelistedRolePermission": "360",
+    "ResetWholeCouncilorRank": "360",
+    "ResetWholeValidatorRank": "360",
+    "SetNetworkProperty": "360",
+    "SetPoorNetworkMessages": "360",
+    "SetProposalDurationsProposal": "360",
+    "SlashValidator": "360",
+    "SoftwareUpgrade": "360",
+    "TokensWhiteBlackChange": "360",
+    "UnassignRoleFromAccount": "360",
+    "UnjailValidator": "360",
+    "UpsertDataRegistry": "360",
+    "UpsertTokenAlias": "360",
+    "UpsertTokenRates": "360",
+    "WhitelistAccountPermission": "360",
+    "WhitelistRolePermission": "360"
+  }
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
