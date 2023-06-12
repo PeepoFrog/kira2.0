@@ -14972,6 +14972,104 @@ sekaid tx customgov proposal set-network-property "MIN_TX_FEE" 10 --title="Reduc
 
 ###### 21.7.7.6 set-poor-network-msgs
 
+🟨 Create a proposal to set a value on a network property. 🟨
+
+Usage:
+```
+sekaid tx customgov proposal set-poor-network-msgs <messages> [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ❌ ?   |
+| `--description string`        | The description of the proposal, it can be a url, some text, etc.                                                                                           | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ✅ yes |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for set-poor-network-msgs                                                                                                                              | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default 'home' directory will be used                                                                         | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ❌ ?   |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `--title string`              | The title of the proposal.                                                                                                                                  | ✅ yes |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov proposal set-poor-network-msgs --help
+
+                $ %s tx customgov proposal set-poor-network-msgs XXXX,YYY --from=<key_or_address>
+
+                All the message types supported could be added here
+                        create-role
+                        assign-role
+                        remove-role
+                        ...
+
+Usage:
+  sekaid tx customgov proposal set-poor-network-msgs <messages> [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --description string       The description of the proposal, it can be a url, some text, etc.
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for set-poor-network-msgs
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+      --title string             The title of the proposal.
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+#TODO haven't tested
+
+🟨  
+🟨  
+🟨
+
 [Return to top](#sekai)
 
 ###### 21.7.7.7 set-proposal-durations-proposal
