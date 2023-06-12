@@ -6995,7 +6995,7 @@ sekaid query customgov voters [proposal-id] [flags]
 | Flags                 | Description                                                                                      | Work  |
 | --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
 | `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
-| `-h, --help`          | help for vote                                                                                    | ✅ yes |
+| `-h, --help`          | help for voters                                                                                  | ✅ yes |
 | `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
 | `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
 
@@ -7097,6 +7097,74 @@ sekaid query customgov voters 8 -o json | jq
 [Return to top](#sekai)
 
 ##### 14.9.31 votes
+
+Query vote details for a single proposal by its identifier.
+
+Usage:
+```
+sekaid query customgov votes [proposal-id] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for votes                                                                                   | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov votes --help
+Query vote details for a single proposal by its identifier.
+
+Example:
+$ sekaid query gov votes 1
+
+Usage:
+  sekaid query customgov votes [proposal-id] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for votes
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid q customgov votes 8 -o json | jq
+{
+  "votes": [
+    {
+      "proposal_id": "8",
+      "voter": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "option": "VOTE_OPTION_YES",
+      "slash": "0.010000000000000000"
+    },
+    {
+      "proposal_id": "8",
+      "voter": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "option": "VOTE_OPTION_YES",
+      "slash": "0.010000000000000000"
+    }
+  ]
+}
+```
 
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
