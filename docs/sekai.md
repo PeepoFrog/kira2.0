@@ -122,6 +122,12 @@
         - [21.7.6 poll](#2176-poll)
         - [21.7.7 proposal](#2177-proposal)
           - [21.7.7.1 account](#21771-account)
+          - [21.7.7.1.1 assign-role](#217711-assign-role)
+          - [21.7.7.1.2 blacklist-permission](#217712-blacklist-permission)
+          - [21.7.7.1.3 remove-blacklisted-permission](#217713-remove-blacklisted-permission)
+          - [21.7.7.1.4 remove-whitelisted-permission](#217714-remove-whitelisted-permission)
+          - [21.7.7.1.5 unassign-role](#217715-unassign-role)
+          - [21.7.7.1.6 whitelist-permission](#217716-whitelist-permission)
           - [21.7.7.2 proposal-jail-councilor](#21772-proposal-jail-councilor)
           - [21.7.7.3 proposal-reset-whole-councilor-rank](#21773-proposal-reset-whole-councilor-rank)
           - [21.7.7.4 role](#21774-role)
@@ -11081,7 +11087,254 @@ Global Flags:
 
 ```
 sekaid tx customgov proposal vote 13 1 --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --keyring-backend=test --home=/root/.sekai --chain-id=localnet-4 --fees=100ukex --yes --output=json | jq
+{
+  "height": "0",
+  "txhash": "10C68B927E3A1BDED0EDD8112AB96DB97CC31FA5B91C88566C960D813B64D073",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
 ```
+
+<details>
+  <summary>Check tx execution</summary>
+
+  ```
+  sekaid q tx 10C68B927E3A1BDED0EDD8112AB96DB97CC31FA5B91C88566C960D813B64D073 -o json | jq
+  ```
+
+  ```json
+  {
+    "height": "141342",
+    "txhash": "10C68B927E3A1BDED0EDD8112AB96DB97CC31FA5B91C88566C960D813B64D073",
+    "codespace": "",
+    "code": 0,
+    "data": "0A1B0A192F6B6972612E676F762E4D7367566F746550726F706F73616C",
+    "raw_log": "[{\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgVoteProposal\"}]},{\"type\":\"proposal_vote\",\"attributes\":[{\"key\":\"proposal_id\",\"value\":\"13\"},{\"key\":\"voter\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"option\",\"value\":\"VOTE_OPTION_YES\"}]}]}]",
+    "logs": [
+      {
+        "msg_index": 0,
+        "log": "",
+        "events": [
+          {
+            "type": "message",
+            "attributes": [
+              {
+                "key": "action",
+                "value": "/kira.gov.MsgVoteProposal"
+              }
+            ]
+          },
+          {
+            "type": "proposal_vote",
+            "attributes": [
+              {
+                "key": "proposal_id",
+                "value": "13"
+              },
+              {
+                "key": "voter",
+                "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+              },
+              {
+                "key": "option",
+                "value": "VOTE_OPTION_YES"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "info": "",
+    "gas_wanted": "0",
+    "gas_used": "0",
+    "tx": {
+      "@type": "/cosmos.tx.v1beta1.Tx",
+      "body": {
+        "messages": [
+          {
+            "@type": "/kira.gov.MsgVoteProposal",
+            "proposal_id": "13",
+            "voter": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+            "option": "VOTE_OPTION_YES",
+            "slash": "0.010000000000000000"
+          }
+        ],
+        "memo": "",
+        "timeout_height": "0",
+        "extension_options": [],
+        "non_critical_extension_options": []
+      },
+      "auth_info": {
+        "signer_infos": [
+          {
+            "public_key": {
+              "@type": "/cosmos.crypto.secp256k1.PubKey",
+              "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+            },
+            "mode_info": {
+              "single": {
+                "mode": "SIGN_MODE_DIRECT"
+              }
+            },
+            "sequence": "96"
+          }
+        ],
+        "fee": {
+          "amount": [
+            {
+              "denom": "ukex",
+              "amount": "100"
+            }
+          ],
+          "gas_limit": "200000",
+          "payer": "",
+          "granter": ""
+        }
+      },
+      "signatures": [
+        "pSzlgYtk+hG0zRlF59DHl/rS928uIGAX+w5m2rFCF2dMsSCw9q28te49FLDzr7IDmrgoC3euUB/Qo99N+ZQH7w=="
+      ]
+    },
+    "timestamp": "2023-06-12T09:22:30Z",
+    "events": [
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "YWNjX3NlcQ==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC85Ng==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "c2lnbmF0dXJl",
+            "value": "cFN6bGdZdGsraEcwelJsRjU5REhsL3JTOTI4dUlHQVgrdzVtMnJGQ0YyZE1zU0N3OXEyOHRlNDlGTER6cjdJRG1yZ29DM2V1VUIvUW85OU4rWlFIN3c9PQ==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_spent",
+        "attributes": [
+          {
+            "key": "c3BlbmRlcg==",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "coin_received",
+        "attributes": [
+          {
+            "key": "cmVjZWl2ZXI=",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "transfer",
+        "attributes": [
+          {
+            "key": "cmVjaXBpZW50",
+            "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+            "index": true
+          },
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "YW1vdW50",
+            "value": "MTAwdWtleA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "c2VuZGVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "tx",
+        "attributes": [
+          {
+            "key": "ZmVl",
+            "value": "MTAwdWtleA==",
+            "index": true
+          },
+          {
+            "key": "ZmVlX3BheWVy",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "message",
+        "attributes": [
+          {
+            "key": "YWN0aW9u",
+            "value": "L2tpcmEuZ292Lk1zZ1ZvdGVQcm9wb3NhbA==",
+            "index": true
+          }
+        ]
+      },
+      {
+        "type": "proposal_vote",
+        "attributes": [
+          {
+            "key": "cHJvcG9zYWxfaWQ=",
+            "value": "MTM=",
+            "index": true
+          },
+          {
+            "key": "dm90ZXI=",
+            "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+            "index": true
+          },
+          {
+            "key": "b3B0aW9u",
+            "value": "Vk9URV9PUFRJT05fWUVT",
+            "index": true
+          }
+        ]
+      }
+    ]
+  }
+  ```
+</details>
 
 <details>
   <summary>Check vote</summary>
