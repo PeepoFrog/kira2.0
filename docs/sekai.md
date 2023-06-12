@@ -6724,6 +6724,128 @@ sekaid q customgov proposal-duration CreateRoleProposal -o json | jq
 
 ##### 14.9.25 proposals
 
+Query for a all paginated proposals that match optional filters.
+
+Usage:
+```
+sekaid query customgov proposals [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--count-total`       | count total number of records in customgov to query for                                          | ✅ yes |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for proposals                                                                               | ✅ yes |
+| `--limit uint`        | pagination limit of customgov to query for (default `100`)                                       | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `--offset uint`       | pagination offset of customgov to query for                                                      | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+| `--page uint`         | pagination page of customgov to query for. This sets offset to a multiple of limit (default `1`) | ✅ yes |
+| `--page-key string`   | pagination page-key of customgov to query for                                                    | ✅ yes |
+| `--reverse`           | results are sorted in descending order                                                           | ✅ yes |
+| `--voter string`      | (optional) filter by proposals voted on by voted                                                 | ❌ no  |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov proposals --help
+Query for a all paginated proposals that match optional filters:
+
+Example:
+$ sekaid query gov proposals --depositor cosmos1skjwj5whet0lpe65qaq4rpq03hjxlwd9nf39lk
+$ sekaid query gov proposals --voter cosmos1skjwj5whet0lpe65qaq4rpq03hjxlwd9nf39lk
+
+Usage:
+  sekaid query customgov proposals [flags]
+
+Flags:
+      --count-total       count total number of records in customgov to query for
+      --height int        Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help              help for proposals
+      --limit uint        pagination limit of customgov to query for (default 100)
+      --node string       <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+      --offset uint       pagination offset of customgov to query for
+  -o, --output string     Output format (text|json) (default "text")
+      --page uint         pagination page of customgov to query for. This sets offset to a multiple of limit (default 1)
+      --page-key string   pagination page-key of customgov to query for
+      --reverse           results are sorted in descending order
+      --voter string      (optional) filter by proposals voted on by voted
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid q customgov proposals -o json | jq
+{
+  "proposals": [
+    {
+      "proposal_id": "1",
+      "title": "Upsert KEX icon URL link",
+      "description": "Initial Setup From KIRA Manager",
+      "content": {
+        "@type": "/kira.tokens.ProposalUpsertTokenAlias",
+        "symbol": "KEX",
+        "name": "KIRA",
+        "icon": "http://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg",
+        "decimals": 6,
+        "denoms": [
+          "ukex"
+        ],
+        "invalidated": false
+      },
+      "submit_time": "2023-05-25T13:00:51.893680415Z",
+      "voting_end_time": "2023-05-25T13:06:51.893680415Z",
+      "enactment_end_time": "2023-05-25T13:11:51.893680415Z",
+      "min_voting_end_block_height": "25",
+      "min_enactment_end_block_height": "58",
+      "result": "VOTE_RESULT_PASSED",
+      "exec_result": "executed successfully"
+    },
+    // . . .
+    {
+      "proposal_id": "28",
+      "title": "Test proposal for docs",
+      "description": "Test proposal for docs",
+      "content": {
+        "@type": "/kira.gov.SetProposalDurationsProposal",
+        "typeof_proposals": [
+          "AssignRoleToAccount",
+          "BlacklistAccountPermission"
+        ],
+        "proposal_durations": [
+          "300",
+          "310"
+        ]
+      },
+      "submit_time": "2023-06-12T14:41:26.992416500Z",
+      "voting_end_time": "2023-06-12T14:47:26.992416500Z",
+      "enactment_end_time": "2023-06-12T14:52:26.992416500Z",
+      "min_voting_end_block_height": "143199",
+      "min_enactment_end_block_height": "143233",
+      "result": "VOTE_RESULT_QUORUM_NOT_REACHED",
+      "exec_result": ""
+    }
+  ],
+  "pagination": {
+    "next_key": null,
+    "total": "0"
+  }
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
