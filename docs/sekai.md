@@ -6985,6 +6985,114 @@ sekaid query customgov vote 9 kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 -o jso
 
 ##### 14.9.30 voters
 
+Query voters for a single proposal by its identifier.
+
+Usage:
+```
+sekaid query customgov voters [proposal-id] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for vote                                                                                    | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid q customgov voters --help
+Query voters for a single proposal by its identifier.
+
+Example:
+$ sekaid query gov voters 1
+
+Usage:
+  sekaid query customgov voters [proposal-id] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for voters
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid query customgov voters 8 -o json | jq
+{
+  "voters": [
+    {
+      "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+      "roles": [
+        "2"
+      ],
+      "status": "ACTIVE",
+      "votes": [
+        "VOTE_OPTION_YES",
+        "VOTE_OPTION_NO",
+        "VOTE_OPTION_ABSTAIN",
+        "VOTE_OPTION_NO_WITH_VETO"
+      ],
+      "permissions": {
+        "blacklist": [
+          10
+        ],
+        "whitelist": [
+          28,
+          12,
+          13
+        ]
+      },
+      "skin": "0"
+    },
+    {
+      "address": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+      "roles": [
+        "1",
+        "2"
+      ],
+      "status": "ACTIVE",
+      "votes": [
+        "VOTE_OPTION_YES",
+        "VOTE_OPTION_ABSTAIN",
+        "VOTE_OPTION_NO",
+        "VOTE_OPTION_NO_WITH_VETO"
+      ],
+      "permissions": {
+        "blacklist": [],
+        "whitelist": [
+          4,
+          35,
+          14,
+          28,
+          5,
+          36,
+          15,
+          29
+        ]
+      },
+      "skin": "1"
+    }
+  ]
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
