@@ -5936,6 +5936,177 @@ sekaid q customgov all-proposal-durations -o json | jq
 
 ##### 14.9.4 all-roles
 
+Query all registered roles.
+
+Usage:
+```
+sekaid query customgov all-roles [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for all-roles                                                                               | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov all-roles --help
+Query all registered roles
+
+Usage:
+  sekaid query customgov all-roles [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for all-roles
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid query customgov all-roles -o json | jq
+{
+  "roles": [
+    {
+      "id": 1,
+      "sid": "sudo",
+      "description": "Sudo role",
+      "permissions": {
+        "blacklist": [],
+        "whitelist": [
+          1,
+          2,
+          3,
+          6,
+          8,
+          9,
+          12,
+          13,
+          10,
+          11,
+          14,
+          15,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          31,
+          32,
+          24,
+          25,
+          16,
+          17,
+          4,
+          5,
+          26,
+          27,
+          28,
+          29,
+          30,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "sid": "validator",
+      "description": "Validator role",
+      "permissions": {
+        "blacklist": [],
+        "whitelist": [
+          2
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "sid": "bruh",
+      "description": "Temporary role 'bruh'",
+      "permissions": {
+        "blacklist": [
+          10
+        ],
+        "whitelist": []
+      }
+    },
+    {
+      "id": 4,
+      "sid": "bruh2",
+      "description": "'Bruh'(2) role",
+      "permissions": {
+        "blacklist": [],
+        "whitelist": [
+          28,
+          29
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "sid": "test",
+      "description": "Test role for testing",
+      "permissions": {
+        "blacklist": [],
+        "whitelist": []
+      }
+    }
+  ]
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
