@@ -20909,6 +20909,355 @@ sekaid tx customgov role create test "Test role for testing" --from=kira1vmwdgw4
 
 ###### 21.7.10.4 remove
 
+Remove role from account.
+
+Usage:
+```
+sekaid tx customgov role remove role [flags]
+```
+
+| Flags                         | Description                                                                                                                                                 | Work  |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `-a, --account-number uint`   | The account number of the signing account (offline mode only)                                                                                               | ❌ ?   |
+| `--addr string`               | the address to set permissions                                                                                                                              | ✅ yes |
+| `-b, --broadcast-mode string` | Transaction broadcasting mode (`sync\|async\|block`) (default `"sync"`)                                                                                     | ✅ yes |
+| `--dry-run`                   | ignore the `--gas` flag and perform a simulation of a transaction, but don't broadcast it                                                                   | ❌ ?   |
+| `--fee-account string`        | Fee account pays fees for the transaction instead of deducting from the signer                                                                              | ❌ ?   |
+| `--fees string`               | Fees to pay along with transaction; eg: `10uatom`                                                                                                           | ✅ yes |
+| `--from string`               | Name or address of private key with which to sign                                                                                                           | ❌ ?   |
+| `--gas string`                | gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default `200000`)                                                | ❌ ?   |
+| `--gas-adjustment float`      | adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default `1`) | ❌ ?   |
+| `--gas-prices string`         | Gas prices in decimal format to determine the transaction fee (e.g. `0.1uatom`)                                                                             | ❌ ?   |
+| `--generate-only`             | Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)                                                    | ✅ yes |
+| `-h, --help`                  | help for remove                                                                                                                                             | ✅ yes |
+| `--keyring-backend string`    | Select keyring's backend (`os\|file\|kwallet\|pass\|test\|memory`) (default `"os"`)                                                                         | ✅ yes |
+| `--keyring-dir string`        | The client Keyring directory; if omitted, the default `'home'` directory will be used                                                                       | ✅ yes |
+| `--ledger`                    | Use a connected Ledger device                                                                                                                               | ✅ yes |
+| `--node string`               | \<host\>:\<port\> to tendermint rpc interface for this chain (default `"tcp://localhost:26657"`)                                                            | ✅ yes |
+| `--note string`               | Note to add a description to the transaction (previously `--memo`)                                                                                          | ❌ ?   |
+| `--offline`                   | Offline mode (does not allow any online functionality                                                                                                       | ❌ ?   |
+| `-o, --output string`         | Output format (`text\|json`) (default `"json"`)                                                                                                             | ✅ yes |
+| `-s, --sequence uint`         | The sequence number of the signing account (offline mode only)                                                                                              | ❌ ?   |
+| `--sign-mode string`          | Choose sign mode (`direct\|amino-json`), this is an advanced feature                                                                                        | ❌ ?   |
+| `--timeout-height uint`       | Set a block timeout height to prevent the tx from being committed past a certain height                                                                     | ❌ ?   |
+| `-y, --yes`                   | Skip tx broadcasting prompt confirmation                                                                                                                    | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov role remove --help
+Remove role from account
+
+Usage:
+  sekaid tx customgov role remove role [flags]
+
+Flags:
+  -a, --account-number uint      The account number of the signing account (offline mode only)
+      --addr string              the address to set permissions
+  -b, --broadcast-mode string    Transaction broadcasting mode (sync|async|block) (default "sync")
+      --dry-run                  ignore the --gas flag and perform a simulation of a transaction, but don't broadcast it
+      --fee-account string       Fee account pays fees for the transaction instead of deducting from the signer
+      --fees string              Fees to pay along with transaction; eg: 10uatom
+      --from string              Name or address of private key with which to sign
+      --gas string               gas limit to set per-transaction; set to "auto" to calculate sufficient gas automatically (default 200000)
+      --gas-adjustment float     adjustment factor to be multiplied against the estimate returned by the tx simulation; if the gas limit is set manually this flag is ignored  (default 1)
+      --gas-prices string        Gas prices in decimal format to determine the transaction fee (e.g. 0.1uatom)
+      --generate-only            Build an unsigned transaction and write it to STDOUT (when enabled, the local Keybase is not accessible)
+  -h, --help                     help for remove
+      --keyring-backend string   Select keyring's backend (os|file|kwallet|pass|test|memory) (default "os")
+      --keyring-dir string       The client Keyring directory; if omitted, the default 'home' directory will be used
+      --ledger                   Use a connected Ledger device
+      --node string              <host>:<port> to tendermint rpc interface for this chain (default "tcp://localhost:26657")
+      --note string              Note to add a description to the transaction (previously --memo)
+      --offline                  Offline mode (does not allow any online functionality
+  -o, --output string            Output format (text|json) (default "json")
+  -s, --sequence uint            The sequence number of the signing account (offline mode only)
+      --sign-mode string         Choose sign mode (direct|amino-json), this is an advanced feature
+      --timeout-height uint      Set a block timeout height to prevent the tx from being committed past a certain height
+  -y, --yes                      Skip tx broadcasting prompt confirmation
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid tx customgov role remove 3 --addr=kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt --from=kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 --keyring-backend=test --home=/root/.sekai --chain-id=localnet-4 --fees=100ukex --yes --output=json | jq
+{
+  "height": "0",
+  "txhash": "5D30838CD311B7EF3DCCF5D1AAD411FE921C6AACA5313F572090A97AC82E1DBA",
+  "codespace": "",
+  "code": 0,
+  "data": "",
+  "raw_log": "[]",
+  "logs": [],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": null,
+  "timestamp": "",
+  "events": []
+}
+```
+
+<details>
+  <summary>Check tx execution</summary>
+
+  ```
+  sekaid q tx 5D30838CD311B7EF3DCCF5D1AAD411FE921C6AACA5313F572090A97AC82E1DBA -o json | jq
+  ```
+
+```json
+{
+  "height": "151310",
+  "txhash": "5D30838CD311B7EF3DCCF5D1AAD411FE921C6AACA5313F572090A97AC82E1DBA",
+  "codespace": "",
+  "code": 0,
+  "data": "0A190A172F6B6972612E676F762E4D736752656D6F7665526F6C65",
+  "raw_log": "[{\"events\":[{\"type\":\"message\",\"attributes\":[{\"key\":\"action\",\"value\":\"/kira.gov.MsgRemoveRole\"}]},{\"type\":\"remove_role\",\"attributes\":[{\"key\":\"proposer\",\"value\":\"kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4\"},{\"key\":\"address\",\"value\":\"kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt\"},{\"key\":\"role_id\",\"value\":\"3\"}]}]}]",
+  "logs": [
+    {
+      "msg_index": 0,
+      "log": "",
+      "events": [
+        {
+          "type": "message",
+          "attributes": [
+            {
+              "key": "action",
+              "value": "/kira.gov.MsgRemoveRole"
+            }
+          ]
+        },
+        {
+          "type": "remove_role",
+          "attributes": [
+            {
+              "key": "proposer",
+              "value": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4"
+            },
+            {
+              "key": "address",
+              "value": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt"
+            },
+            {
+              "key": "role_id",
+              "value": "3"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "info": "",
+  "gas_wanted": "0",
+  "gas_used": "0",
+  "tx": {
+    "@type": "/cosmos.tx.v1beta1.Tx",
+    "body": {
+      "messages": [
+        {
+          "@type": "/kira.gov.MsgRemoveRole",
+          "proposer": "kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4",
+          "address": "kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt",
+          "roleId": 3
+        }
+      ],
+      "memo": "",
+      "timeout_height": "0",
+      "extension_options": [],
+      "non_critical_extension_options": []
+    },
+    "auth_info": {
+      "signer_infos": [
+        {
+          "public_key": {
+            "@type": "/cosmos.crypto.secp256k1.PubKey",
+            "key": "AjjA26m3ab7z6Ddrqeons69CREF8q/d815X180ucZLmo"
+          },
+          "mode_info": {
+            "single": {
+              "mode": "SIGN_MODE_DIRECT"
+            }
+          },
+          "sequence": "130"
+        }
+      ],
+      "fee": {
+        "amount": [
+          {
+            "denom": "ukex",
+            "amount": "100"
+          }
+        ],
+        "gas_limit": "200000",
+        "payer": "",
+        "granter": ""
+      }
+    },
+    "signatures": [
+      "fkCh4+atliY0/+4UiaqVT4Wppw0DnYwWxA8wyQCjZvJGkVa4DDyA/vJZH/hq/+V3Cmt87Y2Iyie/lzC/sJ3qcA=="
+    ]
+  },
+  "timestamp": "2023-06-13T13:56:45Z",
+  "events": [
+    {
+      "type": "tx",
+      "attributes": [
+        {
+          "key": "YWNjX3NlcQ==",
+          "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NC8xMzA=",
+          "index": true
+        }
+      ]
+    },
+    {
+      "type": "tx",
+      "attributes": [
+        {
+          "key": "c2lnbmF0dXJl",
+          "value": "ZmtDaDQrYXRsaVkwLys0VWlhcVZUNFdwcHcwRG5Zd1d4QTh3eVFDalp2SkdrVmE0RER5QS92SlpIL2hxLytWM0NtdDg3WTJJeWllL2x6Qy9zSjNxY0E9PQ==",
+          "index": true
+        }
+      ]
+    },
+    {
+      "type": "coin_spent",
+      "attributes": [
+        {
+          "key": "c3BlbmRlcg==",
+          "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+          "index": true
+        },
+        {
+          "key": "YW1vdW50",
+          "value": "MTAwdWtleA==",
+          "index": true
+        }
+      ]
+    },
+    {
+      "type": "coin_received",
+      "attributes": [
+        {
+          "key": "cmVjZWl2ZXI=",
+          "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+          "index": true
+        },
+        {
+          "key": "YW1vdW50",
+          "value": "MTAwdWtleA==",
+          "index": true
+        }
+      ]
+    },
+    {
+      "type": "transfer",
+      "attributes": [
+        {
+          "key": "cmVjaXBpZW50",
+          "value": "a2lyYTE3eHBmdmFrbTJhbWc5NjJ5bHM2Zjg0ejNrZWxsOGM1bHFrZncycw==",
+          "index": true
+        },
+        {
+          "key": "c2VuZGVy",
+          "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+          "index": true
+        },
+        {
+          "key": "YW1vdW50",
+          "value": "MTAwdWtleA==",
+          "index": true
+        }
+      ]
+    },
+    {
+      "type": "message",
+      "attributes": [
+        {
+          "key": "c2VuZGVy",
+          "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+          "index": true
+        }
+      ]
+    },
+    {
+      "type": "tx",
+      "attributes": [
+        {
+          "key": "ZmVl",
+          "value": "MTAwdWtleA==",
+          "index": true
+        },
+        {
+          "key": "ZmVlX3BheWVy",
+          "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+          "index": true
+        }
+      ]
+    },
+    {
+      "type": "message",
+      "attributes": [
+        {
+          "key": "YWN0aW9u",
+          "value": "L2tpcmEuZ292Lk1zZ1JlbW92ZVJvbGU=",
+          "index": true
+        }
+      ]
+    },
+    {
+      "type": "remove_role",
+      "attributes": [
+        {
+          "key": "cHJvcG9zZXI=",
+          "value": "a2lyYTF2bXdkZ3c0MjZhajlmeDMzZnF1c210ZzZyNjV5eXVjbXg2cmR0NA==",
+          "index": true
+        },
+        {
+          "key": "YWRkcmVzcw==",
+          "value": "a2lyYTE3YWVxeHZrbDNnMzdwZmNnd2txeHZrcm42M2pmbGpmdmpyYXZudA==",
+          "index": true
+        },
+        {
+          "key": "cm9sZV9pZA==",
+          "value": "Mw==",
+          "index": true
+        }
+      ]
+    }
+  ]
+}
+```
+</details>
+
+<details>
+  <summary>Check role</summary>
+
+  ```
+  sekaid query customgov roles kira17aeqxvkl3g37pfcgwkqxvkrn63jfljfvjravnt -o json | jq
+  ```
+
+  ```json
+  {
+    "roleIds": [
+      "2"
+    ]
+  }
+  ```
+</details>
+
 [Return to top](#sekai)
 
 ###### 21.7.10.5 remove-blacklisted-permission
