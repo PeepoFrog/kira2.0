@@ -119,6 +119,10 @@
         - [21.7.3 delete-identity-records](#2173-delete-identity-records)
         - [21.7.4 handle-identity-records-verify-request](#2174-handle-identity-records-verify-request)
         - [21.7.5 permission](#2175-permission)
+          - [21.7.5.1 blacklist](#21751-blacklist)
+          - [21.7.5.2 remove-blacklisted](#21752-remove-blacklisted)
+          - [21.7.5.3 remove-whitelisted](#21753-remove-whitelisted)
+          - [21.7.5.4 whitelist](#21754-whitelist)
         - [21.7.6 poll](#2176-poll)
         - [21.7.7 proposal](#2177-proposal)
           - [21.7.7.1 account](#21771-account)
@@ -11025,7 +11029,84 @@ sekaid tx customgov handle-identity-records-verify-request 4 --home=/root/.sekai
 
 ##### 21.7.5 permission
 
+Permission management subcommands.
+
+Usage:
+```
+sekaid tx customgov permission [flags]
+sekaid tx customgov permission [command]
+```
+
+Available Commands:
+
+| Subcommands                                       | Description                                   |
+| ------------------------------------------------- | --------------------------------------------- |
+| [`blacklist`](#21751-blacklist)                   | Assign permission to a kira account blacklist |
+| [`remove-blacklisted`](#21752-remove-blacklisted) | Remove blacklisted permission from an address |
+| [`remove-whitelisted`](#21753-remove-whitelisted) | Remove whitelisted permission from an address |
+| [`whitelist`](#21754-whitelist)                   | Assign permission to a kira address whitelist |
+
+
+
+| Flags        | Description         | Work  |
+| ------------ | ------------------- | ----- |
+| `-h, --help` | help for permission | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work |
+| --------------------- | -------------------------------------------------------------------------------------- | ---- |
+| `--chain-id string`   | The network chain ID                                                                   | ❌ ?  |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ❌ ?  |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?  |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?  |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?  |
+
+```
+/# sekaid tx customgov permission --help
+Permission management subcommands
+
+Usage:
+  sekaid tx customgov permission [flags]
+  sekaid tx customgov permission [command]
+
+Available Commands:
+  blacklist          Assign permission to a kira account blacklist
+  remove-blacklisted Remove blacklisted permission from an address
+  remove-whitelisted Remove whitelisted permission from an address
+  whitelist          Assign permission to a kira address whitelist
+
+Flags:
+  -h, --help   help for permission
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid tx customgov permission [command] --help" for more information about a command.
+```
+
 [Return to top](#sekai)
+
+###### 21.7.5.1 blacklist
+
+[Return to top](#sekai)
+
+###### 21.7.5.2 remove-blacklisted
+
+[Return to top](#sekai)
+
+###### 21.7.5.3 remove-whitelisted
+
+[Return to top](#sekai)
+
+###### 21.7.5.4 whitelist
+
+[Return to top](#sekai)
+
 
 ##### 21.7.6 poll
 
