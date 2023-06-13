@@ -7407,6 +7407,61 @@ sekaid query customgov role 2 -o json | jq
 
 ##### 14.9.28 roles
 
+Query roles assigned to an address.
+
+Usage:
+```
+sekaid query customgov roles [addr] [flags]
+```
+
+| Flags                 | Description                                                                                      | Work  |
+| --------------------- | ------------------------------------------------------------------------------------------------ | ----- |
+| `--height int`        | Use a specific height to query state at (this can error if the node is pruning state)            | ✅ yes |
+| `-h, --help`          | help for roles                                                                                   | ✅ yes |
+| `--node string`       | \<host\>:\<port\> to Tendermint RPC interface for this chain (default `"tcp://localhost:26657"`) | ✅ yes |
+| `-o, --output string` | Output format (`text\|json`) (default `"text"`)                                                  | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work      |
+| --------------------- | -------------------------------------------------------------------------------------- | --------- |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ ignored |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ ignored |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?       |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?       |
+| `--trace`             | Print out full stack trace on errors                                                   | ❌ ?       |
+
+```
+/# sekaid query customgov roles --help
+Query roles assigned to an address
+
+Usage:
+  sekaid query customgov roles [addr] [flags]
+
+Flags:
+      --height int      Use a specific height to query state at (this can error if the node is pruning state)
+  -h, --help            help for roles
+      --node string     <host>:<port> to Tendermint RPC interface for this chain (default "tcp://localhost:26657")
+  -o, --output string   Output format (text|json) (default "text")
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+```
+
+```
+sekaid query customgov roles kira1vmwdgw426aj9fx33fqusmtg6r65yyucmx6rdt4 -o json | jq
+{
+  "roleIds": [
+    "1",
+    "2"
+  ]
+}
+```
+
 [Return to "`query customgov`"](#149-customgov)  
 [Return to top](#sekai)
 
