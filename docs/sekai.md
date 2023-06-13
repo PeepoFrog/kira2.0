@@ -149,6 +149,13 @@
         - [21.7.8 register-identity-records](#2178-register-identity-records)
         - [21.7.9 request-identity-record-verify](#2179-request-identity-record-verify)
         - [21.7.10 role](#21710-role)
+          - [21.7.10.1 assign](#217101-assign)
+          - [21.7.10.2 blacklist-permission](#217102-blacklist-permission)
+          - [21.7.10.3 create](#217103-create)
+          - [21.7.10.4 remove](#217104-remove)
+          - [21.7.10.5 remove-blacklisted-permission](#217105-remove-blacklisted-permission)
+          - [21.7.10.6 remove-whitelisted-permission](#217106-remove-whitelisted-permission)
+          - [21.7.10.7 whitelist-permission](#217107-whitelist-permission)
         - [21.7.11 set-execution-fee](#21711-set-execution-fee)
         - [21.7.12 set-network-properties](#21712-set-network-properties)
       - [21.8 customslashing](#218-customslashing)
@@ -19798,6 +19805,98 @@ sekaid tx customgov request-identity-record-verify --from=kira1vmwdgw426aj9fx33f
 [Return to top](#sekai)
 
 ##### 21.7.10 role
+
+Role management subcommands.
+
+Usage:
+```
+sekaid tx customgov role [flags]
+sekaid tx customgov role [command]
+```
+
+Available Commands:
+
+| Subcommands                                                              | Description                                            |
+| ------------------------------------------------------------------------ | ------------------------------------------------------ |
+| [`assign`](#217101-assign)                                               | Assign role to account                                 |
+| [`blacklist-permission`](#217102-blacklist-permission)                   | Blacklist a permission for the governance role         |
+| [`create`](#217103-create)                                               | Create new role                                        |
+| [`remove`](#217104-remove)                                               | Remove role from account                               |
+| [`remove-blacklisted-permission`](#217105-remove-blacklisted-permission) | Remove a blacklisted permission from a governance role |
+| [`remove-whitelisted-permission`](#217106-remove-whitelisted-permission) | Remove a whitelisted permission from a governance role |
+| [`whitelist-permission`](#217107-whitelist-permission)                   | Whitelist  permission to a role                        |
+
+
+
+| Flags        | Description   | Work  |
+| ------------ | ------------- | ----- |
+| `-h, --help` | help for role | ✅ yes |
+
+
+
+| Global Flags          | Description                                                                            | Work  |
+| --------------------- | -------------------------------------------------------------------------------------- | ----- |
+| `--chain-id string`   | The network chain ID                                                                   | ✅ yes |
+| `--home string`       | directory for config and data (default `"/root/.sekaid"`)                              | ✅ yes |
+| `--log_format string` | The logging format (`json\|plain`) (default `"plain"`)                                 | ❌ ?   |
+| `--log_level string`  | The logging level (`trace\|debug\|info\|warn\|error\|fatal\|panic`) (default `"info"`) | ❌ ?   |
+| `--trace`             | print out full stack trace on errors                                                   | ❌ ?   |
+
+```
+/# sekaid tx customgov role --help
+Role management subcommands
+
+Usage:
+  sekaid tx customgov role [flags]
+  sekaid tx customgov role [command]
+
+Available Commands:
+  assign                        Assign role to account
+  blacklist-permission          Blacklist a permission for the governance role
+  create                        Create new role
+  remove                        Remove role from account
+  remove-blacklisted-permission Remove a blacklisted permission from a governance role
+  remove-whitelisted-permission Remove a whitelisted permission from a governance role
+  whitelist-permission          Whitelist a permission to a role
+
+Flags:
+  -h, --help   help for role
+
+Global Flags:
+      --chain-id string     The network chain ID
+      --home string         directory for config and data (default "/root/.sekaid")
+      --log_format string   The logging format (json|plain) (default "plain")
+      --log_level string    The logging level (trace|debug|info|warn|error|fatal|panic) (default "info")
+      --trace               print out full stack trace on errors
+
+Use "sekaid tx customgov role [command] --help" for more information about a command.
+```
+
+###### 21.7.10.1 assign
+
+[Return to top](#sekai)
+
+###### 21.7.10.2 blacklist-permission
+
+[Return to top](#sekai)
+
+###### 21.7.10.3 create
+
+[Return to top](#sekai)
+
+###### 21.7.10.4 remove
+
+[Return to top](#sekai)
+
+###### 21.7.10.5 remove-blacklisted-permission
+
+[Return to top](#sekai)
+
+###### 21.7.10.6 remove-whitelisted-permission
+
+[Return to top](#sekai)
+
+###### 21.7.10.7 whitelist-permission
 
 [Return to top](#sekai)
 
