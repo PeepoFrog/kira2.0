@@ -1,21 +1,23 @@
 package docker
 
 import (
+	"archive/tar"
 	"bytes"
 	"context"
-	"fmt"
-	"os"
-
 	"encoding/json"
-
+	"fmt"
 	"io"
-	"log"
+	"os"
+	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
-	"github.com/docker/docker/pkg/stdcopy"
+	"github.com/mrlutik/kira2.0/internal/logging"
 )
+
+var log = logging.Log
 
 type DockerConfig struct {
 	Host       string `json:"Host"`
@@ -25,8 +27,8 @@ type DockerConfig struct {
 	KeyPath    string `json:"KeyPath"`
 }
 
-func (dc *DockerConfig) SetVersion(version string) {
-	dc.APIVersion = version
+func (dm *DockerConfig) SetVersion(version string) {
+	dm.APIVersion = version
 }
 
 type DockerManager struct {
@@ -37,30 +39,37 @@ type DockerManager struct {
 // r: An io.Reader containing the configuration data in JSON format.
 // Returns a new DockerManager instance and an error if there is an issue with decoding the configuration or creating the Docker client.
 func NewDockerManager(r io.Reader) (*DockerManager, error) {
-
-	log.Println("Creating new DockerManager from config")
+	log.Infoln("Creating new DockerManager from config")
 
 	decoder := json.NewDecoder(r)
 	config := DockerConfig{}
 	err := decoder.Decode(&config)
 	if err != nil {
-		log.Printf("Failed to decode config: %s", err)
-		return nil, fmt.Errorf("Failed to decode config: %w", err)
+		log.Errorf("Failed to decode config: %s\n", err)
+		return nil, fmt.Errorf("failed to decode config: %w", err)
 	}
 
 	cli, err := client.NewClientWithOpts(client.WithHost(config.Host), client.WithAPIVersionNegotiation(), client.WithTLSClientConfig(config.CacertPath, config.CertPath, config.KeyPath))
 
 	// Add API version to config. For future use in debug log etc.
 	config.SetVersion(cli.ClientVersion())
-	log.Printf("Docker API versio set to: %v\n", config.APIVersion)
+	log.Infof("Docker API version set to: %v\n", config.APIVersion)
 
 	if err != nil {
-		log.Printf("Failed to create Docker client: %s", err)
-		return nil, fmt.Errorf("Failed to create Docker client: %w", err)
+		log.Errorf("Failed to create Docker client: %s", err)
+		return nil, fmt.Errorf("failed to create Docker client: %w", err)
 	}
 
-	log.Println("Successfully created DockerManager")
+	log.Infoln("Successfully created DockerManager")
 	return &DockerManager{Cli: cli}, nil
+}
+
+func NewTestDockerManager() (*DockerManager, error) {
+	client, err := client.NewClientWithOpts(client.FromEnv)
+	if err != nil {
+		return nil, err
+	}
+	return &DockerManager{Cli: client}, err
 }
 
 // VerifyDockerInstallation verifies if Docker is installed and running by pinging the Docker daemon.
@@ -70,17 +79,17 @@ func (dm *DockerManager) VerifyDockerInstallation(ctx context.Context) error {
 	// Try to ping the Docker daemon to check if it's running
 	_, err := dm.Cli.Ping(ctx)
 	if err != nil {
-		log.Println("Error pinging Docker daemon:", err)
-		return fmt.Errorf("Failed to ping Docker daemon: %w", err)
+		log.Errorf("Error pinging Docker daemon: %s\n", err)
+		return fmt.Errorf("failed to ping Docker daemon: %w", err)
 	}
 
 	// If we got here, Docker is installed and running
-	log.Println("Docker is installed and running!")
+	log.Infoln("Docker is installed and running!")
 	return nil
 }
 
 // PullImage pulls the specified Docker image using the Docker client associated with the DockerManager.
-// It streams the image pull output to a buffer and logs the pretified output.
+// It streams the image pull output to a buffer and logs the prettified output.
 // ctx: The context.Context to use for the image pull operation.
 // imageName: The name of the Docker image to pull.
 // Returns an error if the image pull fails or if there is an error in copying the image pull output.
@@ -88,6 +97,7 @@ func (dm *DockerManager) PullImage(ctx context.Context, imageName string) error 
 	options := types.ImagePullOptions{}
 	reader, err := dm.Cli.ImagePull(ctx, imageName, options)
 	if err != nil {
+		log.Errorf("failed to pull image: %s\n", err)
 		return fmt.Errorf("failed to pull image: %w", err)
 	}
 	defer reader.Close()
@@ -98,58 +108,363 @@ func (dm *DockerManager) PullImage(ctx context.Context, imageName string) error 
 	// Copy the image pull output to the buffer
 	_, err = io.Copy(buf, reader)
 	if err != nil {
+		log.Errorf("failed to copy image pull output: %s", err)
 		return fmt.Errorf("failed to copy image pull output: %w", err)
 	}
 
-	// Print the pretified output from the buffer
-	log.Printf("Image pull output: %s", buf.String())
+	// Print the prettified output from the buffer
+	log.Infof("Image pull output: %s\n", buf.String())
 
 	return nil
 }
 
-// RunContainer runs a Docker container with the specified image.
-// ctx: The context.Context to use for the container operations.
-// image: The name of the Docker image to run.
-// Returns an error if there is an issue with creating or starting the container, waiting for it to finish, or retrieving the container logs.
-func (dm *DockerManager) RunContainer(ctx context.Context, image string) error {
-	config := &container.Config{
-		Image: image,
-		Cmd:   []string{"echo", "hello world"},
-		Tty:   false,
-	}
-
-	resp, err := dm.Cli.ContainerCreate(ctx, config, nil, nil, nil, "")
+// GetFileFromContainer allows you to retrieve a file from a Docker container and save it to the host machine.
+// ctx (context.Context): The context for the operation.
+// filePathOnHostMachine (string): The file path on the host machine where the file will be saved.
+// filePathOnContainer (string): The file path inside the Docker container from which the file will be retrieved.
+// containerID (string): The ID or name of the Docker container from which the file will be retrieved.
+func (dm *DockerManager) GetFileFromContainer(ctx context.Context, filePathOnHostMachine, filePathOnContainer, containerID string) error {
+	log.Infof("Getting file from container '%s' to '%s'", filePathOnContainer, filePathOnHostMachine)
+	rc, _, err := dm.Cli.CopyFromContainer(ctx, containerID, filePathOnContainer)
 	if err != nil {
-		return fmt.Errorf("failed to create container: %w", err)
+		log.Errorf("Error during copying file from container: %s\n", err)
+		return err
+	}
+	defer rc.Close()
+
+	contents, err := io.ReadAll(rc)
+	if err != nil {
+		log.Errorf("Reading error: %s\n", err)
+		return err
 	}
 
-	if err := dm.Cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
-		return fmt.Errorf("failed to start container: %w", err)
+	err = os.WriteFile(filePathOnHostMachine, contents, 0o644)
+	if err != nil {
+		log.Errorf("Writing file error: %s\n", err)
+		return err
 	}
 
-	log.Printf("Container %s started", resp.ID)
+	log.Infof("Successfully got file '%s' to the host!\n", filePathOnHostMachine)
 
-	statusCh, errCh := dm.Cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
-	select {
-	case err := <-errCh:
-		if err != nil {
-			return fmt.Errorf("container wait error: %w", err)
+	return nil
+}
+
+// SendFileToContainer sends a file from the host machine to a specified directory inside a Docker container.
+// ctx: The context for the operation.
+// filePathOnHostMachine: The path of the file on the host machine.
+// directoryPathOnContainer: The path of the directory inside the container where the file will be copied.
+// containerID: The ID or name of the Docker container.
+// Returns an error if any issue occurs during the file sending process.
+func (dm *DockerManager) SendFileToContainer(ctx context.Context, filePathOnHostMachine, directoryPathOnContainer, containerID string) error {
+	log.Infof("Sending file '%s' to container '%s' to '%s'", filePathOnHostMachine, containerID, directoryPathOnContainer)
+	file, err := os.Open(filePathOnHostMachine)
+	if err != nil {
+		log.Errorf("Opening file error: %s\n", err)
+		return err
+	}
+	defer file.Close()
+
+	fileInfo, err := file.Stat()
+	if err != nil {
+		log.Errorf("Can't open file stat: %s\n", err)
+		return err
+	}
+
+	var buf bytes.Buffer
+	tarWriter := tar.NewWriter(&buf)
+
+	err = addFileToTar(fileInfo, file, tarWriter)
+	if err != nil {
+		log.Errorf("Adding file to tar error: %s\n", err)
+		return err
+	}
+
+	err = tarWriter.Close()
+	if err != nil {
+		log.Errorf("Closing tar error: %s\n", err)
+		return err
+	}
+
+	tarContent := buf.Bytes()
+	tarReader := bytes.NewReader(tarContent)
+	copyOptions := types.CopyToContainerOptions{
+		AllowOverwriteDirWithFile: false,
+	}
+
+	err = dm.Cli.CopyToContainer(ctx, containerID, directoryPathOnContainer, tarReader, copyOptions)
+	if err != nil {
+		log.Errorf("Copying tar to container error: %s\n", err)
+		return err
+	}
+
+	log.Infof("Successfully copied '%s' to '%s' in '%s' container\n", filePathOnHostMachine, directoryPathOnContainer, containerID)
+	return nil
+}
+
+// addFileToTar adds a file to a tar archive.
+// fileInfo: The file information.
+// file: The reader for the file data.
+// tarWriter: The tar writer.
+// Returns an error if any issue occurs during the file writing process.
+func addFileToTar(fileInfo os.FileInfo, file io.Reader, tarWriter *tar.Writer) error {
+	log.Infof("Writing file '%s' to tar archive\n", fileInfo.Name())
+
+	header := &tar.Header{
+		Name: fileInfo.Name(),
+		Mode: int64(fileInfo.Mode()),
+		Size: fileInfo.Size(),
+	}
+
+	if err := tarWriter.WriteHeader(header); err != nil {
+		log.Errorf("Writing tar header error: %s\n", err)
+		return err
+	}
+
+	if _, err := io.Copy(tarWriter, file); err != nil {
+		log.Errorf("Copying error: %s\n", err)
+		return err
+	}
+
+	return nil
+}
+
+// InstallDebPackage installs a Debian package (.deb) inside a specified container.
+// ctx: The context for the operation.
+// containerID: The ID or name of the container where the package will be installed.
+// debDestPath: The destination path of the .deb package inside the container.
+// Returns an error if any issue occurs during the package installation process.
+func (dm *DockerManager) InstallDebPackage(ctx context.Context, containerID, debDestPath string) error {
+	log.Infof("Installing '%s'\n", debDestPath)
+
+	installCmd := []string{"dpkg", "-i", debDestPath}
+	execOptions := types.ExecConfig{
+		Cmd:          installCmd,
+		AttachStdout: true,
+		AttachStderr: true,
+	}
+	resp, err := dm.Cli.ContainerExecCreate(ctx, containerID, execOptions)
+	if err != nil {
+		log.Errorf("Creating exec configuration error: %s\n", err)
+		return err
+	}
+
+	attachOptions := types.ExecStartCheck{
+		Detach: false,
+		Tty:    false,
+	}
+	respConn, err := dm.Cli.ContainerExecAttach(ctx, resp.ID, attachOptions)
+	if err != nil {
+		log.Errorf("Attaching error: %s\n", err)
+		return err
+	}
+	defer respConn.Close()
+
+	// Capture the output from the container
+	output, err := io.ReadAll(respConn.Reader)
+	if err != nil {
+		log.Errorf("Reading output error: %s\n", err)
+		return err
+	}
+
+	// Wait for the execution to complete
+	waitResponse, err := dm.Cli.ContainerExecInspect(ctx, resp.ID)
+	if err != nil {
+		log.Errorf("Inspecting process '%s' error: %s\n", resp.ID, err)
+		return err
+	}
+
+	if waitResponse.ExitCode != 0 {
+		err = fmt.Errorf("package installation failed: %s", string(output))
+		log.Errorf("Installation error: %s\n", err)
+		return err
+	}
+
+	log.Infof("Package '%s' installed successfully\n", debDestPath)
+
+	return nil
+}
+
+// ExecCommandInContainerInDetachMode runs a command inside a specified container in detach mode.
+// ctx: The context for the operation.
+// containerID: The ID or name of the container.
+// command: The command to execute inside the container.
+// Returns the output of the command as a byte slice and an error if any issue occurs during the command execution.
+func (dm *DockerManager) ExecCommandInContainerInDetachMode(ctx context.Context, containerID string, command []string) ([]byte, error) {
+	log.Infof("Running command '%s' in detach mode in '%s'\n", strings.Join(command, " "), containerID)
+
+	execCreateResponse, err := dm.Cli.ContainerExecCreate(ctx, containerID, types.ExecConfig{
+		Cmd:          command,
+		AttachStdout: false,
+		AttachStderr: false,
+		Detach:       true,
+	})
+	if err != nil {
+		log.Errorf("Exec configuration error: %s\n", err)
+		return nil, err
+	}
+
+	execAttachConfig := types.ExecStartCheck{}
+	resp, err := dm.Cli.ContainerExecAttach(ctx, execCreateResponse.ID, execAttachConfig)
+	if err != nil {
+		log.Errorf("Attaching to container '%s' error: %s\n", containerID, err)
+		return nil, err
+	}
+	defer resp.Close()
+
+	output, err := io.ReadAll(resp.Reader)
+	if err != nil {
+		log.Errorf("Reading response error: %s\n", err)
+		return output, err
+	}
+
+	log.Infoln("Reading successfully")
+	return output, err
+}
+
+// ExecCommandInContainer executes a command inside a specified container.
+// ctx: The context for the operation.
+// containerID: The ID or name of the container.
+// command: The command to execute inside the container.
+// Returns the output of the command as a byte slice and an error if any issue occurs during the command execution.
+func (dm *DockerManager) ExecCommandInContainer(ctx context.Context, containerID string, command []string) ([]byte, error) {
+	log.Infof("Running command '%s' in '%s'\n", strings.Join(command, " "), containerID)
+
+	execCreateResponse, err := dm.Cli.ContainerExecCreate(ctx, containerID, types.ExecConfig{
+		Cmd:          command,
+		AttachStdout: true,
+		AttachStderr: true,
+	})
+	if err != nil {
+		log.Errorf("Exec configuration error: %s\n", err)
+		return nil, err
+	}
+
+	execAttachConfig := types.ExecStartCheck{}
+	resp, err := dm.Cli.ContainerExecAttach(ctx, execCreateResponse.ID, execAttachConfig)
+	if err != nil {
+		log.Errorf("Attaching to container '%s' error: %s\n", containerID, err)
+		return nil, err
+	}
+	defer resp.Close()
+
+	output, err := io.ReadAll(resp.Reader)
+	if err != nil {
+		log.Errorf("Reading response error: %s\n", err)
+		return output, err
+	}
+
+	log.Infof("Running '%s' successfully\n", strings.Join(command, " "))
+	return output, err
+}
+
+// CheckForContainersName checks if a container with the specified name exists.
+// ctx: The context for the operation.
+// containerNameToCheck: The name of the container to check.
+// Returns true if a container with the specified name is found, false otherwise, and an error if any issue occurs during the process.
+func (dm *DockerManager) CheckForContainersName(ctx context.Context, containerNameToCheck string) (bool, error) {
+	log.Infof("Checking container with name: %s\n", containerNameToCheck)
+
+	containers, err := dm.Cli.ContainerList(ctx, types.ContainerListOptions{All: true})
+	if err != nil {
+		log.Errorf("Cannot get the list of containers: %s\n", err)
+		return false, err
+	}
+
+	for _, c := range containers {
+		for _, name := range c.Names {
+			if name == `/`+containerNameToCheck {
+				log.Infof("Container '%s' detected\n", name)
+				return true, nil
+			}
 		}
-	case <-statusCh:
 	}
 
-	log.Printf("Container %s finished", resp.ID)
+	log.Infof("Container '%s' is not detected\n", containerNameToCheck)
+	return false, nil
+}
 
-	out, err := dm.Cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
+// StopAndDeleteContainer stops and deletes a container with the specified name.
+// ctx: The context for the operation.
+// containerNameToStop: The name of the container to stop and delete.
+// Returns an error if any issue occurs during the process.
+func (dm *DockerManager) StopAndDeleteContainer(ctx context.Context, containerNameToStop string) error {
+	log.Infof("Stopping '%s' container...\n", containerNameToStop)
+
+	err := dm.Cli.ContainerStop(ctx, containerNameToStop, container.StopOptions{})
 	if err != nil {
-		return fmt.Errorf("failed to retrieve container logs: %w", err)
+		log.Errorf("Stopping container error: %s\n", err)
+		return err
 	}
-	defer out.Close()
 
-	log.Printf("Container %s logs:", resp.ID)
-	_, err = stdcopy.StdCopy(os.Stdout, os.Stderr, out)
+	log.Infof("Deleting %s container...\n", containerNameToStop)
+	err = dm.Cli.ContainerRemove(ctx, containerNameToStop, types.ContainerRemoveOptions{})
 	if err != nil {
-		return fmt.Errorf("failed to copy container logs: %w", err)
+		log.Println(err)
+		return err
+	}
+
+	log.Infof("Container %s is deleted\n", containerNameToStop)
+	return nil
+}
+
+// InitAndCreateContainer initializes and creates a new container.
+// ctx: The context for the operation.
+// containerConfig: The container configuration.
+// networkConfig: The network configuration.
+// hostConfig: The host configuration.
+// containerName: The name of the container.
+// Returns an error if any issue occurs during the container initialization and creation process.
+func (dm *DockerManager) InitAndCreateContainer(
+	ctx context.Context,
+	containerConfig *container.Config,
+	networkConfig *network.NetworkingConfig,
+	hostConfig *container.HostConfig,
+	containerName string,
+) error {
+	log.Infof("Starting new container '%s'\n", containerName)
+
+	resp, err := dm.Cli.ContainerCreate(ctx, containerConfig, hostConfig, networkConfig, nil, containerName)
+	if err != nil {
+		log.Errorf("Creating container error: %s\n", err)
+		return err
+	}
+
+	err = dm.Cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{})
+	if err != nil {
+		log.Errorf("Starting container error: %s\n", err)
+		return err
+	}
+
+	log.Infof("'%s' container started successfully! ID: %s\n", containerName, resp.ID)
+	return err
+}
+
+// CheckAndCreateNetwork checks if a network with the specified name exists, and creates it if it doesn't.
+// ctx: The context for the operation.
+// networkName: The name of the network to check and create.
+// Returns an error if any issue occurs during the network checking and creation process.
+func (dm *DockerManager) CheckOrCreateNetwork(ctx context.Context, networkName string) error {
+	log.Infof("Checking network '%s'", networkName)
+
+	networkList, err := dm.Cli.NetworkList(ctx, types.NetworkListOptions{})
+	if err != nil {
+		log.Errorf("Getting list of networks error: %s\n", err)
+		return err
+	}
+
+	for _, network := range networkList {
+		if network.Name == networkName {
+			log.Printf("Network '%s' already exists\n", networkName)
+			return nil
+		}
+	}
+
+	log.Infof("Creating network '%s'\n", networkName)
+
+	_, err = dm.Cli.NetworkCreate(ctx, networkName, types.NetworkCreate{})
+	if err != nil {
+		log.Errorf("Creating Docker network error: %s", err)
+		return err
 	}
 
 	return nil
