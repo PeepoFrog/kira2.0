@@ -471,7 +471,12 @@ func (dm *DockerManager) CheckOrCreateNetwork(ctx context.Context, networkName s
 	return nil
 }
 
-func (dm *DockerManager) CheckIfProccesIsRunningInContainer(ctx context.Context, processName, containerName string) (bool, string, error) {
+// CheckIfProcessIsRunningInContainer checks if a process with the specified name is running inside a container.
+// ctx: The context for the operation.
+// processName: The name of the process to check.
+// containerName: The name of the container.
+// Returns a boolean indicating if the process is running, the output of the process, and an error if any issue occurs.
+func (dm *DockerManager) CheckIfProcessIsRunningInContainer(ctx context.Context, processName, containerName string) (bool, string, error) {
 	log.Infof("Checking if sekaid is running inside a '%s' container", containerName)
 	// Create exec configuration
 	execConfig := types.ExecConfig{
@@ -512,8 +517,23 @@ func (dm *DockerManager) CheckIfProccesIsRunningInContainer(ctx context.Context,
 		log.Infof("Process with name '%s' running inside '%s' container with id: %s ", processName, containerName, string(output))
 	} else {
 		log.Infof("Process with name '%s' is not running inside '%s' container ", processName, containerName)
-
 	}
 	// If the output is not empty, the process is running
 	return strings.TrimSpace(output) != "", string(output), nil
+}
+
+// GetIPofContainer inspects a Docker container and retrieves the IP address associated with it.
+// It takes the container identification (name or ID) and the name of the Docker network as input parameters.
+// Returns the IP address of the container and any encountered error.
+func (dm *DockerManager) GetIPofContainer(ctx context.Context, containerIdentification, dockerNetworkName string) (string, error) {
+	log.Infof("Inspecting container '%s'\n", containerIdentification)
+
+	containerInfo, err := dm.Cli.ContainerInspect(ctx, containerIdentification)
+	if err != nil {
+		log.Errorf("Inspection container error: %s\n", err)
+		return "", err
+	}
+
+	ipAddress := containerInfo.NetworkSettings.Networks[dockerNetworkName].IPAddress
+	return ipAddress, nil
 }

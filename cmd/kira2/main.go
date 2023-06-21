@@ -121,7 +121,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	sekaidManager, err := manager.NewSekaidManager(dockerManager, strconv.Itoa(GRPC_PORT), strconv.Itoa(RPC_PORT), dockerBaseImageName, VOLUME_NAME, DOCKER_NETWORK_NAME)
+	sekaidManager, err := manager.NewSekaidManager(dockerManager, strconv.Itoa(GRPC_PORT), strconv.Itoa(RPC_PORT), dockerBaseImageName, VOLUME_NAME, DOCKER_NETWORK_NAME, SEKAID_CONTAINER_NAME)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -131,7 +131,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	interxManager, err := manager.NewInterxManager(dockerManager, strconv.Itoa(INTERX_PORT), dockerBaseImageName, VOLUME_NAME, DOCKER_NETWORK_NAME)
+	interxManager, err := manager.NewInterxManager(dockerManager, strconv.Itoa(INTERX_PORT), dockerBaseImageName, VOLUME_NAME, DOCKER_NETWORK_NAME, INTERX_CONTAINER_NAME)
 	if err != nil {
 		log.Fatalln(err)
 	}

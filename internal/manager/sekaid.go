@@ -21,7 +21,7 @@ type SekaidManager struct {
 	DockerManager          *docker.DockerManager
 }
 
-func NewSekaidManager(dockerManager *docker.DockerManager, grpcPort, rpcPort, imageName, volumeName, dockerNetworkName string) (*SekaidManager, error) {
+func NewSekaidManager(dockerManager *docker.DockerManager, grpcPort, rpcPort, imageName, volumeName, dockerNetworkName, containerName string) (*SekaidManager, error) {
 	log := logging.Log
 	log.Infof("Creating sekaid manager with ports: %s, %s, image: '%s', volume: '%s' in '%s' network\n", grpcPort, rpcPort, imageName, volumeName, dockerNetworkName)
 
@@ -44,6 +44,7 @@ func NewSekaidManager(dockerManager *docker.DockerManager, grpcPort, rpcPort, im
 		AttachStdin: true,
 		OpenStdin:   true,
 		StdinOnce:   true,
+		Hostname:    fmt.Sprintf("%s.local", containerName),
 		ExposedPorts: nat.PortSet{
 			natGrcpPort: struct{}{},
 			natRpcPort:  struct{}{},
@@ -141,12 +142,11 @@ func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidC
 	log.Infoln("Starting 'sekaid' container")
 	command := fmt.Sprintf(`sekaid start --rpc.laddr "tcp://0.0.0.0:%s" --home=%s`, rcpPort, sekaidHome)
 	_, err := s.DockerManager.ExecCommandInContainerInDetachMode(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
-
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 	}
 	time.Sleep(time.Second * 1)
-	check, _, err := s.DockerManager.CheckIfProccesIsRunningInContainer(ctx, "sekaid", sekaidContainerName)
+	check, _, err := s.DockerManager.CheckIfProcessIsRunningInContainer(ctx, "sekaid", sekaidContainerName)
 	if err != nil {
 		log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
 		return err
