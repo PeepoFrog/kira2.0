@@ -14,6 +14,7 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
+	"github.com/docker/docker/pkg/stdcopy"
 	"github.com/mrlutik/kira2.0/internal/logging"
 )
 
@@ -468,4 +469,51 @@ func (dm *DockerManager) CheckOrCreateNetwork(ctx context.Context, networkName s
 	}
 
 	return nil
+}
+
+func (dm *DockerManager) CheckIfProccesIsRunningInContainer(ctx context.Context, processName, containerName string) (bool, string, error) {
+	log.Infof("Checking if sekaid is running inside a '%s' container", containerName)
+	// Create exec configuration
+	execConfig := types.ExecConfig{
+		Cmd:          []string{"sh", "-c", fmt.Sprintf("pgrep %s", processName)},
+		AttachStdout: true,
+		AttachStderr: true,
+		Detach:       false,
+		Tty:          false,
+	}
+
+	// Create exec
+	resp, err := dm.Cli.ContainerExecCreate(ctx, containerName, execConfig)
+	if err != nil {
+		return false, "", err
+	}
+
+	// Attach to exec
+	attach, err := dm.Cli.ContainerExecAttach(ctx, resp.ID, types.ExecStartCheck{})
+	if err != nil {
+		return false, "", err
+	}
+	defer attach.Close()
+
+	// Create buffers to save stdout and stderr
+	var stdout, stderr bytes.Buffer
+
+	// Use stdcopy to demultiplex attach.Reader into stdout and stderr
+	if _, err = stdcopy.StdCopy(&stdout, &stderr, attach.Reader); err != nil {
+		return false, "", err
+	}
+
+	output := stdout.String()
+	if errOutput := stderr.String(); errOutput != "" {
+		fmt.Println("Stderr:", errOutput)
+	}
+
+	if strings.TrimSpace(output) != "" {
+		log.Infof("Process with name '%s' running inside '%s' container with id: %s ", processName, containerName, string(output))
+	} else {
+		log.Infof("Process with name '%s' is not running inside '%s' container ", processName, containerName)
+
+	}
+	// If the output is not empty, the process is running
+	return strings.TrimSpace(output) != "", string(output), nil
 }
