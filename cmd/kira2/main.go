@@ -15,7 +15,8 @@ import (
 
 const (
 	NETWORK_NAME          = "testnet-1"
-	SEKAID_HOME           = `/root/.sekai`
+	SEKAID_HOME           = `/data/.sekai`
+	INTERXD_HOME          = `/data/.interx`
 	KEYRING_BACKEND       = "test"
 	DOCKER_IMAGE_NAME     = "ghcr.io/kiracore/docker/kira-base"
 	DOCKER_IMAGE_VERSION  = "v0.13.11"
@@ -89,10 +90,10 @@ func main() {
 	gitHubAdapter := adapters.NewGitHubAdapter(token)
 	sekaiDebFileName := "sekai-linux-amd64.deb"
 	interxDebFileName := "interx-linux-amd64.deb"
-
+	// goto F
 	gitHubAdapter.DownloadBinaryFromRepo(ctx, kiraGit, sekaiRepo, sekaiDebFileName, SEKAI_VERSION)
 	gitHubAdapter.DownloadBinaryFromRepo(ctx, kiraGit, interxRepo, interxDebFileName, INTERX_VERSION)
-
+	// F:
 	check, err := dockerManager.CheckForContainersName(ctx, SEKAID_CONTAINER_NAME)
 	if err != nil {
 		log.Fatalln(err)
@@ -157,12 +158,11 @@ func main() {
 		log.Fatalln("Error while installing dep package:", err)
 	}
 
-	err = sekaidManager.SetupSekaidContainer(ctx, MONIKER, SEKAID_CONTAINER_NAME, DOCKER_NETWORK_NAME, SEKAID_HOME, KEYRING_BACKEND, strconv.Itoa(RPC_PORT), MNEMONIC_FOLDER)
+	err = sekaidManager.RunSekaidContainer(ctx, MONIKER, SEKAID_CONTAINER_NAME, DOCKER_NETWORK_NAME, SEKAID_HOME, KEYRING_BACKEND, strconv.Itoa(RPC_PORT), MNEMONIC_FOLDER)
 	if err != nil {
 		log.Fatalf("Error while setup '%s' container: %s\n", SEKAID_CONTAINER_NAME, err)
 	}
-
-	err = interxManager.SetupInterxContainer(ctx, SEKAID_CONTAINER_NAME, INTERX_CONTAINER_NAME, strconv.Itoa(RPC_PORT), strconv.Itoa(GRPC_PORT))
+	err = interxManager.RunInterxContainer(ctx, SEKAID_CONTAINER_NAME, INTERX_CONTAINER_NAME, strconv.Itoa(RPC_PORT), strconv.Itoa(GRPC_PORT), INTERXD_HOME)
 	if err != nil {
 		log.Fatalf("Error while setup '%s' container: %s\n", INTERX_CONTAINER_NAME, err)
 	}

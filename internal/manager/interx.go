@@ -3,6 +3,7 @@ package manager
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
@@ -63,18 +64,18 @@ func NewInterxManager(dockerClient *docker.DockerManager, interxPort, imageName,
 // rpc_port: The RPC port for 'interx' to connect to 'sekaid'.
 // grpc_port: The gRPC port for 'interx' to connect to 'sekaid'.
 // Returns an error if any issue occurs during the setup process.
-func (i *InterxManager) SetupInterxContainer(ctx context.Context, sekaidContainerName, interxContainerName, rpc_port, grpc_port string) error {
+func (i *InterxManager) SetupInterxContainer(ctx context.Context, sekaidContainerName, interxContainerName, rpc_port, grpc_port, interxHome string) error {
 	log := logging.Log
 	log.Infoln("Setting up 'interx' container")
 
-	command := fmt.Sprintf(`interx init --rpc="http://%s:%s" --grpc="dns:///%s:%s" `, sekaidContainerName, rpc_port, sekaidContainerName, grpc_port)
+	command := fmt.Sprintf(`interx init --rpc="http://%s:%s" --grpc="dns:///%s:%s" -home=%s`, sekaidContainerName, rpc_port, sekaidContainerName, grpc_port, interxHome)
 	_, err := i.DockerClient.ExecCommandInContainer(ctx, interxContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 		return err
 	}
-
-	_, err = i.DockerClient.ExecCommandInContainerInDetachMode(ctx, interxContainerName, []string{`bash`, `-c`, `interx start`})
+	command = fmt.Sprintf(`interx start -home=%s`, interxHome)
+	_, err = i.DockerClient.ExecCommandInContainerInDetachMode(ctx, interxContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 		return err
@@ -82,4 +83,29 @@ func (i *InterxManager) SetupInterxContainer(ctx context.Context, sekaidContaine
 
 	log.Infoln("interx started")
 	return err
+}
+
+func (i *InterxManager) RunInterxContainer(ctx context.Context, sekaidContainerName, interxContainerName, rpc_port, grpc_port, interxHome string) error {
+	log := logging.Log
+
+	command := fmt.Sprintf(`interx start -home=%s`, interxHome)
+	_, err := i.DockerClient.ExecCommandInContainerInDetachMode(ctx, interxContainerName, []string{`bash`, `-c`, command})
+	if err != nil {
+		log.Errorf("Command '%s' execution error: %s\n", command, err)
+		return err
+	}
+	time.Sleep(time.Second * 1)
+	check, _, err := i.DockerClient.CheckIfProccesIsRunningInContainer(ctx, "interx", interxContainerName)
+	if err != nil {
+		log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
+		return err
+	}
+	if !check {
+		err = i.SetupInterxContainer(ctx, sekaidContainerName, interxContainerName, rpc_port, grpc_port, interxHome)
+		if err != nil {
+			log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
+			return err
+		}
+	}
+	return nil
 }

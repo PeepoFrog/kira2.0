@@ -3,6 +3,7 @@ package manager
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
@@ -132,5 +133,30 @@ func (s *SekaidManager) SetupSekaidContainer(ctx context.Context, moniker, sekai
 	}
 
 	log.Infoln("'sekaid' container started")
+	return nil
+}
+
+func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir string) error {
+	log := logging.Log
+	log.Infoln("Starting 'sekaid' container")
+	command := fmt.Sprintf(`sekaid start --rpc.laddr "tcp://0.0.0.0:%s" --home=%s`, rcpPort, sekaidHome)
+	_, err := s.DockerManager.ExecCommandInContainerInDetachMode(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+
+	if err != nil {
+		log.Errorf("Command '%s' execution error: %s\n", command, err)
+	}
+	time.Sleep(time.Second * 1)
+	check, _, err := s.DockerManager.CheckIfProccesIsRunningInContainer(ctx, "sekaid", sekaidContainerName)
+	if err != nil {
+		log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
+		return err
+	}
+	if !check {
+		err = s.SetupSekaidContainer(ctx, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir)
+		if err != nil {
+			log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
+			return err
+		}
+	}
 	return nil
 }
