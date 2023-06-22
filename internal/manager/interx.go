@@ -20,7 +20,7 @@ type InterxManager struct {
 	DockerClient           *docker.DockerManager
 }
 
-func NewInterxManager(dockerClient *docker.DockerManager, interxPort, imageName, volumeName, dockerNetworkName string) (*InterxManager, error) {
+func NewInterxManager(dockerClient *docker.DockerManager, interxPort, imageName, volumeName, dockerNetworkName, containerName string) (*InterxManager, error) {
 	log := logging.Log
 	log.Infof("Creating interx manager with port: %s, image: '%s', volume: '%s' in '%s' network\n", interxPort, imageName, volumeName, dockerNetworkName)
 
@@ -37,6 +37,7 @@ func NewInterxManager(dockerClient *docker.DockerManager, interxPort, imageName,
 		AttachStdin:  true,
 		OpenStdin:    true,
 		StdinOnce:    true,
+		Hostname:     fmt.Sprintf("%s.local", containerName),
 		ExposedPorts: nat.PortSet{natInterxPort: struct{}{}},
 	}
 	interxNetworkingConfig := &network.NetworkingConfig{
@@ -95,7 +96,7 @@ func (i *InterxManager) RunInterxContainer(ctx context.Context, sekaidContainerN
 		return err
 	}
 	time.Sleep(time.Second * 1)
-	check, _, err := i.DockerClient.CheckIfProccesIsRunningInContainer(ctx, "interx", interxContainerName)
+	check, _, err := i.DockerClient.CheckIfProcessIsRunningInContainer(ctx, "interx", interxContainerName)
 	if err != nil {
 		log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
 		return err
