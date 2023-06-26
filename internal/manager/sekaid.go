@@ -81,7 +81,7 @@ func NewSekaidManager(dockerManager *docker.DockerManager, grpcPort, rpcPort, im
 // rcpPort: The RPC port for 'sekaid'.
 // mnemonicDir: The directory to store the generated mnemonics.
 // Returns an error if any issue occurs during the setup process.
-func (s *SekaidManager) SetupSekaidContainer(ctx context.Context, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir string) error {
+func (s *SekaidManager) InitSekaidBinInContainer(ctx context.Context, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir string) error {
 	log := logging.Log
 	log.Infoln("Setting up 'sekaid' container")
 
@@ -127,17 +127,17 @@ func (s *SekaidManager) SetupSekaidContainer(ctx context.Context, moniker, sekai
 		return err
 	}
 
-	command = fmt.Sprintf(`sekaid start --rpc.laddr "tcp://0.0.0.0:%s" --home=%s`, rcpPort, sekaidHome)
-	_, err = s.DockerManager.ExecCommandInContainerInDetachMode(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
-	if err != nil {
-		log.Errorf("Command '%s' execution error: %s\n", command, err)
-	}
+	// command = fmt.Sprintf(`sekaid start --rpc.laddr "tcp://0.0.0.0:%s" --home=%s`, rcpPort, sekaidHome)
+	// _, err = s.DockerManager.ExecCommandInContainerInDetachMode(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	// if err != nil {
+	// 	log.Errorf("Command '%s' execution error: %s\n", command, err)
+	// }
 
 	log.Infoln("'sekaid' container started")
 	return nil
 }
 
-func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir string) error {
+func (s *SekaidManager) StartSekaidBinInContainer(ctx context.Context, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir string) error {
 	log := logging.Log
 	log.Infoln("Starting 'sekaid' container")
 	command := fmt.Sprintf(`sekaid start --rpc.laddr "tcp://0.0.0.0:%s" --home=%s`, rcpPort, sekaidHome)
@@ -145,17 +145,50 @@ func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidC
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 	}
+
+	return nil
+}
+
+// Combine SetupSekaidBinInContainer and StartSekaidBinInContainer together
+// First trying to run sekaid bin from previus state if exist
+// Then checking if sekaid bin running inside container
+// If no initing new one
+// Then starting again
+// If no sekaid bin running inside container second time return error
+func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir string) error {
+	log := logging.Log
+	err := s.StartSekaidBinInContainer(ctx, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir)
+	if err != nil {
+		log.Errorf("Cannot start sekaid bin in %s container", sekaidContainerName)
+	}
 	time.Sleep(time.Second * 1)
 	check, _, err := s.DockerManager.CheckIfProcessIsRunningInContainer(ctx, "sekaid", sekaidContainerName)
 	if err != nil {
-		log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
+		log.Infof("Error while setup '%s' container: %s\n", sekaidContainerName, err)
 		return err
 	}
 	if !check {
-		err = s.SetupSekaidContainer(ctx, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir)
+		log.Infof("Error starting sekaid binary first time in '%s' container, initing new instance\n", sekaidContainerName)
+		err = s.InitSekaidBinInContainer(ctx, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir)
 		if err != nil {
 			log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
 			return err
+		}
+		err := s.StartSekaidBinInContainer(ctx, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rcpPort, mnemonicDir)
+		if err != nil {
+			log.Errorf("Cannot start sekaid bin in %s container", sekaidContainerName)
+		}
+
+		time.Sleep(time.Second * 1)
+
+		check, _, err = s.DockerManager.CheckIfProcessIsRunningInContainer(ctx, "sekaid", sekaidContainerName)
+		if err != nil {
+			log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
+			return err
+		}
+		if !check {
+			log.Errorf("Error starting sekaid bin second time in '%s' container\n", sekaidContainerName)
+			return fmt.Errorf("coudnt start sekaid bin second time")
 		}
 	}
 	return nil
