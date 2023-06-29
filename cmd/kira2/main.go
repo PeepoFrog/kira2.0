@@ -158,7 +158,7 @@ func main() {
 		log.Fatalln("Error while installing dep package:", err)
 	}
 
-	err = sekaidManager.RunSekaidContainer(ctx, MONIKER, SEKAID_CONTAINER_NAME, DOCKER_NETWORK_NAME, SEKAID_HOME, KEYRING_BACKEND, strconv.Itoa(RPC_PORT), MNEMONIC_FOLDER)
+	err = sekaidManager.RunSekaidContainer(ctx, MONIKER, SEKAID_CONTAINER_NAME, NETWORK_NAME, SEKAID_HOME, KEYRING_BACKEND, strconv.Itoa(RPC_PORT), MNEMONIC_FOLDER)
 	if err != nil {
 		log.Fatalf("Error while setup '%s' container: %s\n", SEKAID_CONTAINER_NAME, err)
 	}
