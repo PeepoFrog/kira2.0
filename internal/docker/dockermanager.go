@@ -73,6 +73,14 @@ func NewTestDockerManager() (*DockerManager, error) {
 	return &DockerManager{Cli: client}, err
 }
 
+func NewTestDockerManagerWithVersion(version string) (*DockerManager, error) {
+	client, err := client.NewClientWithOpts(client.WithVersion(version))
+	if err != nil {
+		return nil, err
+	}
+	return &DockerManager{Cli: client}, err
+}
+
 // VerifyDockerInstallation verifies if Docker is installed and running by pinging the Docker daemon.
 // ctx: The context.Context to use for the ping operation.
 // Returns an error if the Docker daemon is not reachable or if there is an error in the ping operation.
@@ -522,18 +530,32 @@ func (dm *DockerManager) CheckIfProcessIsRunningInContainer(ctx context.Context,
 	return strings.TrimSpace(output) != "", string(output), nil
 }
 
-// GetIPofContainer inspects a Docker container and retrieves the IP address associated with it.
-// It takes the container identification (name or ID) and the name of the Docker network as input parameters.
-// Returns the IP address of the container and any encountered error.
-func (dm *DockerManager) GetIPofContainer(ctx context.Context, containerIdentification, dockerNetworkName string) (string, error) {
+// GetInspectOfContainer inspects the Docker container with the given containerIdentification and returns
+// the detailed information in the form of types.ContainerJSON struct.
+// The containerIdentification parameter is the identifier of the container to inspect, such as the container ID or name.
+// The function returns the docker package types.ContainerJSON struct containing the detailed information about the container,
+// or an error if the inspection fails.
+func (dm *DockerManager) GetInspectOfContainer(ctx context.Context, containerIdentification string) (types.ContainerJSON, error) {
 	log.Infof("Inspecting container '%s'\n", containerIdentification)
 
 	containerInfo, err := dm.Cli.ContainerInspect(ctx, containerIdentification)
 	if err != nil {
 		log.Errorf("Inspection container error: %s\n", err)
-		return "", err
+		return types.ContainerJSON{}, err
 	}
 
-	ipAddress := containerInfo.NetworkSettings.Networks[dockerNetworkName].IPAddress
-	return ipAddress, nil
+	return containerInfo, nil
+}
+
+// GetNetworksInfo retrieves the list of Docker networks and returns the information
+// about each network as a slice of types.NetworkResource containing the information about each network,
+// or an error if there was a problem retrieving the networks.
+func (dm *DockerManager) GetNetworksInfo(ctx context.Context) ([]types.NetworkResource, error) {
+	resources, err := dm.Cli.NetworkList(ctx, types.NetworkListOptions{})
+	if err != nil {
+		log.Errorf("Getting networks info error: %s\n", err)
+		return nil, err
+	}
+
+	return resources, nil
 }
