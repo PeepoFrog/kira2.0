@@ -2,40 +2,38 @@ package main
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/sirupsen/logrus"
 
 	"github.com/mrlutik/kira2.0/internal/docker"
 	"github.com/mrlutik/kira2.0/internal/logging"
+	"github.com/mrlutik/kira2.0/internal/monitoring"
 )
 
 const (
-	NETWORK_NAME          = "testnet-1"
+	// SEKAID_HOME           = `/root/.sekai`
+	// DOCKER_NETWORK_NAME   = "kiranet"
+	// SEKAID_CONTAINER_NAME = "validator"
+	// RPC_PORT              = 36657
+
 	SEKAID_HOME           = `/data/.sekai`
-	KEYRING_BACKEND       = "test"
-	DOCKER_IMAGE_NAME     = "ghcr.io/kiracore/docker/kira-base"
-	DOCKER_IMAGE_VERSION  = "v0.13.11"
 	DOCKER_NETWORK_NAME   = "kira_network"
-	SEKAI_VERSION         = "latest" // or v0.3.16
-	INTERX_VERSION        = "latest" // or v0.4.33
 	SEKAID_CONTAINER_NAME = "sekaid"
-	INTERX_CONTAINER_NAME = "interx"
-	VOLUME_NAME           = "kira_volume:/data"
-	MNEMONIC_FOLDER       = "~/mnemonics"
 	RPC_PORT              = 26657
-	GRPC_PORT             = 9090
+	KEYRING_BACKEND       = "test"
+	INTERX_CONTAINER_NAME = "interx"
 	INTERX_PORT           = 11000
-	MONIKER               = "VALIDATOR"
 )
 
 var log = logging.Log
 
 func main() {
-	log.SetLevel(logrus.InfoLevel)
+	log.SetLevel(logrus.DebugLevel)
 
-	dockerManager, err := docker.NewTestDockerManager()
+	dockerManager, err := docker.NewTestDockerManagerWithVersion("1.41")
 	if err != nil {
-		log.Fatalln("Can't create instance of docker manager", err)
+		log.Fatalf("Can't create instance of docker manager: %s", err)
 	}
 	defer dockerManager.Cli.Close()
 
@@ -43,18 +41,50 @@ func main() {
 
 	err = dockerManager.VerifyDockerInstallation(ctx)
 	if err != nil {
-		log.Fatalf("Docker is not available: %s\n", err)
+		log.Fatalf("Docker is not available: %s", err)
 	}
 
-	sekaidIP, err := dockerManager.GetIPofContainer(ctx, SEKAID_CONTAINER_NAME, DOCKER_NETWORK_NAME)
-	if err != nil {
-		log.Fatalf("Can't get IP of '%s' container: %s\n", SEKAID_CONTAINER_NAME, err)
-	}
-	log.Infof("Sekaid IP: %s", sekaidIP)
+	monitoring := monitoring.NewMonitoringService(dockerManager)
 
-	interxIP, err := dockerManager.GetIPofContainer(ctx, INTERX_CONTAINER_NAME, DOCKER_NETWORK_NAME)
-	if err != nil {
-		log.Fatalf("Can't get IP of '%s' container: %s\n", INTERX_CONTAINER_NAME, err)
-	}
-	log.Infof("Interx IP: %s", interxIP)
+	networkResource, _ := monitoring.GetDockerNetwork(ctx, DOCKER_NETWORK_NAME)
+	log.Infof("%+v", networkResource)
+
+	cpuLoadPercentage, _ := monitoring.GetCPULoadPercentage()
+	log.Infof("CPU Load: %.2f%%", cpuLoadPercentage)
+
+	ramUsageInfo, _ := monitoring.GetRAMUsage()
+	log.Infof("Ram usage: %+v", ramUsageInfo)
+
+	diskUsageInfo, _ := monitoring.GetDiskUsage()
+	log.Infof("Disk usage: %+v", diskUsageInfo)
+
+	publicIpAddress, _ := monitoring.GetPublicIP()
+	log.Infof("Public IP: %s", publicIpAddress)
+
+	interfacesIPaddresses, _ := monitoring.GetInterfacesIP()
+	log.Infof("Interfaces IP: %+v", interfacesIPaddresses)
+
+	validatorAddress, _ := monitoring.GetValidatorAddress(ctx, SEKAID_CONTAINER_NAME, KEYRING_BACKEND, SEKAID_HOME)
+	log.Infof("Validator address: %s", validatorAddress)
+
+	topOfValidator, _ := monitoring.GetTopForValidator(ctx, strconv.Itoa(INTERX_PORT), validatorAddress)
+	log.Infof("Validator top: %s", topOfValidator)
+
+	valopersInfo, _ := monitoring.GetValopersInfo(ctx, strconv.Itoa(INTERX_PORT))
+	log.Infof("Valopers info: %+v", valopersInfo)
+
+	consensusInfo, _ := monitoring.GetConsensusInfo(ctx, strconv.Itoa(INTERX_PORT))
+	log.Infof("Consensus info: %+v", consensusInfo)
+
+	sekaidContainerInfo, _ := monitoring.GetContainerInfo(ctx, SEKAID_CONTAINER_NAME, DOCKER_NETWORK_NAME)
+	log.Infof("%+v", sekaidContainerInfo)
+
+	interxContainerInfo, _ := monitoring.GetContainerInfo(ctx, INTERX_CONTAINER_NAME, DOCKER_NETWORK_NAME)
+	log.Infof("%+v", interxContainerInfo)
+
+	sekaidNetworkInfo, _ := monitoring.GetSekaidInfo(ctx, strconv.Itoa(RPC_PORT))
+	log.Infof("Sekaid network info: %+v", sekaidNetworkInfo)
+
+	interxNetworkInfo, _ := monitoring.GetInterxInfo(ctx, strconv.Itoa(INTERX_PORT))
+	log.Infof("Interx network info: %+v", interxNetworkInfo)
 }
