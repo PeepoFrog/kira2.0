@@ -24,6 +24,8 @@ type SekaidManager struct {
 	DockerManager          *docker.DockerManager
 }
 
+const timeWaitBetweenBlocks = 10700
+
 // Returns configured SekaidManager.
 // *docker.DockerManager: The poiner for docker.DockerManager instance.
 // grpcPort: The grpc port for sekaid.
@@ -215,9 +217,9 @@ func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidC
 			log.Errorf("Error starting sekaid bin second time in '%s' container\n", sekaidContainerName)
 			return fmt.Errorf("coudnt start sekaid bin second time")
 		}
-		err = s.PostGenesisProposals(ctx, sekaidContainerName, sekaidHome)
+		err = s.PostGenesisProposals(ctx, sekaidContainerName, sekaidHome, sekaidNetworkName)
 		if err != nil {
-			log.Errorf("Error while propagating transaction")
+			log.Errorf("Error while propagating transaction: %s \n", err)
 			return err
 		}
 	}
@@ -228,7 +230,7 @@ func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidC
 // Adding required permitions for validator.
 // First getting validator address with GetAddressByName.
 // Then in loop calling GivePermisionsToAddress func with dalay between calls 10 sec because tx can be propagated once per 10 sec
-func (s *SekaidManager) PostGenesisProposals(ctx context.Context, sekaidContainerName, sekaidHome string) error {
+func (s *SekaidManager) PostGenesisProposals(ctx context.Context, sekaidContainerName, sekaidHome, networkName string) error {
 	log := logging.Log
 	address, err := s.GetAddressByName(ctx, "validator", sekaidContainerName, sekaidHome)
 	if err != nil {
@@ -246,36 +248,36 @@ func (s *SekaidManager) PostGenesisProposals(ctx context.Context, sekaidContaine
 	}
 	log.Printf("Permissions to add:%v to: %s", permissions, address)
 	//waiting 10 sec to first block to propagate
-	time.Sleep(time.Millisecond * 10700)
+	time.Sleep(time.Millisecond * timeWaitBetweenBlocks)
 	for _, perm := range permissions {
 		log.Printf("\n\n\nAdding permision %v, aprx wait 20sec\n", perm)
-		err = s.GivePermisionsToAddress(ctx, perm, address, sekaidContainerName, sekaidHome)
+		err = s.GivePermisionsToAddress(ctx, perm, address, sekaidContainerName, sekaidHome, networkName)
 		if err != nil {
-			log.Printf("%s\n", err)
+			log.Errorf("%s\n", err)
 		}
-		time.Sleep(time.Millisecond * 10700)
+		time.Sleep(time.Millisecond * timeWaitBetweenBlocks)
 	}
 	return nil
 }
 
 // Getting TX by parsing json output of `sekaid query tx <TXhash>`
-func (s *SekaidManager) GetTxQuery(ctx context.Context, transactionHash, sekaidContainerName, sekaidHome string) (types.Data, error) {
+func (s *SekaidManager) GetTxQuery(ctx context.Context, transactionHash, sekaidContainerName, sekaidHome string) (types.TxData, error) {
 	log := logging.Log
+	var data types.TxData
 
 	command := fmt.Sprintf(`sekaid query tx %s  --home=%s -output=json`, transactionHash, sekaidHome)
 	out, err := s.DockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
-		log.Errorf("error when checking tx:  %s  Command: %s\n", transactionHash, command)
+		log.Errorf("error when checking tx:  %s.  Command: %s. Error:%s\n", transactionHash, command, err)
+		return data, err
 	}
-	var data types.Data
-	log.Printf("\n\nout:\n %s\nCheckTransactionStatus: \n %v \n", string(out), data)
-
 	err = json.Unmarshal(out, &data)
 
 	if err != nil {
 		log.Errorf("error when unmarshaling tx:  %s  error: %s\n", transactionHash, err)
 		return data, err
 	}
+	log.Printf("\n\nout:\n %s\nCheckTransactionStatus: \n %v \n", string(out), data)
 	return data, nil
 }
 
@@ -286,9 +288,9 @@ func (s *SekaidManager) GetTxQuery(ctx context.Context, transactionHash, sekaidC
 //
 // Then unmarshaling json output and checking sekaid hex of tx
 // Then waitiong 10 sec for tx to propagate in blockchain and checking status code of Tx with GetTxQuery
-func (s *SekaidManager) GivePermisionsToAddress(ctx context.Context, permisionToAdd int, address, sekaidContainerName, sekaidHome string) error {
+func (s *SekaidManager) GivePermisionsToAddress(ctx context.Context, permisionToAdd int, address, sekaidContainerName, sekaidHome, networkName string) error {
 	log := logging.Log
-	command := fmt.Sprintf(`sekaid tx customgov permission whitelist --from %s --keyring-backend=test --permission=%v --addr=%s --chain-id=testnet-1 --home=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, address, permisionToAdd, address, sekaidHome)
+	command := fmt.Sprintf(`sekaid tx customgov permission whitelist --from %s --keyring-backend=test --permission=%v --addr=%s --chain-id=%s --home=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, address, permisionToAdd, address, networkName, sekaidHome)
 	out, err := s.DockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("error when giving  %v permission. Command: %s", permisionToAdd, command)
@@ -296,14 +298,14 @@ func (s *SekaidManager) GivePermisionsToAddress(ctx context.Context, permisionTo
 	log.Printf("permission voted to address %s, perm: %v\n", address, permisionToAdd)
 	log.Printf("OUT OF PERMITION\n%s\n", string(out))
 
-	var data types.Data
+	var data types.TxData
 	err = json.Unmarshal(out, &data)
 	if err != nil {
 		log.Errorf("Error unmarshaling:%s", err)
 		return err
 	}
 	log.Printf("GivePermissionToAddress: \n %v \n", data)
-	time.Sleep(time.Millisecond * 10700)
+	time.Sleep(time.Millisecond * timeWaitBetweenBlocks)
 
 	txData, err := s.GetTxQuery(ctx, data.Txhash, sekaidContainerName, sekaidHome)
 	if err != nil {
@@ -325,14 +327,16 @@ func (s *SekaidManager) GetAddressByName(ctx context.Context, addressName, sekai
 	command := fmt.Sprintf("sekaid keys show validator --keyring-backend=test --home=%s", sekaidHome)
 	out, err := s.DockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`sh`, `-c`, command})
 	if err != nil {
-		log.Errorf("Can't get addres by %s name. Command: %s", addressName, command)
+		log.Errorf("Can't get addres by %s name. Command: %s. Error: %s", addressName, command, err)
+		return "", err
 	}
-	var key []types.Key
+	var key []types.SekaidKey
 	log.Println(string(out))
 	err = yaml.Unmarshal([]byte(out), &key)
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		log.Fatalf("error, cannot unmarshal yaml: %v", err)
+		return "", err
 	}
-	log.Println(key[0].Address)
+	log.Printf("val address: %s\n", key[0].Address)
 	return key[0].Address, nil
 }

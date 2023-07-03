@@ -1,213 +1,209 @@
 package types
 
 const (
-	// # no-op permission
-	PermZero = 0
+	//  no-op permission
+	PermZero = iota
 
-	//# the permission that allows to Set Permissions to other actors
-	PermSetPermissions = 1
+	// the permission that allows to Set Permissions to other actors
+	PermSetPermissions
 
-	//# permission that allows to Claim a validator Seat
-	PermClaimValidator = 2
+	// permission that allows to Claim a validator Seat
+	PermClaimValidator
 
-	//# permission that allows to Claim a Councilor Seat
-	PermClaimCouncilor = 3
+	// permission that allows to Claim a Councilor Seat
+	PermClaimCouncilor
 
 	//# permission to create proposals to whitelist account permission
-	PermWhitelistAccountPermissionProposal = 4
+	PermWhitelistAccountPermissionProposal
 
-	// # permission to vote on a proposal to whitelist account permission
-	PermVoteWhitelistAccountPermissionProposal = 5
+	//  permission to vote on a proposal to whitelist account permission
+	PermVoteWhitelistAccountPermissionProposal
 
-	// # permission to upsert token alias
-	PermUpsertTokenAlias = 6
+	//  permission to upsert token alias
+	PermUpsertTokenAlias
 
-	// # permission to change transaction fees - execution fee and fee range
-	PermChangeTxFee = 7
+	//  permission to change transaction fees - execution fee and fee range
+	PermChangeTxFee
 
-	// # permission to upsert token rates
-	PermUpsertTokenRate = 8
+	//  permission to upsert token rates
+	PermUpsertTokenRate
 
-	// # permission to add, modify and assign roles
-	PermUpsertRole = 9
+	//  permission to add, modify and assign roles
+	PermUpsertRole
 
-	// # permission to create a proposal to change the Data Registry
-	PermCreateUpsertDataRegistryProposal = 10
+	//  permission to create a proposal to change the Data Registry
+	PermCreateUpsertDataRegistryProposal
 
-	// # permission to vote on a proposal to change the Data Registry
-	PermVoteUpsertDataRegistryProposal = 11
+	//  permission to vote on a proposal to change the Data Registry
+	PermVoteUpsertDataRegistryProposal
 
-	// # permission to create proposals for setting network property
-	PermCreateSetNetworkPropertyProposal = 12
+	//  permission to create proposals for setting network property
+	PermCreateSetNetworkPropertyProposal
 
-	// # permission to vote a proposal to set network property
-	PermVoteSetNetworkPropertyProposal = 13
+	//  permission to vote a proposal to set network property
+	PermVoteSetNetworkPropertyProposal
 
-	// # permission to create proposals to upsert token alias
-	PermCreateUpsertTokenAliasProposal = 14
+	//  permission to create proposals to upsert token alias
+	PermCreateUpsertTokenAliasProposal
 
-	// # permission to vote proposals to upsert token alias
-	PermVoteUpsertTokenAliasProposal = 15
+	//  permission to vote proposals to upsert token alias
+	PermVoteUpsertTokenAliasProposal
 
-	// # permission to create proposals for setting poor network messages
-	PermCreateSetPoorNetworkMessagesProposal = 16
+	//  permission to create proposals for setting poor network messages
+	PermCreateSetPoorNetworkMessagesProposal
 
-	// # permission to vote proposals to set poor network messages
-	PermVoteSetPoorNetworkMessagesProposal = 17
+	//  permission to vote proposals to set poor network messages
+	PermVoteSetPoorNetworkMessagesProposal
 
-	// # permission to create proposals to upsert token rate
-	PermCreateUpsertTokenRateProposal = 18
+	//  permission to create proposals to upsert token rate
+	PermCreateUpsertTokenRateProposal
 
-	// # permission to vote propsals to upsert token rate
-	PermVoteUpsertTokenRateProposal = 19
+	//  permission to vote propsals to upsert token rate
+	PermVoteUpsertTokenRateProposal
 
-	// # permission to create a proposal to unjail a validator
-	PermCreateUnjailValidatorProposal = 20
+	//  permission to create a proposal to unjail a validator
+	PermCreateUnjailValidatorProposal
 
-	// # permission to vote a proposal to unjail a validator
-	PermVoteUnjailValidatorProposal = 21
+	//  permission to vote a proposal to unjail a validator
+	PermVoteUnjailValidatorProposal
 
-	// # permission to create a proposal to create a role
-	PermCreateRoleProposal = 22
+	//  permission to create a proposal to create a role
+	PermCreateRoleProposal
 
-	// # permission to vote a proposal to create a role
-	PermVoteCreateRoleProposal = 23
+	//  permission to vote a proposal to create a role
+	PermVoteCreateRoleProposal
 
-	// # permission to create a proposal to change blacklist/whitelisted tokens
-	PermCreateTokensWhiteBlackChangeProposal = 24
+	//  permission to create a proposal to change blacklist/whitelisted tokens
+	PermCreateTokensWhiteBlackChangeProposal
 
-	// # permission to vote a proposal to change blacklist/whitelisted tokens
-	PermVoteTokensWhiteBlackChangeProposal = 25
+	//  permission to vote a proposal to change blacklist/whitelisted tokens
+	PermVoteTokensWhiteBlackChangeProposal
 
-	// # permission needed to create a proposal to reset whole validator rank
-	PermCreateResetWholeValidatorRankProposal = 26
+	//  permission needed to create a proposal to reset whole validator rank
+	PermCreateResetWholeValidatorRankProposal
 
-	// # permission needed to vote on reset whole validator rank proposal
-	PermVoteResetWholeValidatorRankProposal = 27
+	//  permission needed to vote on reset whole validator rank proposal
+	PermVoteResetWholeValidatorRankProposal
 
-	// # permission needed to create a proposal for software upgrade
-	PermCreateSoftwareUpgradeProposal = 28
+	//  permission needed to create a proposal for software upgrade
+	PermCreateSoftwareUpgradeProposal
 
-	// # permission needed to vote on software upgrade proposal
-	PermVoteSoftwareUpgradeProposal = 29
+	//  permission needed to vote on software upgrade proposal
+	PermVoteSoftwareUpgradeProposal
 
-	// # permission that allows to Set ClaimValidatorPermission to other actors
-	PermSetClaimValidatorPermission = 30
+	//  permission that allows to Set ClaimValidatorPermission to other actors
+	PermSetClaimValidatorPermission
 
-	// # permission needed to create a proposal to set proposal duration
-	PermCreateSetProposalDurationProposal = 31
+	//  permission needed to create a proposal to set proposal duration
+	PermCreateSetProposalDurationProposal
 
-	// # permission needed to vote a proposal to set proposal duration
-	PermVoteSetProposalDurationProposal = 32
+	//  permission needed to vote a proposal to set proposal duration
+	PermVoteSetProposalDurationProposal
 
-	// # permission needed to create proposals for blacklisting an account permission.
-	PermBlacklistAccountPermissionProposal = 33
+	//  permission needed to create proposals for blacklisting an account permission.
+	PermBlacklistAccountPermissionProposal
 
-	// # permission that an actor must have in order to vote a Proposal to blacklist account permission.
-	PermVoteBlacklistAccountPermissionProposal = 34
+	//  permission that an actor must have in order to vote a Proposal to blacklist account permission.
+	PermVoteBlacklistAccountPermissionProposal
 
-	// # permission needed to create proposals for removing whitelisted permission from an account.
-	PermRemoveWhitelistedAccountPermissionProposal = 35
+	//  permission needed to create proposals for removing whitelisted permission from an account.
+	PermRemoveWhitelistedAccountPermissionProposal
 
-	// # permission that an actor must have in order to vote a proposal to remove a whitelisted account permission
-	PermVoteRemoveWhitelistedAccountPermissionProposal = 36
+	//  permission that an actor must have in order to vote a proposal to remove a whitelisted account permission
+	PermVoteRemoveWhitelistedAccountPermissionProposal
 
-	// # permission needed to create proposals for removing blacklisted permission from an account.
-	PermRemoveBlacklistedAccountPermissionProposal = 37
+	//  permission needed to create proposals for removing blacklisted permission from an account.
+	PermRemoveBlacklistedAccountPermissionProposal
 
-	// # permission that an actor must have in order to vote a proposal to remove a blacklisted account permission.
-	PermVoteRemoveBlacklistedAccountPermissionProposal = 38
+	//  permission that an actor must have in order to vote a proposal to remove a blacklisted account permission.
+	PermVoteRemoveBlacklistedAccountPermissionProposal
 
-	// # permission needed to create proposals for whitelisting an role permission.
-	PermWhitelistRolePermissionProposal = 39
+	//  permission needed to create proposals for whitelisting an role permission.
+	PermWhitelistRolePermissionProposal
 
-	// #permission that an actor must have in order to vote a proposal to whitelist role permission.
-	PermVoteWhitelistRolePermissionProposal = 40
+	// permission that an actor must have in order to vote a proposal to whitelist role permission.
+	PermVoteWhitelistRolePermissionProposal
 
-	// #permission needed to create proposals for blacklisting an role permission.
-	PermBlacklistRolePermissionProposal = 41
+	// permission needed to create proposals for blacklisting an role permission.
+	PermBlacklistRolePermissionProposal
 
-	// # permission that an actor must have in order to vote a proposal to blacklist role permission.
-	PermVoteBlacklistRolePermissionProposal = 42
+	//  permission that an actor must have in order to vote a proposal to blacklist role permission.
+	PermVoteBlacklistRolePermissionProposal
 
-	// # permission needed to create proposals for removing whitelisted permission from a role.
-	PermRemoveWhitelistedRolePermissionProposal = 43
+	//  permission needed to create proposals for removing whitelisted permission from a role.
+	PermRemoveWhitelistedRolePermissionProposal
 
-	// # permission that an actor must have in order to vote a proposal to remove a whitelisted role permission.
-	PermVoteRemoveWhitelistedRolePermissionProposal = 44
+	//  permission that an actor must have in order to vote a proposal to remove a whitelisted role permission.
+	PermVoteRemoveWhitelistedRolePermissionProposal
 
-	// # permission needed to create proposals for removing blacklisted permission from a role.
-	PermRemoveBlacklistedRolePermissionProposal = 45
+	//  permission needed to create proposals for removing blacklisted permission from a role.
+	PermRemoveBlacklistedRolePermissionProposal
 
-	// # permission that an actor must have in order to vote a proposal to remove a blacklisted role permission.
-	PermVoteRemoveBlacklistedRolePermissionProposal = 46
+	//  permission that an actor must have in order to vote a proposal to remove a blacklisted role permission.
+	PermVoteRemoveBlacklistedRolePermissionProposal
 
-	// # permission needed to create proposals to assign role to an account
-	PermAssignRoleToAccountProposal = 47
+	//  permission needed to create proposals to assign role to an account
+	PermAssignRoleToAccountProposal
 
-	// # permission that an actor must have in order to vote a proposal to assign role to an account
-	PermVoteAssignRoleToAccountProposal = 48
+	//  permission that an actor must have in order to vote a proposal to assign role to an account
+	PermVoteAssignRoleToAccountProposal
 
-	// # permission needed to create proposals to unassign role from an account
-	PermUnassignRoleFromAccountProposal = 49
+	//  permission needed to create proposals to unassign role from an account
+	PermUnassignRoleFromAccountProposal
 
-	// # permission that an actor must have in order to vote a proposal to unassign role from an account
-	PermVoteUnassignRoleFromAccountProposal = 50
+	//  permission that an actor must have in order to vote a proposal to unassign role from an account
+	PermVoteUnassignRoleFromAccountProposal
 
-	// # permission needed to create a proposal to remove a role.
-	PermRemoveRoleProposal = 51
+	//  permission needed to create a proposal to remove a role.
+	PermRemoveRoleProposal
 
-	// # permission needed to vote a proposal to remove a role.
-	PermVoteRemoveRoleProposal = 52
+	//  permission needed to vote a proposal to remove a role.
+	PermVoteRemoveRoleProposal
 
-	// # permission needed to create proposals to upsert ubi
-	PermCreateUpsertUBIProposal = 53
+	//  permission needed to create proposals to upsert ubi
+	PermCreateUpsertUBIProposal
 
-	// # permission that an actor must have in order to vote a proposal to upsert ubi
-	PermVoteUpsertUBIProposal = 54
+	//  permission that an actor must have in order to vote a proposal to upsert ubi
+	PermVoteUpsertUBIProposal
 
-	// # permission needed to create a proposal to remove ubi.
-	PermCreateRemoveUBIProposal = 55
+	//  permission needed to create a proposal to remove ubi.
+	PermCreateRemoveUBIProposal
 
-	// # permission needed to vote a proposal to remove ubi.
-	PermVoteRemoveUBIProposal = 56
+	//  permission needed to vote a proposal to remove ubi.
+	PermVoteRemoveUBIProposal
 
-	// # permission needed to create a proposal to slash validator.
-	PermCreateSlashValidatorProposal = 57
+	//  permission needed to create a proposal to slash validator.
+	PermCreateSlashValidatorProposal
 
-	// # permission needed to vote a proposal to slash validator.
-	PermVoteSlashValidatorProposal = 58
+	//  permission needed to vote a proposal to slash validator.
+	PermVoteSlashValidatorProposal
 
-	// # permission needed to create a proposal related to basket.
-	PermCreateBasketProposal = 59
+	//  permission needed to create a proposal related to basket.
+	PermCreateBasketProposal
 
-	// # permission needed to vote a proposal related to basket.
-	PermVoteBasketProposal = 60
+	//  permission needed to vote a proposal related to basket.
+	PermVoteBasketProposal
 
-	// # permission needed to handle emergency issues on basket.
-	PermHandleBasketEmergency = 61
+	//  permission needed to handle emergency issues on basket.
+	PermHandleBasketEmergency
 
-	// # permission needed to create a proposal to reset whole councilor rank
-	PermCreateResetWholeCouncilorRankProposal = 62
+	//  permission needed to create a proposal to reset whole councilor rank
+	PermCreateResetWholeCouncilorRankProposal
 
-	// # permission needed to vote on reset whole councilor rank proposal
-	PermVoteResetWholeCouncilorRankProposal = 63
+	//  permission needed to vote on reset whole councilor rank proposal
+	PermVoteResetWholeCouncilorRankProposal
 
-	// # permission needed to create a proposal to jail councilors
-	PermCreateJailCouncilorProposal = 64
+	//  permission needed to create a proposal to jail councilors
+	PermCreateJailCouncilorProposal
 
-	// # permission needed to vote on jail councilors proposal
-	PermVoteJailCouncilorProposal = 65
+	//  permission needed to vote on jail councilors proposal
+	PermVoteJailCouncilorProposal
 )
 
 type Test struct {
 	Text string
 }
 
-type Key struct {
-	Name     string `yaml:"name"`
-	Type     string `yaml:"type"`
-	Address  string `yaml:"address"`
-	PubKey   string `yaml:"pubkey"`
-	Mnemonic string `yaml:"mnemonic"`
+type SekaidKey struct {
+	Address string `yaml:"address"`
 }

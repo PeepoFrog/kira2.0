@@ -362,7 +362,7 @@ func (dm *DockerManager) ExecCommandInContainer(ctx context.Context, containerID
 	var outBuf, errBuf bytes.Buffer
 	_, err = stdcopy.StdCopy(&outBuf, &errBuf, resp.Reader)
 	if err != nil {
-		log.Printf("Reading response error: %s\n", err)
+		log.Errorf("Reading response error: %s\n", err)
 		return nil, err
 	}
 
