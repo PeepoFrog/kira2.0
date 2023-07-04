@@ -325,7 +325,7 @@ func (s *SekaidManager) GivePermisionsToAddress(ctx context.Context, permisionTo
 func (s *SekaidManager) GetAddressByName(ctx context.Context, addressName, sekaidContainerName, sekaidHome string) (string, error) {
 	log := logging.Log
 	command := fmt.Sprintf("sekaid keys show validator --keyring-backend=test --home=%s", sekaidHome)
-	out, err := s.DockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`sh`, `-c`, command})
+	out, err := s.DockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Can't get addres by %s name. Command: %s. Error: %s", addressName, command, err)
 		return "", err
@@ -339,4 +339,49 @@ func (s *SekaidManager) GetAddressByName(ctx context.Context, addressName, sekai
 	}
 	log.Printf("val address: %s\n", key[0].Address)
 	return key[0].Address, nil
+}
+
+func (s *SekaidManager) UpdatingIdentityRegistrar(ctx context.Context, account, sekaidContainerName, sekaidHome, keyringBackend, networkName string) error {
+	s.UpsertIdentityRecord(ctx, "validator", "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	s.UpsertIdentityRecord(ctx, account, "", "", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	return nil
+}
+
+// upsertIdentityRecord  from sekai-utils.sh
+func (s *SekaidManager) UpsertIdentityRecord(ctx context.Context, account, key, value, sekaidContainerName, sekaidHome, keyringBackend, networkName string) error {
+	log := logging.Log
+	address, err := s.GetAddressByName(ctx, account, sekaidContainerName, sekaidHome)
+	if err != nil {
+		log.Errorf("")
+		return err
+	}
+	if value != "" {
+		command := fmt.Sprintf(`sekaid tx customgov register-identity-records --infos-json="{\"%s\":\"%s\"}" --from=%s--keyring-backend=%s --home=%s--chain-id=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, key, value, address, keyringBackend, sekaidHome, networkName)
+		out, err := s.DockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+		if err != nil {
+			log.Errorf("")
+			return err
+		}
+		log.Printf("%s\n", string(out))
+	} else {
+		command := fmt.Sprintf(`sekaid tx customgov delete-identity-records --keys="%s" --from=%s --keyring-backend=%s --home=%s --chain-id=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, key, address, keyringBackend, sekaidHome, networkName)
+		out, err := s.DockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+		if err != nil {
+			log.Errorf("")
+			return err
+		}
+		log.Printf("%s\n", string(out))
+	}
+
+	return nil
 }
