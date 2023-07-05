@@ -28,7 +28,7 @@ const timeWaitBetweenBlocks = time.Millisecond * 10700
 const validatorAccountName = "validator"
 
 // Returns configured SekaidManager.
-// *docker.DockerManager: The poiner for docker.DockerManager instance.
+// *docker.DockerManager: The pointer for docker.DockerManager instance.
 // grpcPort: The grpc port for sekaid.
 // rpcPort: The rpc port for sekaid.
 // imageName: The name of a image that sekaid container will be using.
@@ -168,12 +168,12 @@ func (s *SekaidManager) StartSekaidBinInContainer(ctx context.Context, moniker, 
 }
 
 // Combine SetupSekaidBinInContainer and StartSekaidBinInContainer together.
-// First trying to run sekaid bin from previus state if exist.
+// First trying to run sekaid bin from previous state if exist.
 // Then checking if sekaid bin running inside container.
 // If no initing new one.
 // Then starting again.
 // If no sekaid bin running inside container second time - return error.
-// Then starting propagating transactions for permisions as in sekai-env.sh
+// Then starting propagating transactions for permissions as in sekai-env.sh
 // ctx: The context for the operation.
 // moniker: The moniker for the 'sekaid' container.
 // sekaidContainerName: The name of the 'sekaid' container.
@@ -216,7 +216,7 @@ func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidC
 		}
 		if !check {
 			log.Errorf("Error starting sekaid bin second time in '%s' container\n", sekaidContainerName)
-			return fmt.Errorf("coudnt start sekaid bin second time")
+			return fmt.Errorf("couldn't start sekaid bin second time")
 		}
 		err = s.PostGenesisProposals(ctx, sekaidContainerName, sekaidHome, sekaidNetworkName)
 		if err != nil {
@@ -227,15 +227,15 @@ func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidC
 	return nil
 }
 
-// Post genesis proposals after launching new newtork from KM1 await-validator-init.sh file.
+// Post genesis proposals after launching new network from KM1 await-validator-init.sh file.
 // Adding required permitions for validator.
 // First getting validator address with GetAddressByName.
-// Then in loop calling GivePermisionsToAddress func with dalay between calls 10 sec because tx can be propagated once per 10 sec
+// Then in loop calling GivePermissionsToAddress func with delay between calls 10 sec because tx can be propagated once per 10 sec
 func (s *SekaidManager) PostGenesisProposals(ctx context.Context, sekaidContainerName, sekaidHome, networkName string) error {
 	log := logging.Log
 	address, err := s.GetAddressByName(ctx, validatorAccountName, sekaidContainerName, sekaidHome)
 	if err != nil {
-		log.Fatalf("Error while geting address in '%s' container: %s\n", sekaidContainerName, err)
+		log.Fatalf("Error while getting address in '%s' container: %s\n", sekaidContainerName, err)
 	}
 	permissions := []int{
 		types.PermWhitelistAccountPermissionProposal,
@@ -251,8 +251,8 @@ func (s *SekaidManager) PostGenesisProposals(ctx context.Context, sekaidContaine
 	//waiting 10 sec to first block to be propagated
 	time.Sleep(timeWaitBetweenBlocks)
 	for _, perm := range permissions {
-		log.Printf("\n\n\nAdding permision %v, aprx duration: %v\n", perm, timeWaitBetweenBlocks*2)
-		err = s.GivePermisionsToAddress(ctx, perm, address, sekaidContainerName, sekaidHome, networkName)
+		log.Printf("\n\n\nAdding permission %v, approximately duration: %v\n", perm, timeWaitBetweenBlocks*2)
+		err = s.GivePermissionsToAddress(ctx, perm, address, sekaidContainerName, sekaidHome, networkName)
 		if err != nil {
 			log.Errorf("%s\n", err)
 		}
@@ -291,21 +291,21 @@ func (s *SekaidManager) GetTxQuery(ctx context.Context, transactionHash, sekaidC
 	return data, nil
 }
 
-// Giving permission for choosen address.
-// Permisions are ints thats have 0-65 range
+// Giving permission for chosen address.
+// Permissions are ints thats have 0-65 range
 //
 // Using command: sekaid tx customgov permission whitelist --from "$KM_ACC" --keyring-backend=test --permission="$PERM" --addr="$ADDR" --chain-id=$NETWORK_NAME --home=$SEKAID_HOME --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json | txAwait $TIMEOUT
 //
 // Then unmarshaling json output and checking sekaid hex of tx
-// Then waitiong 10 sec for tx to propagate in blockchain and checking status code of Tx with GetTxQuery
-func (s *SekaidManager) GivePermisionsToAddress(ctx context.Context, permisionToAdd int, address, sekaidContainerName, sekaidHome, networkName string) error {
+// Then waiting timeWaitBetweenBlocks for tx to propagate in blockchain and checking status code of Tx with GetTxQuery
+func (s *SekaidManager) GivePermissionsToAddress(ctx context.Context, permissionToAdd int, address, sekaidContainerName, sekaidHome, networkName string) error {
 	log := logging.Log
-	command := fmt.Sprintf(`sekaid tx customgov permission whitelist --from %s --keyring-backend=test --permission=%v --addr=%s --chain-id=%s --home=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, address, permisionToAdd, address, networkName, sekaidHome)
+	command := fmt.Sprintf(`sekaid tx customgov permission whitelist --from %s --keyring-backend=test --permission=%v --addr=%s --chain-id=%s --home=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, address, permissionToAdd, address, networkName, sekaidHome)
 	out, err := s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
-		log.Errorf("error when giving  %v permission. Command: %s", permisionToAdd, command)
+		log.Errorf("error when giving  %v permission. Command: %s", permissionToAdd, command)
 	}
-	log.Printf("permission voted to address %s, perm: %v\n", address, permisionToAdd)
+	log.Printf("permission voted to address %s, perm: %v\n", address, permissionToAdd)
 
 	var data types.TxData
 	err = json.Unmarshal(out, &data)
@@ -323,18 +323,20 @@ func (s *SekaidManager) GivePermisionsToAddress(ctx context.Context, permisionTo
 	}
 	if txData.Code != 0 {
 		log.Errorf("ERROR IN PROPAGATING TRANSACTION \nTRANSACTION STATUS:%v\n", txData.Code)
-		return fmt.Errorf("error in adding %v permission to %s address.\nTxHash:%s\nCode: %v", permisionToAdd, address, data.Txhash, txData.Code)
+		return fmt.Errorf("error in adding %v permission to %s address.\nTxHash:%s\nCode: %v", permissionToAdd, address, data.Txhash, txData.Code)
 	}
 	return nil
 }
 
-// # Checking if accaount has specific a permission
+// Checking if account has a specific permission
+//
+// https://github.com/KiraCore/sekai/blob/master/scripts/sekai-env.sh
 //
 // sekaid query customgov permissions kira12tptcuw0cp9fccng80vkmqen96npyyrvh2nw5q --output=json --home=/data/.sekai
 //
 //	permissionToCheck  is a int with 0-65 range
 //
-// address has to be kira adress(not name) : kira12tptcuw0cp9fccng80vkmqen96npyyrvh2nw5q for example, you can get it from local keyring by func GetAddressByName()
+// address has to be kira address(not name) : kira12tptcuw0cp9fccng80vkmqen96npyyrvh2nw5q for example, you can get it from local keyring by func GetAddressByName()
 func (s *SekaidManager) CheckAccountPermission(ctx context.Context, permissionToCheck int, address, sekaidContainerName, sekaidHome string) (bool, error) {
 	log := logging.Log
 	log.Printf("Looking for %v permission \n", permissionToCheck)
@@ -344,7 +346,7 @@ func (s *SekaidManager) CheckAccountPermission(ctx context.Context, permissionTo
 		log.Errorf("")
 		return false, err
 	}
-	var perms types.AddressPermisions
+	var perms types.AddressPermissions
 	err = json.Unmarshal(out, &perms)
 	if err != nil {
 		log.Errorf("Error unmarshaling:%s \n%s", string(out), err)
@@ -370,7 +372,7 @@ func (s *SekaidManager) GetAddressByName(ctx context.Context, addressName, sekai
 	command := fmt.Sprintf("sekaid keys show %s --keyring-backend=test --home=%s", addressName, sekaidHome)
 	out, err := s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
-		log.Errorf("Can't get addres by %s name. Command: %s. Error: %s", addressName, command, err)
+		log.Errorf("Can't get address by %s name. Command: %s. Error: %s", addressName, command, err)
 		return "", err
 	}
 	var key []types.SekaidKey
