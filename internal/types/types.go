@@ -207,3 +207,8 @@ type Test struct {
 type SekaidKey struct {
 	Address string `yaml:"address"`
 }
+
+type AddressPermissions struct {
+	BlackList []int `json:"blacklist"`
+	WhiteList []int `json:"whitelist"`
+}
