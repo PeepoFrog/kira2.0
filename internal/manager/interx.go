@@ -10,6 +10,7 @@ import (
 	"github.com/docker/go-connections/nat"
 	"github.com/mrlutik/kira2.0/internal/docker"
 	"github.com/mrlutik/kira2.0/internal/logging"
+	"github.com/mrlutik/kira2.0/internal/types"
 )
 
 // InterxManager represents a manager for Interx container and its associated configurations.
@@ -18,6 +19,7 @@ type InterxManager struct {
 	SekaiHostConfig        *container.HostConfig
 	SekaidNetworkingConfig *network.NetworkingConfig
 	DockerClient           *docker.DockerManager
+	config                 *types.Config
 }
 
 // Returns configured InterxManager.
@@ -27,57 +29,57 @@ type InterxManager struct {
 // volumeName: The name of a volume that interx container will be using.
 // dockerNetworkName: The name of a docker network that interx container will be using.
 // containerName: The name of a container that interx will have.
-func NewInterxManager(dockerClient *docker.DockerManager, interxPort, imageName, volumeName, dockerNetworkName, containerName string) (*InterxManager, error) {
+func NewInterxManager(dockerClient *docker.DockerManager, config *types.Config) (*InterxManager, error) {
 	log := logging.Log
-	log.Infof("Creating interx manager with port: %s, image: '%s', volume: '%s' in '%s' network\n", interxPort, imageName, volumeName, dockerNetworkName)
+	log.Infof("Creating interx manager with port: %s, image: '%s', volume: '%s' in '%s' network\n", config.InterxPort, config.DockerImageName, config.VolumeName, config.DockerNetworkName)
 
-	natInterxPort, err := nat.NewPort("tcp", interxPort)
+	natInterxPort, err := nat.NewPort("tcp", config.InterxPort)
 	if err != nil {
 		log.Errorf("Creating NAT interx port error: %s\n", err)
 		return nil, err
 	}
 
 	interxContainerConfig := &container.Config{
-		Image:        imageName,
+		Image:        fmt.Sprintf("%s:%s", config.DockerImageName, config.DockerImageVersion),
 		Cmd:          []string{"/bin/bash"},
 		Tty:          true,
 		AttachStdin:  true,
 		OpenStdin:    true,
 		StdinOnce:    true,
-		Hostname:     fmt.Sprintf("%s.local", containerName),
+		Hostname:     fmt.Sprintf("%s.local", config.InterxContainerName),
 		ExposedPorts: nat.PortSet{natInterxPort: struct{}{}},
 	}
 	interxNetworkingConfig := &network.NetworkingConfig{
 		EndpointsConfig: map[string]*network.EndpointSettings{
-			dockerNetworkName: {},
+			config.DockerNetworkName: {},
 		},
 	}
 	interxHostConfig := &container.HostConfig{
 		Binds: []string{
-			volumeName,
+			config.VolumeName,
 		},
 		PortBindings: nat.PortMap{
-			natInterxPort: []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: interxPort}},
+			natInterxPort: []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: config.InterxPort}},
 		},
 		Privileged: true,
 	}
 
-	return &InterxManager{interxContainerConfig, interxHostConfig, interxNetworkingConfig, dockerClient}, err
+	return &InterxManager{interxContainerConfig, interxHostConfig, interxNetworkingConfig, dockerClient, config}, err
 }
 
 // InitInterxBinInContainer sets up the 'interx' container with the specified configurations.
 // ctx: The context for the operation.
-// sekaidContainerName: The name of the 'sekaid' container.
-// interxContainerName: The name of the 'interx' container.
+// SekaidContainerName: The name of the 'sekaid' container.
+// InterxContainerName: The name of the 'interx' container.
 // rpc_port: The RPC port for 'interx' to connect to 'sekaid'.
 // grpc_port: The gRPC port for 'interx' to connect to 'sekaid'.
 // Returns an error if any issue occurs during the init process.
-func (i *InterxManager) InitInterxBinInContainer(ctx context.Context, sekaidContainerName, interxContainerName, rpc_port, grpc_port, interxHome string) error {
+func (i *InterxManager) InitInterxBinInContainer(ctx context.Context) error {
 	log := logging.Log
 	log.Infoln("Setting up 'interx' container")
 
-	command := fmt.Sprintf(`interx init --rpc="http://%s:%s" --grpc="dns:///%s:%s" -home=%s`, sekaidContainerName, rpc_port, sekaidContainerName, grpc_port, interxHome)
-	_, err := i.DockerClient.ExecCommandInContainer(ctx, interxContainerName, []string{`bash`, `-c`, command})
+	command := fmt.Sprintf(`interx init --rpc="http://%s:%s" --grpc="dns:///%s:%s" -home=%s`, i.config.SekaidContainerName, i.config.RpcPort, i.config.SekaidContainerName, i.config.GrpcPort, i.config.InterxHome)
+	_, err := i.DockerClient.ExecCommandInContainer(ctx, i.config.InterxContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 		return err
@@ -87,17 +89,17 @@ func (i *InterxManager) InitInterxBinInContainer(ctx context.Context, sekaidCont
 	return err
 }
 
-// StartInterxBinInContainer starts interx binary inside interxContainerName
+// StartInterxBinInContainer starts interx binary inside InterxContainerName
 // ctx: The context for the operation.
-// interxContainerName: The name of the 'interx' container.
+// InterxContainerName: The name of the 'interx' container.
 // rpc_port: The RPC port for 'interx' to connect to 'sekaid'.
-// grpc_port: The gRPC port for 'interx' to connect to 'sekaid'.
-// interxHome: The home directory for 'interx'.
+// grpc_port: The gRPC porI for 'interx' to conRect to 'sGkaid'.
+// InterxHome: The home directory for 'interx'.
 // Returns an error if any issue occurs during the start process.
-func (i *InterxManager) StartInterxBinInContainer(ctx context.Context, interxContainerName, rpc_port, grpc_port, interxHome string) error {
+func (i *InterxManager) StartInterxBinInContainer(ctx context.Context) error {
 	log := logging.Log
-	command := fmt.Sprintf(`interx start -home=%s`, interxHome)
-	_, err := i.DockerClient.ExecCommandInContainerInDetachMode(ctx, interxContainerName, []string{`bash`, `-c`, command})
+	command := fmt.Sprintf(`interx start -home=%s`, i.config.InterxHome)
+	_, err := i.DockerClient.ExecCommandInContainerInDetachMode(ctx, i.config.InterxContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 		return err
@@ -113,44 +115,44 @@ func (i *InterxManager) StartInterxBinInContainer(ctx context.Context, interxCon
 // Then starting again.
 // If no interx bin running inside container second time - return error.
 // ctx: The context for the operation.
-// sekaidContainerName: The name of the 'sekaid" container.
-// interxContainerName: The name of the 'interx' container.
+// SekaidContainerName: The name of the 'sekaid" container.
+// InterxContainerName: The name of the 'interx' container.
 // rpc_port: The RPC port for 'interx' to connect to 'sekaid'.
-// grpc_port: The gRPC port for 'interx' to connect to 'sekaid'.
-// interxHome: The home directory for 'interx'.
+// grpc_port: The gRPC porI for 'interx' to conRect to 'sGkaid'.
+// InterxHome: The home directory for 'interx'.
 // Returns an error if any issue occurs during the run process.
-func (i *InterxManager) RunInterxContainer(ctx context.Context, sekaidContainerName, interxContainerName, rpc_port, grpc_port, interxHome string) error {
+func (i *InterxManager) RunInterxContainer(ctx context.Context) error {
 	log := logging.Log
-	err := i.StartInterxBinInContainer(ctx, interxContainerName, rpc_port, grpc_port, interxHome)
+	err := i.StartInterxBinInContainer(ctx)
 	if err != nil {
-		log.Errorf("Error while starting interex bin in '%s' container: %s\n", interxContainerName, err)
+		log.Errorf("Error while starting interex bin in '%s' container: %s\n", i.config.InterxContainerName, err)
 	}
 	time.Sleep(time.Second * 1)
-	check, _, err := i.DockerClient.CheckIfProcessIsRunningInContainer(ctx, "interx", interxContainerName)
+	check, _, err := i.DockerClient.CheckIfProcessIsRunningInContainer(ctx, "interx", i.config.InterxContainerName)
 	if err != nil {
-		log.Errorf("Error while starting '%s' container: %s\n", interxContainerName, err)
+		log.Errorf("Error while starting '%s' container: %s\n", i.config.InterxContainerName, err)
 		return err
 	}
 	if !check {
-		log.Infof("Error starting interx binary first time in '%s' container, initing new instance\n", interxContainerName)
-		err = i.InitInterxBinInContainer(ctx, sekaidContainerName, interxContainerName, rpc_port, grpc_port, interxHome)
+		log.Infof("Error starting interx binary first time in '%s' container, initing new instance\n", i.config.InterxContainerName)
+		err = i.InitInterxBinInContainer(ctx)
 		if err != nil {
-			log.Errorf("Error while initing '%s' container: %s\n", interxContainerName, err)
+			log.Errorf("Error while initing '%s' container: %s\n", i.config.InterxContainerName, err)
 			return err
 		}
-		err := i.StartInterxBinInContainer(ctx, interxContainerName, rpc_port, grpc_port, interxHome)
+		err := i.StartInterxBinInContainer(ctx)
 		if err != nil {
-			log.Errorf("Error while running interx bin in '%s' container: %s\n", interxContainerName, err)
+			log.Errorf("Error while running interx bin in '%s' container: %s\n", i.config.InterxContainerName, err)
 		}
 		time.Sleep(time.Second * 1)
-		check, _, err := i.DockerClient.CheckIfProcessIsRunningInContainer(ctx, "interx", interxContainerName)
+		check, _, err := i.DockerClient.CheckIfProcessIsRunningInContainer(ctx, "interx", i.config.InterxContainerName)
 		if err != nil {
-			log.Errorf("Error while checking if procces is running in '%s' container: %s\n", interxContainerName, err)
+			log.Errorf("Error while checking if procces is running in '%s' container: %s\n", i.config.InterxContainerName, err)
 			return err
 		}
 		if !check {
-			log.Errorf("Error starting interex binary second time in '%s' container\n", interxContainerName)
-			return fmt.Errorf("cannot start interex bin in %s container", interxContainerName)
+			log.Errorf("Error starting interex binary second time in '%s' container\n", i.config.InterxContainerName)
+			return fmt.Errorf("cannot start interex bin in %s container", i.config.InterxContainerName)
 		}
 	}
 	return nil

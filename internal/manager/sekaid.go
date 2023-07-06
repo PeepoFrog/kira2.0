@@ -24,43 +24,97 @@ type SekaidManager struct {
 	SekaiHostConfig        *container.HostConfig
 	SekaidNetworkingConfig *network.NetworkingConfig
 	dockerManager          *docker.DockerManager
+	config                 *types.Config
 }
 
 const timeWaitBetweenBlocks = time.Millisecond * 10700
 const validatorAccountName = "validator"
 
-// Returns configured SekaidManager.
-// *docker.DockerManager: The pointer for docker.DockerManager instance.
-// grpcPort: The grpc port for sekaid.
-// rpcPort: The rpc port for sekaid.
-// imageName: The name of a image that sekaid container will be using.
-// volumeName: The name of a volume that sekaid container will be using.
-// dockerNetworkName: The name of a docker network that sekaid container will be using.
-// containerName: The name of a container that sekaid will have.
-func NewSekaidManager(dockerManager *docker.DockerManager, grpcPort, rpcPort, imageName, volumeName, dockerNetworkName, containerName string) (*SekaidManager, error) {
-	log := logging.Log
-	log.Infof("Creating sekaid manager with ports: %s, %s, image: '%s', volume: '%s' in '%s' network\n", grpcPort, rpcPort, imageName, volumeName, dockerNetworkName)
+// # Create new config file for sekaidManager
+//
+//	NetworkName // name of a blockchain name (chandID)
+//	SekaidHome // home folder for sekai bin
+//	InterxHome // home folder for interx bin
+//	KeyringBackend // name of keyring
+//	DockerImageName // name of a docker image that will be used to create containers for sekai and interx
+//	DockerImageVersion // version of a docker image that will be used to create containers for sekai and interx
+//	DockerNetworkName // the name of docker network that will be create and used for sekaid and interx containers
+//	SekaiVersion // version of sekai binary
+//	InterxVersion // version of interx binary
+//	SekaidContainerName // name for sekai container
+//	InterxContainerName // name for interx container
+//	VolumeName // the name of a docker's volume that will be SekaidContainerName and InterxContainerName will be using
+//	MnemonicDir // destination where mnemonics file will be saved
+//	RpcPort // sekaid's rpc port
+//	GrpcPort // sekaid's grpc port
+//	InterxPort // interx endpoint port
+//	Moniker // Moniker
+func NewConfig(
+	NetworkName,
+	SekaidHome,
+	InterxHome,
+	KeyringBackend,
+	DockerImageName,
+	DockerImageVersion,
+	DockerNetworkName,
+	SekaiVersion,
+	InterxVersion,
+	SekaidContainerName,
+	InterxContainerName,
+	VolumeName,
+	MnemonicDir,
+	RpcPort,
+	GrpcPort,
+	InterxPort,
+	Moniker string) *types.Config {
+	return &types.Config{
+		NetworkName:         NetworkName,
+		SekaidHome:          SekaidHome,
+		InterxHome:          InterxHome,
+		KeyringBackend:      KeyringBackend,
+		DockerImageName:     DockerImageName,
+		DockerImageVersion:  DockerImageVersion,
+		DockerNetworkName:   DockerNetworkName,
+		SekaiVersion:        SekaiVersion,
+		InterxVersion:       InterxVersion,
+		SekaidContainerName: SekaidContainerName,
+		InterxContainerName: InterxContainerName,
+		VolumeName:          VolumeName,
+		MnemonicDir:         MnemonicDir,
+		RpcPort:             RpcPort,
+		GrpcPort:            GrpcPort,
+		InterxPort:          InterxPort,
+		Moniker:             Moniker}
+}
 
-	natGrpcPort, err := nat.NewPort("tcp", grpcPort)
+// Returns configured SekaidManager.
+//
+//	*docker.DockerManager // The pointer for docker.DockerManager instance.
+//	*config	//Pointer to config struct, can create new instance by calling NewConfig() function
+func NewSekaidManager(dockerManager *docker.DockerManager, config *types.Config) (*SekaidManager, error) {
+	log := logging.Log
+	log.Infof("Creating sekaid manager with ports: %s, %s, image: '%s', volume: '%s' in '%s' network\n", config.GrpcPort, config.RpcPort, config.DockerImageName, config.VolumeName, config.DockerNetworkName)
+
+	natGrpcPort, err := nat.NewPort("tcp", config.GrpcPort)
 	if err != nil {
 		log.Errorf("Creating NAT GRPC port error: %s\n", err)
 		return nil, err
 	}
 
-	natRpcPort, err := nat.NewPort("tcp", rpcPort)
+	natRpcPort, err := nat.NewPort("tcp", config.RpcPort)
 	if err != nil {
 		log.Errorf("Creating NAT RPC port error: %s\n", err)
 		return nil, err
 	}
 
 	sekaiContainerConfig := &container.Config{
-		Image:       imageName,
+		Image:       fmt.Sprintf("%s:%s", config.DockerImageName, config.DockerImageVersion),
 		Cmd:         []string{"/bin/bash"},
 		Tty:         true,
 		AttachStdin: true,
 		OpenStdin:   true,
 		StdinOnce:   true,
-		Hostname:    fmt.Sprintf("%s.local", containerName),
+		Hostname:    fmt.Sprintf("%s.local", config.SekaidContainerName),
 		ExposedPorts: nat.PortSet{
 			natGrpcPort: struct{}{},
 			natRpcPort:  struct{}{},
@@ -69,75 +123,75 @@ func NewSekaidManager(dockerManager *docker.DockerManager, grpcPort, rpcPort, im
 
 	sekaiHostConfig := &container.HostConfig{
 		Binds: []string{
-			volumeName,
+			config.VolumeName,
 		},
 		PortBindings: nat.PortMap{
-			natGrpcPort: []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: grpcPort}},
-			natRpcPort:  []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: rpcPort}},
+			natGrpcPort: []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: config.GrpcPort}},
+			natRpcPort:  []nat.PortBinding{{HostIP: "0.0.0.0", HostPort: config.RpcPort}},
 		},
 		Privileged: true,
 	}
 
 	sekaidNetworkingConfig := &network.NetworkingConfig{
 		EndpointsConfig: map[string]*network.EndpointSettings{
-			dockerNetworkName: {},
+			config.DockerNetworkName: {},
 		},
 	}
 
-	return &SekaidManager{sekaiContainerConfig, sekaiHostConfig, sekaidNetworkingConfig, dockerManager}, err
+	return &SekaidManager{sekaiContainerConfig, sekaiHostConfig, sekaidNetworkingConfig, dockerManager, config}, err
 }
 
 // InitSekaidBinInContainer sets up the 'sekaid' container with the specified configurations.
 // ctx: The context for the operation.
-// moniker: The moniker for the 'sekaid' container.
-// sekaidContainerName: The name of the 'sekaid' container.
+// Moniker: The Moniker for the 'sekaid' container.
+// SekaidContainerName: The name of the 'sekaid' container.
 // sekaidNetworkName: The name of the network associated with the 'sekaid' container.
-// sekaidHome: The home directory for 'sekaid'.
-// keyringBackend: The keyring backend to use.
-// rpcPort: The RPC port for 'sekaid'.
-// mnemonicDir: The directory to store the generated mnemonics.
+// SekaidHome: The home directory for 'sekaid'.
+// KeyringBackend: The keyring backend to use.
+// RpcPort: The RPC port for 'sekaid'.
+// MnemonicDir: The directory to store the generated mnemonics.
 // Returns an error if any issue occurs during the init process.
-func (s *SekaidManager) InitSekaidBinInContainer(ctx context.Context, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rpcPort, mnemonicDir string) error {
+func (s *SekaidManager) InitSekaidBinInContainer(ctx context.Context) error {
 	log := logging.Log
 	log.Infoln("Setting up 'sekaid' container")
 
-	command := fmt.Sprintf(`sekaid init  --overwrite --chain-id=%s --home=%s "%s"`, sekaidNetworkName, sekaidHome, moniker)
-	_, err := s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command := fmt.Sprintf(`sekaid init  --overwrite --chain-id=%s --home=%s "%s"`, s.config.NetworkName, s.config.SekaidHome, s.config.Moniker)
+	_, err := s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 		return err
 	}
 
-	command = fmt.Sprintf(`mkdir %s`, mnemonicDir)
-	_, err = s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command = fmt.Sprintf(`mkdir %s`, s.config.MnemonicDir)
+	_, err = s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 		return err
 	}
 
-	command = fmt.Sprintf(`sekaid keys add "%s" --keyring-backend=%s --home=%s --output=json | jq .mnemonic > %s/sekai.mnemonic`, validatorAccountName, keyringBackend, sekaidHome, mnemonicDir)
-	_, err = s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command = fmt.Sprintf(`sekaid keys add "%s" --keyring-backend=%s --home=%s --output=json | jq .mnemonic > %s/sekai.mnemonic`, validatorAccountName, s.config.KeyringBackend, s.config.SekaidHome, s.config.MnemonicDir)
+	_, err = s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 		return err
 	}
 
-	command = fmt.Sprintf(`sekaid keys add "faucet" --keyring-backend=%s --home=%s --output=json | jq .mnemonic > %s/faucet.mnemonic`, keyringBackend, sekaidHome, mnemonicDir)
-	_, err = s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command = fmt.Sprintf(`sekaid keys add "faucet" --keyring-backend=%s --home=%s --output=json | jq .mnemonic > %s/faucet.mnemonic`, s.config.KeyringBackend, s.config.SekaidHome, s.config.MnemonicDir)
+	_, err = s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 		return err
 	}
 
-	command = fmt.Sprintf(`sekaid add-genesis-account %s 150000000000000ukex,300000000000000test,2000000000000000000000000000samolean,1000000lol --keyring-backend=%v --home=%v`, validatorAccountName, keyringBackend, sekaidHome)
-	_, err = s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command = fmt.Sprintf(`sekaid add-genesis-account %s 150000000000000ukex,300000000000000test,2000000000000000000000000000samolean,1000000lol --keyring-backend=%v --home=%v`, validatorAccountName, s.config.KeyringBackend, s.config.SekaidHome)
+	_, err = s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 		return err
 	}
 
-	command = fmt.Sprintf(`sekaid gentx-claim %s --keyring-backend=%s --moniker="%s" --home=%s`, validatorAccountName, keyringBackend, moniker, sekaidHome)
-	_, err = s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command = fmt.Sprintf(`sekaid gentx-claim %s --keyring-backend=%s --moniker="%s" --home=%s`, validatorAccountName, s.config.KeyringBackend, s.config.Moniker, s.config.SekaidHome)
+	_, err = s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 		return err
@@ -147,21 +201,14 @@ func (s *SekaidManager) InitSekaidBinInContainer(ctx context.Context, moniker, s
 	return nil
 }
 
-// StartSekaidBinInContainer starts sekaid binary inside sekaidContainerName var
+// StartSekaidBinInContainer starts sekaid binary inside SekaidContainerName var
 // ctx: The context for the operation.
-// moniker: The moniker for the 'sekaid' container.
-// sekaidContainerName: The name of the 'sekaid' container.
-// sekaidNetworkName: The name of the network associated with the 'sekaid' container.
-// sekaidHome: The home directory for 'sekaid'.
-// keyringBackend: The keyring backend to use.
-// rpcPort: The RPC port for 'sekaid'.
-// mnemonicDir: The directory to store the generated mnemonics.
 // Returns an error if any issue occurs during the start process.
-func (s *SekaidManager) StartSekaidBinInContainer(ctx context.Context, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rpcPort, mnemonicDir string) error {
+func (s *SekaidManager) StartSekaidBinInContainer(ctx context.Context) error {
 	log := logging.Log
 	log.Infoln("Starting 'sekaid' container")
-	command := fmt.Sprintf(`sekaid start --rpc.laddr "tcp://0.0.0.0:%s" --home=%s`, rpcPort, sekaidHome)
-	_, err := s.dockerManager.ExecCommandInContainerInDetachMode(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command := fmt.Sprintf(`sekaid start --rpc.laddr "tcp://0.0.0.0:%s" --home=%s`, s.config.RpcPort, s.config.SekaidHome)
+	_, err := s.dockerManager.ExecCommandInContainerInDetachMode(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Command '%s' execution error: %s\n", command, err)
 	}
@@ -177,55 +224,55 @@ func (s *SekaidManager) StartSekaidBinInContainer(ctx context.Context, moniker, 
 // If no sekaid bin running inside container second time - return error.
 // Then starting propagating transactions for permissions as in sekai-env.sh
 // ctx: The context for the operation.
-// moniker: The moniker for the 'sekaid' container.
-// sekaidContainerName: The name of the 'sekaid' container.
+// Moniker: The Moniker for the 'sekaid' container.
+// SekaidContainerName: The name of the 'sekaid' container.
 // sekaidNetworkName: The name of the network associated with the 'sekaid' container.
-// sekaidHome: The home directory for 'sekaid'.
-// keyringBackend: The keyring backend to use.
-// rpcPort: The RPC port for 'sekaid'.
-// mnemonicDir: The directory to store the generated mnemonics.
+// SekaidHome: The home directory for 'sekaid'.
+// KeyringBackend: The keyring backend to use.
+// RpcPort: The RPC port for 'sekaid'.
+// MnemonicDir: The directory to store the generated mnemonics.
 // Returns an error if any issue occurs during the run process.
-func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rpcPort, mnemonicDir string) error {
+func (s *SekaidManager) RunSekaidContainer(ctx context.Context) error {
 	log := logging.Log
-	err := s.StartSekaidBinInContainer(ctx, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rpcPort, mnemonicDir)
+	err := s.StartSekaidBinInContainer(ctx)
 	if err != nil {
-		log.Errorf("Cannot start sekaid bin in %s container", sekaidContainerName)
+		log.Errorf("Cannot start sekaid bin in %s container", s.config.SekaidContainerName)
 	}
 	time.Sleep(time.Second * 1)
-	check, _, err := s.dockerManager.CheckIfProcessIsRunningInContainer(ctx, "sekaid", sekaidContainerName)
+	check, _, err := s.dockerManager.CheckIfProcessIsRunningInContainer(ctx, "sekaid", s.config.SekaidContainerName)
 	if err != nil {
-		log.Infof("Error while setup '%s' container: %s\n", sekaidContainerName, err)
+		log.Infof("Error while setup '%s' container: %s\n", s.config.SekaidContainerName, err)
 		return err
 	}
 	if !check {
-		log.Infof("Error starting sekaid binary first time in '%s' container, initing new instance\n", sekaidContainerName)
-		err = s.InitSekaidBinInContainer(ctx, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rpcPort, mnemonicDir)
+		log.Infof("Error starting sekaid binary first time in '%s' container, initing new instance\n", s.config.SekaidContainerName)
+		err = s.InitSekaidBinInContainer(ctx)
 		if err != nil {
-			log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
+			log.Errorf("Error while setup '%s' container: %s\n", s.config.SekaidContainerName, err)
 			return err
 		}
-		err := s.StartSekaidBinInContainer(ctx, moniker, sekaidContainerName, sekaidNetworkName, sekaidHome, keyringBackend, rpcPort, mnemonicDir)
+		err := s.StartSekaidBinInContainer(ctx)
 		if err != nil {
-			log.Errorf("Cannot start sekaid bin in %s container", sekaidContainerName)
+			log.Errorf("Cannot start sekaid bin in %s container, %s", s.config.SekaidContainerName, err)
 		}
 
 		time.Sleep(time.Second * 1)
-
-		check, _, err = s.dockerManager.CheckIfProcessIsRunningInContainer(ctx, "sekaid", sekaidContainerName)
+		log.Printf("%+v\n", s.config)
+		check, _, err = s.dockerManager.CheckIfProcessIsRunningInContainer(ctx, "sekaid", s.config.SekaidContainerName)
 		if err != nil {
-			log.Errorf("Error while setup '%s' container: %s\n", sekaidContainerName, err)
+			log.Errorf("Error while setup '%s' container: %s\n", s.config.SekaidContainerName, err)
 			return err
 		}
 		if !check {
-			log.Errorf("Error starting sekaid bin second time in '%s' container\n", sekaidContainerName)
+			log.Errorf("Error starting sekaid bin second time in '%s' container\n", s.config.SekaidContainerName)
 			return fmt.Errorf("couldn't start sekaid bin second time")
 		}
-		err = s.PostGenesisProposals(ctx, sekaidContainerName, sekaidHome, sekaidNetworkName, keyringBackend)
+		err = s.PostGenesisProposals(ctx)
 		if err != nil {
 			log.Errorf("Error while propagating transaction: %s \n", err)
 			return err
 		}
-		err = s.UpdateIdentityRegistrar(ctx, validatorAccountName, sekaidContainerName, sekaidHome, keyringBackend, sekaidNetworkName, rpcPort)
+		err = s.UpdateIdentityRegistrar(ctx, validatorAccountName)
 		if err != nil {
 			log.Errorf("Error while updating identity registrar %s \n", err)
 			return err
@@ -240,11 +287,11 @@ func (s *SekaidManager) RunSekaidContainer(ctx context.Context, moniker, sekaidC
 // Adding required permitions for validator.
 // First getting validator address with GetAddressByName.
 // Then in loop calling GivePermissionsToAddress func with delay between calls 10 sec because tx can be propagated once per 10 sec
-func (s *SekaidManager) PostGenesisProposals(ctx context.Context, sekaidContainerName, sekaidHome, networkName, keyringBackend string) error {
+func (s *SekaidManager) PostGenesisProposals(ctx context.Context) error {
 	log := logging.Log
-	address, err := s.GetAddressByName(ctx, validatorAccountName, sekaidContainerName, sekaidHome, keyringBackend)
+	address, err := s.GetAddressByName(ctx, validatorAccountName)
 	if err != nil {
-		log.Fatalf("Error while getting address in '%s' container: %s\n", sekaidContainerName, err)
+		log.Fatalf("Error while getting address in '%s' container: %s\n", s.config.SekaidContainerName, err)
 	}
 	permissions := []int{
 		types.PermWhitelistAccountPermissionProposal,
@@ -261,12 +308,12 @@ func (s *SekaidManager) PostGenesisProposals(ctx context.Context, sekaidContaine
 	time.Sleep(timeWaitBetweenBlocks)
 	for _, perm := range permissions {
 		log.Printf("\n\n\nAdding permission %v, approximately duration: %v\n", perm, timeWaitBetweenBlocks*2)
-		err = s.GivePermissionsToAddress(ctx, perm, address, sekaidContainerName, sekaidHome, networkName)
+		err = s.GivePermissionsToAddress(ctx, perm, address)
 		if err != nil {
 			log.Errorf("%s\n", err)
 		}
 		log.Printf("Checking if %s has %v permission\n", address, perm)
-		check, err := s.CheckAccountPermission(ctx, perm, address, sekaidContainerName, sekaidHome)
+		check, err := s.CheckAccountPermission(ctx, perm, address)
 		if err != nil {
 			log.Errorf("%s\n", err)
 		}
@@ -280,12 +327,12 @@ func (s *SekaidManager) PostGenesisProposals(ctx context.Context, sekaidContaine
 }
 
 // Getting TX by parsing json output of `sekaid query tx <TXhash>`
-func (s *SekaidManager) GetTxQuery(ctx context.Context, transactionHash, sekaidContainerName, sekaidHome string) (types.TxData, error) {
+func (s *SekaidManager) GetTxQuery(ctx context.Context, transactionHash string) (types.TxData, error) {
 	log := logging.Log
 	var data types.TxData
 
-	command := fmt.Sprintf(`sekaid query tx %s  --home=%s -output=json`, transactionHash, sekaidHome)
-	out, err := s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command := fmt.Sprintf(`sekaid query tx %s  --home=%s -output=json`, transactionHash, s.config.SekaidHome)
+	out, err := s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("error when checking tx:  %s.  Command: %s. Error:%s\n", transactionHash, command, err)
 		return data, err
@@ -307,10 +354,10 @@ func (s *SekaidManager) GetTxQuery(ctx context.Context, transactionHash, sekaidC
 //
 // Then unmarshaling json output and checking sekaid hex of tx
 // Then waiting timeWaitBetweenBlocks for tx to propagate in blockchain and checking status code of Tx with GetTxQuery
-func (s *SekaidManager) GivePermissionsToAddress(ctx context.Context, permissionToAdd int, address, sekaidContainerName, sekaidHome, networkName string) error {
+func (s *SekaidManager) GivePermissionsToAddress(ctx context.Context, permissionToAdd int, address string) error {
 	log := logging.Log
-	command := fmt.Sprintf(`sekaid tx customgov permission whitelist --from %s --keyring-backend=test --permission=%v --addr=%s --chain-id=%s --home=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, address, permissionToAdd, address, networkName, sekaidHome)
-	out, err := s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command := fmt.Sprintf(`sekaid tx customgov permission whitelist --from %s --keyring-backend=test --permission=%v --addr=%s --chain-id=%s --home=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, address, permissionToAdd, address, s.config.NetworkName, s.config.SekaidHome)
+	out, err := s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("error when giving  %v permission. Command: %s", permissionToAdd, command)
 	}
@@ -325,7 +372,7 @@ func (s *SekaidManager) GivePermissionsToAddress(ctx context.Context, permission
 	log.Printf("GivePermissionToAddress: \n %+v \n", data)
 	time.Sleep(timeWaitBetweenBlocks)
 
-	txData, err := s.GetTxQuery(ctx, data.Txhash, sekaidContainerName, sekaidHome)
+	txData, err := s.GetTxQuery(ctx, data.Txhash)
 	if err != nil {
 		log.Errorf("Error Checking transaction status:%s", err)
 		return err
@@ -346,13 +393,13 @@ func (s *SekaidManager) GivePermissionsToAddress(ctx context.Context, permission
 //	permissionToCheck  is a int with 0-65 range
 //
 // address has to be kira address(not name) : kira12tptcuw0cp9fccng80vkmqen96npyyrvh2nw5q for example, you can get it from local keyring by func GetAddressByName()
-func (s *SekaidManager) CheckAccountPermission(ctx context.Context, permissionToCheck int, address, sekaidContainerName, sekaidHome string) (bool, error) {
+func (s *SekaidManager) CheckAccountPermission(ctx context.Context, permissionToCheck int, address string) (bool, error) {
 	log := logging.Log
 	log.Printf("Looking for %v permission \n", permissionToCheck)
-	command := fmt.Sprintf("sekaid query customgov permissions %s --output=json --home=%s", address, sekaidHome)
-	out, err := s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command := fmt.Sprintf("sekaid query customgov permissions %s --output=json --home=%s", address, s.config.SekaidHome)
+	out, err := s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
-		log.Errorf(`error when executing "%s" command in %s container`, command, sekaidContainerName)
+		log.Errorf(`error when executing "%s" command in %s container`, command, s.config.SekaidContainerName)
 		return false, err
 	}
 	var perms types.AddressPermissions
@@ -376,10 +423,10 @@ func (s *SekaidManager) CheckAccountPermission(ctx context.Context, permissionTo
 // Getting address from keyring.
 //
 // sekaid keys show validator --keyring-backend=test --home=test
-func (s *SekaidManager) GetAddressByName(ctx context.Context, addressName, sekaidContainerName, sekaidHome, keyringBackend string) (string, error) {
+func (s *SekaidManager) GetAddressByName(ctx context.Context, addressName string) (string, error) {
 	log := logging.Log
-	command := fmt.Sprintf("sekaid keys show %s --keyring-backend=%s --home=%s", addressName, keyringBackend, sekaidHome)
-	out, err := s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+	command := fmt.Sprintf("sekaid keys show %s --keyring-backend=%s --home=%s", addressName, s.config.KeyringBackend, s.config.SekaidHome)
+	out, err := s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 	if err != nil {
 		log.Errorf("Can't get address by %s name. Command: %s. Error: %s", addressName, command, err)
 		return "", err
@@ -400,77 +447,77 @@ func (s *SekaidManager) GetAddressByName(ctx context.Context, addressName, sekai
 }
 
 // Updating identity registrar from KM1 await-validator-init.sh file.
-func (s *SekaidManager) UpdateIdentityRegistrar(ctx context.Context, accountName, sekaidContainerName, sekaidHome, keyringBackend, networkName, rpcPort string) error {
+func (s *SekaidManager) UpdateIdentityRegistrar(ctx context.Context, accountName string) error {
 	log := logging.Log
-	nodeStruct, err := s.GetSekaidStatus(sekaidContainerName, rpcPort)
+	nodeStruct, err := s.GetSekaidStatus(s.config.SekaidContainerName, s.config.RpcPort)
 	if err != nil {
 		log.Errorf("Error when trying to get sekaid status %s\n", err)
 		return err
 	}
 
-	err = s.UpsertIdentityRecord(ctx, accountName, "description", "This is genesis validator account of the KIRA Team", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "description", "This is genesis validator account of the KIRA Team")
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
-	err = s.UpsertIdentityRecord(ctx, accountName, "social", "https://tg.kira.network,twitter.kira.network", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "social", "https://tg.kira.network,twitter.kira.network")
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
-	err = s.UpsertIdentityRecord(ctx, accountName, "contact", "https://support.kira.network", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "contact", "https://support.kira.network")
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
-	err = s.UpsertIdentityRecord(ctx, accountName, "website", "https://kira.network", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "website", "https://kira.network")
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
-	err = s.UpsertIdentityRecord(ctx, accountName, "username", "KIRA", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "username", "KIRA")
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
-	err = s.UpsertIdentityRecord(ctx, accountName, "logo", "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "logo", "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg")
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
-	err = s.UpsertIdentityRecord(ctx, accountName, "avatar", "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "avatar", "https://kira-network.s3-eu-west-1.amazonaws.com/assets/img/tokens/kex.svg")
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
-	err = s.UpsertIdentityRecord(ctx, accountName, "pentest1", "<iframe src=javascript:alert(1)>", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "pentest1", "<iframe src=javascript:alert(1)>")
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
-	err = s.UpsertIdentityRecord(ctx, accountName, "pentest2", "<img/src=x a='' onerror=alert(2)>", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "pentest2", "<img/src=x a='' onerror=alert(2)>")
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
-	err = s.UpsertIdentityRecord(ctx, accountName, "pentest3", "<img src=1 onerror=alert(3)>", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "pentest3", "<img src=1 onerror=alert(3)>")
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
-	err = s.UpsertIdentityRecord(ctx, accountName, "validator_node_id", nodeStruct.Result.NodeInfo.ID, sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	err = s.UpsertIdentityRecord(ctx, accountName, "validator_node_id", nodeStruct.Result.NodeInfo.ID)
 	if err != nil {
 		log.Errorf("Error when upserting identity record: %s\n", err)
 		return err
 	}
 
 	//not sure if this needed
-	// err = s.UpsertIdentityRecord(ctx, "signer", "username", "faucet", sekaidContainerName, sekaidHome, keyringBackend, networkName)
+	// err = s.UpsertIdentityRecord(ctx, "signer", "username", "faucet", SekaidContainerName, SekaidHome, KeyringBackend, NetworkName)
 	// if err != nil {
 	// 	log.Errorf("Error when upserting identity record: %s\n", err)
 	// 	return err
 	// }
-	// s.UpsertIdentityRecord(ctx, "test", "username", "test", sekaidContainerName, sekaidHome, keyringBackend, networkName).
+	// s.UpsertIdentityRecord(ctx, "test", "username", "test", SekaidContainerName, SekaidHome, KeyringBackend, NetworkName).
 	// if err != nil {
 	// 	log.Errorf("Error when upserting identity record: %s\n", err)
 	// 	return err
@@ -479,28 +526,28 @@ func (s *SekaidManager) UpdateIdentityRegistrar(ctx context.Context, accountName
 }
 
 // upsertIdentityRecord  from sekai-utils.sh
-func (s *SekaidManager) UpsertIdentityRecord(ctx context.Context, account, key, value, sekaidContainerName, sekaidHome, keyringBackend, networkName string) error {
+func (s *SekaidManager) UpsertIdentityRecord(ctx context.Context, account, key, value string) error {
 	log := logging.Log
-	address, err := s.GetAddressByName(ctx, account, sekaidContainerName, sekaidHome, keyringBackend)
+	address, err := s.GetAddressByName(ctx, account)
 	if err != nil {
 		log.Errorf("Error while getting kira address from keyring %s\n", err)
 		return err
 	}
 	var out []byte
 	if value != "" {
-		command := fmt.Sprintf(`sekaid tx customgov register-identity-records --infos-json="{\"%s\":\"%s\"}" --from=%s --keyring-backend=%s --home=%s --chain-id=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, key, value, address, keyringBackend, sekaidHome, networkName)
-		out, err = s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+		command := fmt.Sprintf(`sekaid tx customgov register-identity-records --infos-json="{\"%s\":\"%s\"}" --from=%s --keyring-backend=%s --home=%s --chain-id=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, key, value, address, s.config.KeyringBackend, s.config.SekaidHome, s.config.NetworkName)
+		out, err = s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 		if err != nil {
-			log.Errorf("Error while executing command %s\n in %s container", command, sekaidContainerName)
+			log.Errorf("Error while executing command %s\n in %s container", command, s.config.SekaidContainerName)
 			return err
 		}
 		log.Printf("%s\n", string(out))
 
 	} else {
-		command := fmt.Sprintf(`sekaid tx customgov delete-identity-records --keys="%s" --from=%s --keyring-backend=%s --home=%s --chain-id=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, key, address, keyringBackend, sekaidHome, networkName)
-		out, err = s.dockerManager.ExecCommandInContainer(ctx, sekaidContainerName, []string{`bash`, `-c`, command})
+		command := fmt.Sprintf(`sekaid tx customgov delete-identity-records --keys="%s" --from=%s --keyring-backend=%s --home=%s --chain-id=%s --fees=100ukex --yes --broadcast-mode=async --log_format=json --output=json`, key, address, s.config.KeyringBackend, s.config.SekaidHome, s.config.NetworkName)
+		out, err = s.dockerManager.ExecCommandInContainer(ctx, s.config.SekaidContainerName, []string{`bash`, `-c`, command})
 		if err != nil {
-			log.Errorf("Error while executing command %s\n in %s container", command, sekaidContainerName)
+			log.Errorf("Error while executing command %s\n in %s container", command, s.config.SekaidContainerName)
 			return err
 		}
 		log.Printf("%s\n", string(out))
@@ -513,7 +560,7 @@ func (s *SekaidManager) UpsertIdentityRecord(ctx context.Context, account, key, 
 	}
 	time.Sleep(timeWaitBetweenBlocks)
 
-	txData, err := s.GetTxQuery(ctx, data.Txhash, sekaidContainerName, sekaidHome)
+	txData, err := s.GetTxQuery(ctx, data.Txhash)
 	if err != nil {
 		log.Errorf("Error while gettind tx data from %s hash\n", data.Txhash)
 		return err
@@ -527,10 +574,10 @@ func (s *SekaidManager) UpsertIdentityRecord(ctx context.Context, account, key, 
 
 // func to get status of sekaid node
 // same as curl localhost:26657/status (port for sekaid's rpc endpoint)
-func (s *SekaidManager) GetSekaidStatus(sekaidContainerName, rpcPort string) (*types.Status, error) {
+func (s *SekaidManager) GetSekaidStatus(SekaidContainerName, RpcPort string) (*types.Status, error) {
 	log := logging.Log
 
-	url := fmt.Sprintf("http://localhost:%s/status", rpcPort)
+	url := fmt.Sprintf("http://localhost:%s/status", RpcPort)
 	log.Println(url)
 	response, err := http.Get(url)
 	if err != nil {
