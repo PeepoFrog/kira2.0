@@ -90,10 +90,10 @@ func main() {
 	gitHubAdapter := adapters.NewGitHubAdapter(token)
 	sekaiDebFileName := "sekai-linux-amd64.deb"
 	interxDebFileName := "interx-linux-amd64.deb"
-	goto F
+	// goto F
 	gitHubAdapter.DownloadBinaryFromRepo(ctx, kiraGit, sekaiRepo, sekaiDebFileName, SEKAI_VERSION)
 	gitHubAdapter.DownloadBinaryFromRepo(ctx, kiraGit, interxRepo, interxDebFileName, INTERX_VERSION)
-F:
+	// F:
 	check, err := dockerManager.CheckForContainersName(ctx, SEKAID_CONTAINER_NAME)
 	if err != nil {
 		log.Fatalln(err)
