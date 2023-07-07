@@ -24,11 +24,31 @@ type SekaidManager struct {
 	SekaiHostConfig        *container.HostConfig
 	SekaidNetworkingConfig *network.NetworkingConfig
 	dockerManager          *docker.DockerManager
-	config                 *types.Config
+	config                 *Config
 }
 
 const timeWaitBetweenBlocks = time.Millisecond * 10700
 const validatorAccountName = "validator"
+
+type Config struct {
+	NetworkName         string
+	SekaidHome          string
+	InterxHome          string
+	KeyringBackend      string
+	DockerImageName     string
+	DockerImageVersion  string
+	DockerNetworkName   string
+	SekaiVersion        string
+	InterxVersion       string
+	SekaidContainerName string
+	InterxContainerName string
+	VolumeName          string
+	MnemonicDir         string
+	RpcPort             string
+	GrpcPort            string
+	InterxPort          string
+	Moniker             string
+}
 
 // # Create new config file for sekaidManager
 //
@@ -66,8 +86,8 @@ func NewConfig(
 	RpcPort,
 	GrpcPort,
 	InterxPort,
-	Moniker string) *types.Config {
-	return &types.Config{
+	Moniker string) *Config {
+	return &Config{
 		NetworkName:         NetworkName,
 		SekaidHome:          SekaidHome,
 		InterxHome:          InterxHome,
@@ -91,7 +111,7 @@ func NewConfig(
 //
 //	*docker.DockerManager // The pointer for docker.DockerManager instance.
 //	*config	//Pointer to config struct, can create new instance by calling NewConfig() function
-func NewSekaidManager(dockerManager *docker.DockerManager, config *types.Config) (*SekaidManager, error) {
+func NewSekaidManager(dockerManager *docker.DockerManager, config *Config) (*SekaidManager, error) {
 	log := logging.Log
 	log.Infof("Creating sekaid manager with ports: %s, %s, image: '%s', volume: '%s' in '%s' network\n", config.GrpcPort, config.RpcPort, config.DockerImageName, config.VolumeName, config.DockerNetworkName)
 
