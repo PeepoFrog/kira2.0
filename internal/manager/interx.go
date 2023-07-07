@@ -10,7 +10,6 @@ import (
 	"github.com/docker/go-connections/nat"
 	"github.com/mrlutik/kira2.0/internal/docker"
 	"github.com/mrlutik/kira2.0/internal/logging"
-	"github.com/mrlutik/kira2.0/internal/types"
 )
 
 // InterxManager represents a manager for Interx container and its associated configurations.
@@ -19,7 +18,7 @@ type InterxManager struct {
 	SekaiHostConfig        *container.HostConfig
 	SekaidNetworkingConfig *network.NetworkingConfig
 	DockerClient           *docker.DockerManager
-	config                 *types.Config
+	config                 *Config
 }
 
 // Returns configured InterxManager.
@@ -29,7 +28,7 @@ type InterxManager struct {
 // volumeName: The name of a volume that interx container will be using.
 // dockerNetworkName: The name of a docker network that interx container will be using.
 // containerName: The name of a container that interx will have.
-func NewInterxManager(dockerClient *docker.DockerManager, config *types.Config) (*InterxManager, error) {
+func NewInterxManager(dockerClient *docker.DockerManager, config *Config) (*InterxManager, error) {
 	log := logging.Log
 	log.Infof("Creating interx manager with port: %s, image: '%s', volume: '%s' in '%s' network\n", config.InterxPort, config.DockerImageName, config.VolumeName, config.DockerNetworkName)
 
